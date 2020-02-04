@@ -50,11 +50,9 @@ class _loginState extends State<login> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(bottom: widt*0.20),
+              padding: EdgeInsets.only(bottom: widt*0.20,left: widt*0.10,right: widt*0.10),
               child: Image.asset(
                 "images/logo.png",
-                height: 100,
-                width: 150,
                 fit: BoxFit.fill,
               ),
             ),
