@@ -94,6 +94,7 @@ class _LoginState extends State<Login> {
                           margin: EdgeInsets.only(top: 20),
                           height: 50,
                           decoration: BoxDecoration(
+
                               borderRadius: BorderRadius.all(Radius.circular(8))),
                           child: MaterialButton(
                             shape: RoundedRectangleBorder(
