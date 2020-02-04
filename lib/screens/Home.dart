@@ -66,17 +66,7 @@ class _HomeState extends State<Home> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     border: Border.all(width: 0.5,color: Colors.grey),
-                    /*boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey,
-                    blurRadius: 20.0, // soften the shadow
-                    //spreadRadius: 1.0, //extend the shadow
-                    offset: Offset(
-                      10.0, // Move to right 10  horizontally
-                      10.0, // Move to bottom 10 Vertically
-                    ),
-                  ),
-                ],*/
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -101,17 +91,7 @@ class _HomeState extends State<Home> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     border: Border.all(width: 0.5,color: Colors.grey),
-                    /*boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey,
-                    blurRadius: 20.0, // soften the shadow
-                    //spreadRadius: 1.0, //extend the shadow
-                    offset: Offset(
-                      10.0, // Move to right 10  horizontally
-                      10.0, // Move to bottom 10 Vertically
-                    ),
-                  ),
-                ],*/
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
