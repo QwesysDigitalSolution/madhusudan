@@ -43,7 +43,7 @@ class _ProductListState extends State<ProductList> {
                 style: TextStyle(color: cnst.app_primary_material_color),
               ),
               backgroundColor: Colors.white,
-              expandedHeight: 100.0,
+              expandedHeight: 105.0,
               floating: false,
               pinned: true,
               forceElevated: innerBoxIsScrolled,
@@ -61,7 +61,7 @@ class _ProductListState extends State<ProductList> {
               flexibleSpace: new FlexibleSpaceBar(
                 background: Column(
                   children: <Widget>[
-                    SizedBox(height: widthScreen*0.18),
+                    SizedBox(height: widthScreen*0.20),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
                       child: Container(
