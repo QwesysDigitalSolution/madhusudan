@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:madhusudan/Common/Constants.dart' as cnst;
 
 class login extends StatefulWidget {
@@ -9,11 +10,11 @@ class login extends StatefulWidget {
 class _loginState extends State<login> {
   TextEditingController edtMobile = new TextEditingController();
   double widt;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
   }
 
   showMsg(String msg, {String title = 'Madhusudan'}) {
@@ -68,6 +69,7 @@ class _loginState extends State<login> {
                         controller: edtMobile,
                         cursorColor: Theme.of(context).cursorColor,
                         decoration: InputDecoration(
+                          border: InputBorder.none,
                           counterText: "",
                           filled: true,
                           hintText: 'Enter Mobile No',
