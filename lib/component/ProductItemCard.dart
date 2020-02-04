@@ -31,7 +31,7 @@ class _ProductItemCardState extends State<ProductItemCard> {
 
       },
       child: AnimationConfiguration.staggeredGrid(
-        duration: const Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 1000),
         columnCount: 2,
         position: widget.index,
         child: SlideAnimation(

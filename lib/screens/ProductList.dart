@@ -42,7 +42,6 @@ class _ProductListState extends State<ProductList> {
                 "Product",
                 style: TextStyle(color: cnst.app_primary_material_color),
               ),
-              centerTitle: true,
               backgroundColor: Colors.white,
               expandedHeight: 100.0,
               floating: false,
@@ -197,8 +196,8 @@ class _ProductListState extends State<ProductList> {
             child: AnimationLimiter(
                 child: GridView.builder(
                     //itemCount: searchMemberData.length,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: 50,
+                   // physics: NeverScrollableScrollPhysics(),
+                    itemCount: 10,
                     //shrinkWrap: true,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
