@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:madhusudan/common/Constants.dart';
+import 'package:madhusudan/common/Constants.dart' as cnst;
 
 class Home extends StatefulWidget {
   @override
@@ -25,33 +25,12 @@ class _HomeState extends State<Home> {
             ),
           ),
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 20,vertical: 5),
-            padding: EdgeInsets.symmetric(vertical: 10),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(width: 0.5,color: Colors.grey),
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Text(
-                  "Upload Order Photo",
-                  style: TextStyle(
-                    fontSize: 25,
-                  ),
-                ),
-                Image.asset("images/camera.png"),
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 20,vertical: 5),
+            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 GestureDetector(
-                  onTap:(){
+                  onTap: () {
                     Navigator.pushNamed(context, '/ProductList');
                   },
                   child: Container(
@@ -60,7 +39,7 @@ class _HomeState extends State<Home> {
                     padding: EdgeInsets.symmetric(vertical: 10),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      border: Border.all(width: 0.5,color: Colors.grey),
+                      border: Border.all(width: 0.5, color: Colors.grey),
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                     child: Column(
@@ -81,7 +60,7 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     Navigator.pushNamed(context, '/ProductList');
                   },
                   child: Container(
@@ -90,7 +69,7 @@ class _HomeState extends State<Home> {
                     padding: EdgeInsets.symmetric(vertical: 10),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      border: Border.all(width: 0.5,color: Colors.grey),
+                      border: Border.all(width: 0.5, color: Colors.grey),
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                     child: Column(
@@ -112,7 +91,28 @@ class _HomeState extends State<Home> {
                 ),
               ],
             ),
-          )
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+            padding: EdgeInsets.symmetric(vertical: 10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(width: 0.5, color: Colors.grey),
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Text(
+                  "Upload Order Photo",
+                  style: TextStyle(
+                    fontSize: 25,
+                  ),
+                ),
+                Image.asset("images/camera.png"),
+              ],
+            ),
+          ),
         ],
       ),
     );
