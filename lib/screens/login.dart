@@ -8,7 +8,7 @@ class login extends StatefulWidget {
 
 class _loginState extends State<login> {
   TextEditingController edtMobile = new TextEditingController();
-
+  double widt;
   @override
   void initState() {
     // TODO: implement initState
@@ -40,15 +40,22 @@ class _loginState extends State<login> {
 
   @override
   Widget build(BuildContext context) {
+    double widt=MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Image.asset(
-              "images/logo.png",
-              height: 100,
-              width: 150,
-              fit: BoxFit.fill,
+            Padding(
+              padding: EdgeInsets.only(bottom: widt*0.20),
+              child: Image.asset(
+                "images/logo.png",
+                height: 100,
+                width: 150,
+                fit: BoxFit.fill,
+              ),
             ),
             Column(
               children: <Widget>[
