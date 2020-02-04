@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:madhusudan/Common/Constants.dart' as cnst;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:madhusudan/animation/fade_animation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class splash extends StatefulWidget {
@@ -10,7 +11,6 @@ class splash extends StatefulWidget {
 }
 
 class _splashState extends State<splash> {
-
   @override
   void initState() {
     // TODO: implement initState
@@ -30,6 +30,7 @@ class _splashState extends State<splash> {
       Navigator.pushReplacementNamed(context, '/login');
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,22 +45,25 @@ class _splashState extends State<splash> {
               height: MediaQuery.of(context).size.height,
               fit: BoxFit.cover,
             ),
-            Container(
-              color: Color.fromRGBO(0, 0, 0, 0.2),
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Image.asset(
-                      "images/logo.png",
-                      fit: BoxFit.contain,
-                      //height: 100,
+            FadeAnimation(
+              3,
+              Container(
+                color: Color.fromRGBO(0, 0, 0, 0.2),
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Image.asset(
+                        "images/logo.png",
+                        fit: BoxFit.contain,
+                        //height: 100,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],
