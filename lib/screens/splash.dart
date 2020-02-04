@@ -26,8 +26,16 @@ class _splashState extends State<splash> {
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Image.asset(
+                      "images/LOGO.png",
+                      fit: BoxFit.contain,
+                      //height: 100,
+                    ),
+                  ),
                 ],
               ),
             )
