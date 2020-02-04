@@ -38,8 +38,6 @@ class _loginState extends State<login> {
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     double widt=MediaQuery.of(context).size.width;
@@ -111,7 +109,7 @@ class _loginState extends State<login> {
                                 minWidth: MediaQuery.of(context).size.width - 20,
                                 onPressed: () {
                                   //_checkLogin();
-                                  //Navigator.pushReplacementNamed(context, '/Dashboard');
+                                  Navigator.pushNamed(context, '/ProductList');
                                   //Navigator.pushReplacementNamed(context, '/Dashboard');
                                 },
                                 child: Row(

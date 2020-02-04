@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:madhusudan/screens/ProductList.dart';
 import 'package:madhusudan/screens/login.dart';
 
 //screen list
@@ -23,6 +24,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         '/': (context) => splash(),
         '/login': (context) => login(),
+        '/ProductList': (context) => ProductList(),
       },
       theme: ThemeData(
         textTheme: GoogleFonts.latoTextTheme(textTheme).copyWith(
