@@ -8,6 +8,8 @@ class NotificationScrren extends StatefulWidget {
 class _NotificationScrrenState extends State<NotificationScrren> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      child: Text("Notification"),
+    );
   }
 }
