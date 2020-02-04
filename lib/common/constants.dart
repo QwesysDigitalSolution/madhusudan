@@ -9,17 +9,17 @@ class session {
 }
 
 Map<int, Color> app_primary_colors = {
-  50: Color.fromRGBO(56, 48, 95, .1),
-  100: Color.fromRGBO(56, 48, 95, .2),
-  200: Color.fromRGBO(56, 48, 95, .3),
-  300: Color.fromRGBO(56, 48, 95, .4),
-  400: Color.fromRGBO(56, 48, 95, .5),
-  500: Color.fromRGBO(56, 48, 95, .6),
-  600: Color.fromRGBO(56, 48, 95, .7),
-  700: Color.fromRGBO(56, 48, 95, .8),
-  800: Color.fromRGBO(56, 48, 95, .9),
-  900: Color.fromRGBO(56, 48, 95, 1)
+  50: Color.fromRGBO(220, 0, 0, .1),
+  100: Color.fromRGBO(220, 0, 0, .2),
+  200: Color.fromRGBO(220, 0, 0, .3),
+  300: Color.fromRGBO(220, 0, 0, .4),
+  400: Color.fromRGBO(220, 0, 0, .5),
+  500: Color.fromRGBO(220, 0, 0, .6),
+  600: Color.fromRGBO(220, 0, 0, .7),
+  700: Color.fromRGBO(220, 0, 0, .8),
+  800: Color.fromRGBO(220, 0, 0, .9),
+  900: Color.fromRGBO(220, 0, 0, 1)
 };
 
 MaterialColor app_primary_material_color =
-    MaterialColor(0xFF9D0202, app_primary_colors);
+    MaterialColor(0xFFDC0000, app_primary_colors);

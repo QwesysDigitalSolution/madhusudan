@@ -136,7 +136,7 @@ class _loginState extends State<login> {
                                   padding: const EdgeInsets.all(7.0),
                                   child: Icon(
                                     Icons.arrow_forward_ios,
-                                    color: cnst.app_primary_material_color[600],
+                                    color: cnst.app_primary_material_color,
                                     size: 15,
                                   ),
                                 ),
