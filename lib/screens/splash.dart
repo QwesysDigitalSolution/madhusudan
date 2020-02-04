@@ -1,5 +1,8 @@
+import 'dart:async';
+import 'package:madhusudan/Common/Constants.dart' as cnst;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class splash extends StatefulWidget {
   @override
@@ -7,6 +10,26 @@ class splash extends StatefulWidget {
 }
 
 class _splashState extends State<splash> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Timer(Duration(seconds: 3), () async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      /*String MemberId = prefs.getString(Session.MemberId);
+      String veri = prefs.getString(Session.IsVerified);
+
+      if (MemberId != null && MemberId != "" && veri=="true") {
+        controller.stop(canceled: true);
+        Navigator.pushReplacementNamed(context, '/Dashboard');
+      } else {
+        controller.stop(canceled: true);
+        Navigator.pushReplacementNamed(context, '/Login');
+      }*/
+      Navigator.pushReplacementNamed(context, '/login');
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
