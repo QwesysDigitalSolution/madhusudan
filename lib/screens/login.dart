@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:madhusudan/Common/Constants.dart' as cnst;
+import 'package:madhusudan/animation/fade_animation.dart';
 
 class login extends StatefulWidget {
   @override
@@ -43,115 +44,133 @@ class _loginState extends State<login> {
   Widget build(BuildContext context) {
     double widt=MediaQuery.of(context).size.width;
     return Scaffold(
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(bottom: widt*0.20,left: widt*0.10,right: widt*0.10),
-              child: Image.asset(
-                "images/logo.png",
-                fit: BoxFit.fill,
-              ),
-            ),
-            Column(
+      body: Stack(
+        children: <Widget>[
+          /*Image.asset(
+            "images/splashbg.jpg",
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            fit: BoxFit.cover,
+          ),*/
+          Container(
+            //color: Color.fromRGBO(0, 0, 0, 0.2),
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: EdgeInsets.only(left: 15, right: 15),
-                  child: Column(
-                    children: <Widget>[
-                      TextFormField(
-                        controller: edtMobile,
-                        cursorColor: Theme.of(context).cursorColor,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          counterText: "",
-                          filled: true,
-                          hintText: 'Enter Mobile No',
-                          labelText: "Mobile No",
-                          prefixIcon: Icon(
-                            Icons.phone,
-                            color: Colors.grey,
-                          ),
-                          //helperText: "password",
-                        ),
-                        maxLength: 10,
-                        keyboardType: TextInputType.phone,
-                      ),
-                      Padding(padding: EdgeInsets.only(top: 5)),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        margin: EdgeInsets.only(top: 20),
-                        height: 50,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(8))),
-                        child: MaterialButton(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(8.0)),
-                          color: cnst.app_primary_material_color[600],
-                          minWidth: MediaQuery.of(context).size.width - 20,
-                          onPressed: () {
-                            //_checkLogin();
-                            //Navigator.pushReplacementNamed(context, '/Dashboard');
-                            //Navigator.pushReplacementNamed(context, '/Dashboard');
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Container(
-                                decoration: BoxDecoration(
-                                  //shape: BoxShape.circle,
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(15)),
-                                  color: Colors.transparent,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(7.0),
-                                  child: Icon(
-                                    Icons.arrow_forward_ios,
-                                    color: Colors.transparent,
-                                    size: 20,
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                "Login",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17.0,
-                                    fontWeight: FontWeight.w600),
-                                textAlign: TextAlign.center,
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  //shape: BoxShape.circle,
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(15)),
-                                  color: Colors.white,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(7.0),
-                                  child: Icon(
-                                    Icons.arrow_forward_ios,
-                                    color: cnst.app_primary_material_color,
-                                    size: 15,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                FadeAnimation(
+                  1, Padding(
+                    padding: EdgeInsets.only(bottom: widt*0.20,left: widt*0.10,right: widt*0.10),
+                    child: Image.asset(
+                      "images/logo.png",
+                      fit: BoxFit.fill,
+                    ),
                   ),
+                ),
+                Column(
+                  children: <Widget>[
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.only(left: 15, right: 15),
+                      child: Column(
+                        children: <Widget>[
+                          FadeAnimation(
+                            2, TextFormField(
+                              controller: edtMobile,
+                              cursorColor: Theme.of(context).cursorColor,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                //fillColor: Colors.white,
+                                counterText: "",
+                                filled: true,
+                                hintText: 'Enter Mobile No',
+                                labelText: "Mobile No",
+                                prefixIcon: Icon(
+                                  Icons.phone,
+                                  color: Colors.grey,
+                                ),
+                                //helperText: "password",
+                              ),
+                              maxLength: 10,
+                              keyboardType: TextInputType.phone,
+                            ),
+                          ),
+                          Padding(padding: EdgeInsets.only(top: 5)),
+                          FadeAnimation(
+                            2.5, Container(
+                              width: MediaQuery.of(context).size.width,
+                              margin: EdgeInsets.only(top: 20),
+                              height: 50,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(8))),
+                              child: MaterialButton(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: new BorderRadius.circular(8.0)),
+                                color: cnst.app_primary_material_color[600],
+                                minWidth: MediaQuery.of(context).size.width - 20,
+                                onPressed: () {
+                                  //_checkLogin();
+                                  //Navigator.pushReplacementNamed(context, '/Dashboard');
+                                  //Navigator.pushReplacementNamed(context, '/Dashboard');
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        //shape: BoxShape.circle,
+                                        borderRadius:
+                                        BorderRadius.all(Radius.circular(15)),
+                                        color: Colors.transparent,
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(7.0),
+                                        child: Icon(
+                                          Icons.arrow_forward_ios,
+                                          color: Colors.transparent,
+                                          size: 20,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      "Login",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 17.0,
+                                          fontWeight: FontWeight.w600),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        //shape: BoxShape.circle,
+                                        borderRadius:
+                                        BorderRadius.all(Radius.circular(15)),
+                                        color: Colors.white,
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(7.0),
+                                        child: Icon(
+                                          Icons.arrow_forward_ios,
+                                          color: cnst.app_primary_material_color,
+                                          size: 15,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
