@@ -29,9 +29,9 @@ class _splashState extends State<splash> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(10),
                     child: Image.asset(
-                      "images/LOGO.png",
+                      "images/logo.png",
                       fit: BoxFit.contain,
                       //height: 100,
                     ),
