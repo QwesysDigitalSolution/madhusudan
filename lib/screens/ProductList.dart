@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:madhusudan/animation/FadeAnimation.dart';
 import 'package:madhusudan/component/LoadingComponent.dart';
 import 'package:madhusudan/component/NoDataComponent.dart';
 import 'package:madhusudan/Common/Constants.dart' as cnst;
@@ -53,7 +55,7 @@ class _ProductListState extends State<ProductList> {
                 },
                 child: Icon(
                   Icons.arrow_back_ios,
-                  size: 20,
+                  size: 18,
                   color: cnst.app_primary_material_color,
                 ),
               ),
@@ -68,7 +70,7 @@ class _ProductListState extends State<ProductList> {
                         width: double.infinity,
                         child: CupertinoTextField(
                           keyboardType: TextInputType.text,
-                          placeholder: "Search Category",
+                          placeholder: "Search Product",
                           onChanged: (val) {
                             if (val == "" || val == null) {
                               setState(() {
@@ -105,7 +107,7 @@ class _ProductListState extends State<ProductList> {
               actions: <Widget>[
                 GestureDetector(
                   onTap: () {
-                   // Navigator.pushNamed(context, '/MyCart');
+                    // Navigator.pushNamed(context, '/MyCart');
                   },
                   child: Stack(
                     children: <Widget>[
@@ -192,20 +194,21 @@ class _ProductListState extends State<ProductList> {
                                 })
                     : NoDataComponent(),*/
 
-            child: GridView.builder(
-                //itemCount: searchMemberData.length,
-                itemCount: 10,
-                //shrinkWrap: true,
-                gridDelegate:
-                SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio:
-                  MediaQuery.of(context).size.width / (430),
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  //return ProductItemCard(searchMemberData[index]);
-                  return ProductItemCard();
-                }),
+            child: AnimationLimiter(
+                child: GridView.builder(
+                    //itemCount: searchMemberData.length,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: 50,
+                    //shrinkWrap: true,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio:
+                          MediaQuery.of(context).size.width / (430),
+                    ),
+                    itemBuilder: (BuildContext context, int index) {
+                      //return ProductItemCard(searchMemberData[index]);
+                      return ProductItemCard(index);
+                    })),
           ),
         ),
       ),

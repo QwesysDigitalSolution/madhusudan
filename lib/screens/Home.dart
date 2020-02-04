@@ -59,54 +59,64 @@ class _HomeState extends State<Home> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Container(
-                  //margin: EdgeInsets.symmetric(horizontal: 20,vertical: 5),
-                  width: widt * 0.44,
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(width: 0.5,color: Colors.grey),
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Image.asset(
-                        "images/box.png",
-                        height: 150,
-                      ),
-                      Text(
-                        "Box",
-                        style: TextStyle(
-                          fontSize: 30,
+                GestureDetector(
+                  onTap:(){
+                    Navigator.pushNamed(context, '/ProductList');
+                  },
+                  child: Container(
+                    //margin: EdgeInsets.symmetric(horizontal: 20,vertical: 5),
+                    width: widt * 0.44,
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(width: 0.5,color: Colors.grey),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Image.asset(
+                          "images/box.png",
+                          height: 150,
                         ),
-                      ),
-                    ],
+                        Text(
+                          "Box",
+                          style: TextStyle(
+                            fontSize: 30,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                Container(
-                  //margin: EdgeInsets.symmetric(horizontal: 20,vertical: 5),
-                  width: widt * 0.44,
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(width: 0.5,color: Colors.grey),
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Image.asset(
-                        "images/sareeicon.jpg",
-                        height: 150,
-                      ),
-                      Text(
-                        "Loose",
-                        style: TextStyle(
-                          fontSize: 30,
+                GestureDetector(
+                  onTap: (){
+                    Navigator.pushNamed(context, '/ProductList');
+                  },
+                  child: Container(
+                    //margin: EdgeInsets.symmetric(horizontal: 20,vertical: 5),
+                    width: widt * 0.44,
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(width: 0.5,color: Colors.grey),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Image.asset(
+                          "images/sareeicon.jpg",
+                          height: 150,
                         ),
-                      ),
-                    ],
+                        Text(
+                          "Loose",
+                          style: TextStyle(
+                            fontSize: 30,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
