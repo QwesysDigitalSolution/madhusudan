@@ -16,6 +16,8 @@ class _HomeState extends State<Home> {
           Padding(
             padding: EdgeInsets.only(
               bottom: widt * 0.05,
+              left: widt * 0.20,
+              right: widt * 0.20,
             ),
             child: Image.asset(
               "images/logo.png",
@@ -29,17 +31,6 @@ class _HomeState extends State<Home> {
               color: Colors.white,
               border: Border.all(width: 0.5,color: Colors.grey),
               borderRadius: BorderRadius.all(Radius.circular(10)),
-              /*boxShadow: [
-                BoxShadow(
-                  color: Colors.grey,
-                  blurRadius: 20.0, // soften the shadow
-                  //spreadRadius: 1.0, //extend the shadow
-                  offset: Offset(
-                    10.0, // Move to right 10  horizontally
-                    10.0, // Move to bottom 10 Vertically
-                  ),
-                ),
-              ],*/
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
