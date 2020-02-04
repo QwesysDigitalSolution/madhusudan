@@ -61,7 +61,7 @@ class _ProductListState extends State<ProductList> {
               flexibleSpace: new FlexibleSpaceBar(
                 background: Column(
                   children: <Widget>[
-                    SizedBox(height: 75),
+                    SizedBox(height: widthScreen*0.18),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
                       child: Container(
