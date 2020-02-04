@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:madhusudan/common/Constants.dart' as cnst;
+import 'package:madhusudan/screens/Login.dart';
 import 'package:madhusudan/screens/ProductList.dart';
-import 'package:madhusudan/screens/login.dart';
+import 'package:madhusudan/screens/Login.dart';
 
 //screen list
-import 'screens/splash.dart';
+import 'screens/Splash.dart';
+import 'screens/Dashboard.dart';
 
 void main() => runApp(MyApp());
 
@@ -23,13 +26,16 @@ class _MyAppState extends State<MyApp> {
       initialRoute: '/',
       routes: {
         '/': (context) => splash(),
-        '/login': (context) => login(),
+        '/login': (context) => Login(),
         '/ProductList': (context) => ProductList(),
+        '/Dashboard': (context) => Dashboard(),
       },
       theme: ThemeData(
         textTheme: GoogleFonts.latoTextTheme(textTheme).copyWith(
           body1: GoogleFonts.oswald(textStyle: textTheme.body1),
         ),
+        primaryColor: cnst.app_primary_material_color,
+        primarySwatch: cnst.app_primary_material_color,
       ),
     );
   }
