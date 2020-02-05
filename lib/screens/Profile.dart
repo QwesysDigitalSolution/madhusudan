@@ -63,7 +63,7 @@ class _ProfileState extends State<Profile> {
                       Padding(
                         padding: const EdgeInsets.only(top: 10),
                         child: Text(
-                          "${Mobile}",
+                          "Mobile",
                           style: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.w600),
                         ),
