@@ -336,7 +336,7 @@ class _MyCartState extends State<MyCart> {
           ),
           Container(
             height: 70,
-            padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
+            padding: EdgeInsets.only(left: 15, right: 15, bottom: 5),
             width: MediaQuery.of(context).size.width,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -346,11 +346,7 @@ class _MyCartState extends State<MyCart> {
                     var calculation = {
                       "subTotal": subTotal,
                       "discount": discount,
-                      "shippingCharges": shippingCharges,
-                      "giftCharges": giftCharges,
-                      "youSave": youSave,
-                      "totalAmt": totalAmt,
-                      "walletAmountUsed":walletAmountUsed
+                      "totalAmt": totalAmt
                     };
                     _settingModalBottomSheet(context, calculation);
                   },
@@ -482,7 +478,7 @@ void _settingModalBottomSheet(context, var calculation) {
                   ],
                 ),
               ),
-              Padding(
+              /*Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -541,8 +537,8 @@ void _settingModalBottomSheet(context, var calculation) {
                     )
                   ],
                 ),
-              ),
-              Padding(
+              ),*/
+              /*Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -561,7 +557,7 @@ void _settingModalBottomSheet(context, var calculation) {
                     )
                   ],
                 ),
-              ),
+              ),*/
               Divider(
                 color: Colors.grey,
               ),
