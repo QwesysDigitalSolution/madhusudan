@@ -4,7 +4,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:madhusudan/animation/FadeAnimation.dart';
 import 'package:madhusudan/component/LoadingComponent.dart';
 import 'package:madhusudan/component/NoDataComponent.dart';
-import 'package:madhusudan/Common/Constants.dart' as cnst;
+import 'package:madhusudan/common/Constants.dart' as cnst;
 import 'package:madhusudan/component/ProductItemCard.dart';
 
 class ProductList extends StatefulWidget {

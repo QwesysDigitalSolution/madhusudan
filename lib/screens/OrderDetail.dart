@@ -2,12 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:madhusudan/Common/Constants.dart' as cnst;
-import 'package:madhusudan/Common/Constants.dart';
-import 'package:madhusudan/Common/Services.dart';
-import 'package:madhusudan/Component/LoadingComponent.dart';
+import 'package:madhusudan/common/Constants.dart' as cnst;
+import 'package:madhusudan/component/LoadingComponent.dart';
 import 'package:madhusudan/common/Services.dart';
 import 'package:madhusudan/component/MyOrderItem.dart';
+import 'package:madhusudan/component/OrderedItem.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timeline_list/timeline.dart';
@@ -15,8 +14,9 @@ import 'package:timeline_list/timeline_model.dart';
 
 class OrderDetail extends StatefulWidget {
   String orderId;
+  String status;
 
-  OrderDetail(this.orderId);
+  OrderDetail(this.orderId,this.status);
 
   @override
   _OrderDetailState createState() => _OrderDetailState();
@@ -164,9 +164,7 @@ class _OrderDetailState extends State<OrderDetail> {
                       physics: NeverScrollableScrollPhysics(),
                       itemCount: OrderItems.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return MyOrderItem(OrderItems[index],(var data){
-
-                        });
+                        return OrderedItem(OrderItems[index],widget.status);
                       },
                     ),
                   ),

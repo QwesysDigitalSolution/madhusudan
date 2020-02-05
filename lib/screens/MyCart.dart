@@ -3,12 +3,11 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:madhusudan/Common/Constants.dart' as cnst;
-import 'package:madhusudan/Common/Constants.dart';
-import 'package:madhusudan/Common/Services.dart';
-import 'package:madhusudan/Component/MyCartItem.dart';
-import 'package:madhusudan/Screens/CheckOut.dart';
-/*import 'package:madhusudan/Screens/StateContainer.dart';*/
+import 'package:madhusudan/common/Constants.dart' as cnst;
+import 'package:madhusudan/common/Services.dart';
+import 'package:madhusudan/component/MyCartItem.dart';
+import 'package:madhusudan/screens/CheckOut.dart';
+/*import 'package:madhusudan/screens/StateContainer.dart';*/
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyCart extends StatefulWidget {
