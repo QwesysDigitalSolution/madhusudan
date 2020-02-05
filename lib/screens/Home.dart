@@ -92,25 +92,30 @@ class _HomeState extends State<Home> {
               ],
             ),
           ),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            padding: EdgeInsets.symmetric(vertical: 10),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(width: 0.5, color: Colors.grey),
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Text(
-                  "Upload Order Photo",
-                  style: TextStyle(
-                    fontSize: 25,
+          GestureDetector(
+            onTap: (){
+              Navigator.pushNamed(context, '/UploadPhotoOrder');
+            },
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              padding: EdgeInsets.symmetric(vertical: 10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(width: 0.5, color: Colors.grey),
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Text(
+                    "Upload Order Photo",
+                    style: TextStyle(
+                      fontSize: 25,
+                    ),
                   ),
-                ),
-                Image.asset("images/camera.png"),
-              ],
+                  Image.asset("images/camera.png"),
+                ],
+              ),
             ),
           ),
         ],

@@ -38,11 +38,9 @@ class _LoginState extends State<Login> {
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-    double widt=MediaQuery.of(context).size.width;
+    double widt = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -51,8 +49,10 @@ class _LoginState extends State<Login> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             FadeAnimation(
-              1, Padding(
-                padding: EdgeInsets.only(bottom: widt*0.20,left: widt*0.10,right: widt*0.10),
+              1,
+              Padding(
+                padding: EdgeInsets.only(
+                    bottom: widt * 0.20, left: widt * 0.10, right: widt * 0.10),
                 child: Image.asset(
                   "images/logo.png",
                   fit: BoxFit.fill,
@@ -67,7 +67,8 @@ class _LoginState extends State<Login> {
                   child: Column(
                     children: <Widget>[
                       FadeAnimation(
-                        2, TextFormField(
+                        2,
+                        TextFormField(
                           controller: edtMobile,
                           cursorColor: Theme.of(context).cursorColor,
                           decoration: InputDecoration(
@@ -89,13 +90,14 @@ class _LoginState extends State<Login> {
                       ),
                       Padding(padding: EdgeInsets.only(top: 5)),
                       FadeAnimation(
-                        2.5, Container(
+                        2.5,
+                        Container(
                           width: MediaQuery.of(context).size.width,
                           margin: EdgeInsets.only(top: 20),
                           height: 50,
                           decoration: BoxDecoration(
-
-                              borderRadius: BorderRadius.all(Radius.circular(8))),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8))),
                           child: MaterialButton(
                             shape: RoundedRectangleBorder(
                                 borderRadius: new BorderRadius.circular(8.0)),
@@ -104,7 +106,8 @@ class _LoginState extends State<Login> {
                             onPressed: () {
                               //_checkLogin();
                               //Navigator.pushReplacementNamed(context, '/Dashboard');
-                              Navigator.pushReplacementNamed(context, '/Dashboard');
+                              Navigator.pushReplacementNamed(
+                                  context, '/Dashboard');
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -113,7 +116,7 @@ class _LoginState extends State<Login> {
                                   decoration: BoxDecoration(
                                     //shape: BoxShape.circle,
                                     borderRadius:
-                                    BorderRadius.all(Radius.circular(15)),
+                                        BorderRadius.all(Radius.circular(15)),
                                     color: Colors.transparent,
                                   ),
                                   child: Padding(
@@ -137,7 +140,7 @@ class _LoginState extends State<Login> {
                                   decoration: BoxDecoration(
                                     //shape: BoxShape.circle,
                                     borderRadius:
-                                    BorderRadius.all(Radius.circular(15)),
+                                        BorderRadius.all(Radius.circular(15)),
                                     color: Colors.white,
                                   ),
                                   child: Padding(

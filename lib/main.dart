@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
 import 'package:madhusudan/screens/Login.dart';
 import 'package:madhusudan/screens/ProductList.dart';
 import 'package:madhusudan/screens/Login.dart';
+import 'package:madhusudan/screens/UploadPhotoOrder.dart';
 
 //screen list
 import 'screens/Splash.dart';
@@ -19,6 +21,10 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
+    /*SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: cnst.app_primary_material_color[900]
+    ));*/
+
     final textTheme = Theme.of(context).textTheme;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -29,6 +35,7 @@ class _MyAppState extends State<MyApp> {
         '/login': (context) => Login(),
         '/ProductList': (context) => ProductList(),
         '/Dashboard': (context) => Dashboard(),
+        '/UploadPhotoOrder': (context) => UploadPhotoOrder(),
       },
       theme: ThemeData(
         textTheme: GoogleFonts.latoTextTheme(textTheme).copyWith(
