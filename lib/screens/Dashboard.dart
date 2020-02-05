@@ -12,6 +12,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  List<String> menu_list = ["Dashboard", "Notification", "Profile"];
   final List<Widget> _children = [
     Home(),
     NotificationScrren(),
@@ -98,7 +99,7 @@ class _DashboardState extends State<Dashboard> {
           ),
         ],
       ),
-      appBar: AppBar(title: Text("Madhusudan")),
+      appBar: AppBar(title: Text("${menu_list[_currentIndex]}")),
       body: _children[_currentIndex],
     );
   }

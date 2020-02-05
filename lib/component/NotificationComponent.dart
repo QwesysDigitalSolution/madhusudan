@@ -4,7 +4,9 @@ import 'package:madhusudan/Common/Constants.dart' as cnst;
 
 class NotificationComponent extends StatefulWidget {
   var notification;
+
   NotificationComponent(this.notification);
+
   @override
   _NotificationComponentState createState() => _NotificationComponentState();
 }
@@ -21,7 +23,10 @@ class _NotificationComponentState extends State<NotificationComponent> {
         child: Card(
           shape: RoundedRectangleBorder(
             //side: BorderSide(color: cnst.appcolor)),
-            side: BorderSide(width: 0.50, color: cnst.app_primary_material_color),
+            side: BorderSide(
+              width: 0.50,
+              color: Colors.grey,
+            ),
             borderRadius: BorderRadius.circular(
               10.0,
             ),
@@ -45,10 +50,11 @@ class _NotificationComponentState extends State<NotificationComponent> {
                             padding: EdgeInsets.all(5),
                             //color: Colors.blue,
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(7),
-                                    topLeft: Radius.circular(7)),
-                                color: cnst.app_primary_material_color),
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(7),
+                                  topLeft: Radius.circular(7)),
+                              color: cnst.app_primary_material_color,
+                            ),
                             //height: 40,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -59,7 +65,7 @@ class _NotificationComponentState extends State<NotificationComponent> {
                                       color: Colors.white,
                                       fontSize: 15,
                                       fontWeight: FontWeight.w600),
-                                )
+                                ),
                               ],
                             ),
                           ),
@@ -68,7 +74,7 @@ class _NotificationComponentState extends State<NotificationComponent> {
                                 top: 7, bottom: 7, left: 5, right: 5),
                             decoration: BoxDecoration(
                                 border:
-                                Border.all(color: Colors.black, width: 0.5),
+                                    Border.all(color: Colors.black, width: 0.5),
                                 borderRadius: BorderRadius.only(
                                     bottomLeft: Radius.circular(6),
                                     bottomRight: Radius.circular(6)),
@@ -79,10 +85,10 @@ class _NotificationComponentState extends State<NotificationComponent> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Text(
-                                  '${new DateFormat.MMM().format(DateTime.parse(DateFormat("yyyy-MM-dd").parse(widget.notification["Date"].toString().substring(0,10)).toString()))},${widget.notification["Date"].substring(0, 4)}',
+                                  '${new DateFormat.MMM().format(DateTime.parse(DateFormat("yyyy-MM-dd").parse(widget.notification["Date"].toString().substring(0, 10)).toString()))},${widget.notification["Date"].substring(0, 4)}',
                                   style: TextStyle(
                                       fontSize: 11,
-                                      color: cnst.app_primary_material_color,
+                                      //color: cnst.app_primary_material_color,
                                       fontWeight: FontWeight.w600),
                                 )
                               ],
@@ -93,27 +99,27 @@ class _NotificationComponentState extends State<NotificationComponent> {
                     ),
                     Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                '${widget.notification["Title"]}',
-                                style: TextStyle(
-                                    color: cnst.app_primary_material_color,
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                              Text(
-                                '${widget.notification["Description"]}',
-                                style: TextStyle(
-                                    color: cnst.app_primary_material_color,
-                                    fontSize: 14),
-                              ),
-                            ],
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            '${widget.notification["Title"]}',
+                            style: TextStyle(
+                                //color: cnst.app_primary_material_color,
+                                fontSize: 17,
+                                fontWeight: FontWeight.w600,),
                           ),
-                        ))
+                          Text(
+                            '${widget.notification["Description"]}',
+                            style: TextStyle(
+                                //color: cnst.app_primary_material_color,
+                                fontSize: 14,),
+                          ),
+                        ],
+                      ),
+                    ))
                   ],
                 )
               ],
