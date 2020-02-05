@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:madhusudan/common/Constants.dart' as cnst;
 
 class Profile extends StatefulWidget {
   @override
@@ -6,113 +7,405 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  String Name = "", Mobile = "", MemberId = "", MemberImage = "";
+
+  /*String getName() {
+    getLocalData();
+    return Name;
+  }*/
+
+
   @override
   Widget build(BuildContext context) {
     double widt = MediaQuery.of(context).size.width;
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(
-              bottom: widt * 0.05,
-              left: widt * 0.20,
-              right: widt * 0.20,
-            ),
-            child: Image.asset(
-              "images/logo.png",
-              fit: BoxFit.fill,
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            padding: EdgeInsets.symmetric(vertical: 10),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(width: 0.5, color: Colors.grey),
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Text(
-                  "Upload Order Photo",
-                  style: TextStyle(
-                    fontSize: 25,
-                  ),
-                ),
-                Image.asset("images/camera.png"),
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 20,vertical: 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                GestureDetector(
-                  onTap:(){
-                    Navigator.pushNamed(context, '/ProductList');
-                  },
-                  child: Container(
-                    //margin: EdgeInsets.symmetric(horizontal: 20,vertical: 5),
-                    width: widt * 0.44,
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(width: 0.5,color: Colors.grey),
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+    return SingleChildScrollView(
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        //height: MediaQuery.of(context).size.height,
+        color: Colors.grey[100],
+        child: Column(
+          children: <Widget>[
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: 130,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(left: 15, right: 15),
+                    width: 80,
+                    height: 80,
+                    child: MemberImage != "" && MemberImage != null
+                        ? ClipOval(
+                      child: FadeInImage.assetNetwork(
+                        placeholder: "assets/loading.gif",
+                        image: "${cnst.img_url}${MemberImage}",
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                        : ClipOval(
+                      child: Image.asset(
+                        'images/icon_user.png',
+                        fit: BoxFit.fill,
+                      ),
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Image.asset(
-                          "images/box.png",
-                          height: 150,
-                        ),
-                        Text(
-                          "Box",
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "Name",
+                        //"${getName()}",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w600),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Text(
+                          "${Mobile}",
                           style: TextStyle(
-                            fontSize: 30,
+                              fontSize: 15, fontWeight: FontWeight.w600),
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
+            Container(
+              //color: Colors.white,
+              padding: EdgeInsets.all(5),
+              width: MediaQuery.of(context).size.width,
+              child: Card(
+                child: Column(
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/EditProfile');
+                      },
+                      child: Container(
+                        color: Colors.white,
+                        padding: EdgeInsets.only(top: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Icon(
+                                    Icons.edit,
+                                    size: 22,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Text("Edit Profile",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      )),
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: Container(
+                                //width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.grey[300]),
+                                child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 12,
+                                    )),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      color: Colors.grey[300],
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/MyOrders');
+                      },
+                      child: Container(
+                        color: Colors.white,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Image.asset(
+                                    "images/myorder.png",
+                                    height: 22,
+                                    width: 22,
+                                    fit: BoxFit.fill,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Text("My Orders",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      )),
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: Container(
+                                //width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.grey[300]),
+                                child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 12,
+                                    )),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      color: Colors.grey[300],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              //color: Colors.white,
+              padding: EdgeInsets.all(5),
+              width: MediaQuery.of(context).size.width,
+              child: Card(
+                child: Column(
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.pushNamed(context, '/AboutUs');
+                      },
+                      child: Container(
+                        color: Colors.white,
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Image.asset(
+                                    "images/info.png",
+                                    height: 22,
+                                    width: 22,
+                                    fit: BoxFit.fill,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Text("About Us",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      )),
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: Container(
+                                //width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.grey[300]),
+                                child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 12,
+                                    )),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      color: Colors.grey[300],
+                    ),
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.pushNamed(context, '/ContactUs');
+                      },
+                      child: Container(
+                        color: Colors.white,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Icon(
+                                    Icons.phone,
+                                    size: 22,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Text("Contact Us",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      )),
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: Container(
+                                //width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.grey[300]),
+                                child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 12,
+                                    )),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      color: Colors.grey[300],
+                    ),
+                    GestureDetector(
+                      onTap: (){
+                        //rateApp();
+                      },
+                      child: Container(
+                        color: Colors.white,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Icon(
+                                    Icons.star_border,
+                                    size: 22,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Text("Rate App",
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                      )),
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: Container(
+                                //width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.grey[300]),
+                                child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 12,
+                                    )),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushReplacementNamed(context, '/Login');
+              },
+              child: Container(
+                //color: Colors.white,
+                padding: EdgeInsets.all(5),
+                margin: EdgeInsets.only(bottom: 10),
+                width: MediaQuery.of(context).size.width,
+                child: Card(
+                  child: Container(
+                    color: Colors.white,
+                    padding: const EdgeInsets.only(top: 5, bottom: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Icon(
+                                Icons.exit_to_app,
+                                size: 22,
+                                color: Colors.black54,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Text("Log Out",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  )),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Container(
+                            //width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.grey[300]),
+                            child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 12,
+                                )),
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-                GestureDetector(
-                  onTap: (){
-                    Navigator.pushNamed(context, '/ProductList');
-                  },
-                  child: Container(
-                    //margin: EdgeInsets.symmetric(horizontal: 20,vertical: 5),
-                    width: widt * 0.44,
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(width: 0.5,color: Colors.grey),
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Image.asset(
-                          "images/sareeicon.jpg",
-                          height: 150,
-                        ),
-                        Text(
-                          "Loose",
-                          style: TextStyle(
-                            fontSize: 30,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

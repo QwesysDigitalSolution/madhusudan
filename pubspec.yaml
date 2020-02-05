@@ -59,6 +59,9 @@ flutter:
     - images/sareeicon.jpg
     - images/camera.png
     - images/shoppingcart.png
+    - images/myorder.png
+    - images/info.png
+    - images/icon_user.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
