@@ -120,34 +120,49 @@ class _MyOrderState extends State<MyOrder> {
             tabs: [
               Padding(
                 padding: const EdgeInsets.all(12),
-                child: Text("Current Order",
+                child: Text("Pending Order",
                     style: TextStyle(fontSize: 17, color: Colors.black)),
               ),
-              Text("Order History",
+              Text("Delivered Order",
                   style: TextStyle(fontSize: 17, color: Colors.black)),
             ],
           ),
         ),
         body: TabBarView(children: [
-          isLoading == false
-              ? CurrentOrderList != null && CurrentOrderList.length > 0
-                  ? ListView.builder(
-                      itemCount: CurrentOrderList.length,
-                      //shrinkWrap: true,
-                      itemBuilder: (BuildContext context, int index) {
-                        return MyOrderItem(
-                          CurrentOrderList[index],
-                          ((String action) {
-                            if (action == "OrderCancel") {
-                              setState(() {
-                                CurrentOrderList.removeAt(index);
-                              });
-                            }
-                          }),
-                        );
-                      })
-                  : NoDataComponent()
-              : LoadingComponent(),
+          CurrentOrderList != null && CurrentOrderList.length > 0
+              ? ListView.builder(
+                  itemCount: CurrentOrderList.length,
+                  //shrinkWrap: true,
+                  itemBuilder: (BuildContext context, int index) {
+                    return MyOrderItem(
+                      CurrentOrderList[index],
+                      ((String action) {
+                        if (action == "OrderCancel") {
+                          setState(() {
+                            CurrentOrderList.removeAt(index);
+                          });
+                        }
+                      }),
+                    );
+                  })
+              : NoDataComponent(),
+          CurrentOrderList != null && CurrentOrderList.length > 0
+              ? ListView.builder(
+              itemCount: CurrentOrderList.length,
+              //shrinkWrap: true,
+              itemBuilder: (BuildContext context, int index) {
+                return MyOrderItem(
+                  CurrentOrderList[index],
+                  ((String action) {
+                    if (action == "OrderCancel") {
+                      setState(() {
+                        CurrentOrderList.removeAt(index);
+                      });
+                    }
+                  }),
+                );
+              })
+              : NoDataComponent(),
         ]),
       ),
     );

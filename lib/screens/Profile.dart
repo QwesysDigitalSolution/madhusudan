@@ -133,7 +133,7 @@ class _ProfileState extends State<Profile> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, '/MyOrders');
+                        Navigator.pushNamed(context, '/MyOrder');
                       },
                       child: Container(
                         color: Colors.white,

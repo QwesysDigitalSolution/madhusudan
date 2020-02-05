@@ -12,6 +12,7 @@ import 'package:madhusudan/screens/Login.dart';
 import 'package:madhusudan/screens/ProductList.dart';
 import 'package:madhusudan/screens/MyCart.dart';
 import 'package:madhusudan/screens/OrderSuccess.dart';
+import 'package:madhusudan/screens/MyOrder.dart';
 
 void main() => runApp(MyApp());
 
@@ -41,6 +42,7 @@ class _MyAppState extends State<MyApp> {
         '/EditProfile': (context) => EditProfile(),
         '/MyCart': (context) => MyCart(),
         '/OrderSuccess' : (context) => OrderSuccess(),
+        '/MyOrder' : (context) => MyOrder(),
       },
       theme: ThemeData(
         textTheme: GoogleFonts.latoTextTheme(textTheme).copyWith(
