@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:madhusudan/common/ClassList.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
 
 //Screens List
@@ -12,6 +14,8 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  CartData cartData = new CartData(CartCount: 1);
+
   List<String> menu_list = ["Dashboard", "Notification", "Profile"];
   final List<Widget> _children = [
     Home(),
@@ -58,6 +62,9 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: cnst.app_primary_material_color[900],
+    ));
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -99,7 +106,53 @@ class _DashboardState extends State<Dashboard> {
           ),
         ],
       ),
-      appBar: AppBar(title: Text("${menu_list[_currentIndex]}")),
+      appBar: AppBar(
+        title: Text(
+          "${menu_list[_currentIndex]}",
+          style: TextStyle(
+            color: cnst.app_primary_material_color,
+          ),
+        ),
+        backgroundColor: Colors.white,
+        actions: <Widget>[
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, '/MyCart');
+            },
+            child: Stack(
+              children: <Widget>[
+                Padding(
+                  padding:
+                      const EdgeInsets.only(top: 10, right: 15, bottom: 10),
+                  child: Center(
+                      child: Icon(
+                    Icons.shopping_cart,
+                    size: 30,
+                    color: cnst.app_primary_material_color,
+                  )),
+                ),
+                Container(
+                  //width: MediaQuery.of(context).size.width,
+                  margin: EdgeInsets.only(top: 4, left: 15),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Color.fromRGBO(0, 0, 0, 0.7),
+                  ),
+                  child: Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: Text(
+                        "${cartData != null ? cartData.CartCount : 0}",
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      )),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
       body: _children[_currentIndex],
     );
   }

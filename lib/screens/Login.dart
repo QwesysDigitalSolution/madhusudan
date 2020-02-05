@@ -40,6 +40,9 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: cnst.app_primary_material_color[900],
+    ));
     double widt = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(
