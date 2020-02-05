@@ -239,6 +239,7 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                     if (_orderPhoto != null) {
                       if (edtDescription.text != "") {
                         //_addPhotoOrder();
+                        print("${edtDescription.text}");
                       } else {
                         Fluttertoast.showToast(
                             msg: "Enter Description.",

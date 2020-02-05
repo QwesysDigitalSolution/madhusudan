@@ -8,6 +8,7 @@ import 'package:madhusudan/screens/Login.dart';
 import 'package:madhusudan/screens/UploadPhotoOrder.dart';
 
 //screen list
+import 'screens/EditProfile.dart';
 import 'screens/Splash.dart';
 import 'screens/Dashboard.dart';
 
@@ -36,6 +37,7 @@ class _MyAppState extends State<MyApp> {
         '/ProductList': (context) => ProductList(),
         '/Dashboard': (context) => Dashboard(),
         '/UploadPhotoOrder': (context) => UploadPhotoOrder(),
+        '/EditProfile': (context) => EditProfile(),
       },
       theme: ThemeData(
         textTheme: GoogleFonts.latoTextTheme(textTheme).copyWith(

@@ -14,7 +14,6 @@ class _ProfileState extends State<Profile> {
     return Name;
   }*/
 
-
   @override
   Widget build(BuildContext context) {
     double widt = MediaQuery.of(context).size.width;
@@ -37,18 +36,19 @@ class _ProfileState extends State<Profile> {
                     height: 80,
                     child: MemberImage != "" && MemberImage != null
                         ? ClipOval(
-                      child: FadeInImage.assetNetwork(
-                        placeholder: "assets/loading.gif",
-                        image: "${cnst.img_url}${MemberImage}",
-                        fit: BoxFit.cover,
-                      ),
-                    )
+                            child: FadeInImage.assetNetwork(
+                              placeholder: "assets/loading.gif",
+                              //image: "${cnst.img_url}${MemberImage}",
+                              image: "${MemberImage}",
+                              fit: BoxFit.cover,
+                            ),
+                          )
                         : ClipOval(
-                      child: Image.asset(
-                        'images/icon_user.png',
-                        fit: BoxFit.fill,
-                      ),
-                    ),
+                            child: Image.asset(
+                              'images/icon_user.png',
+                              fit: BoxFit.fill,
+                            ),
+                          ),
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -97,7 +97,7 @@ class _ProfileState extends State<Profile> {
                                   child: Icon(
                                     Icons.edit,
                                     size: 22,
-                                    color: Colors.black54,
+                                    color: cnst.app_primary_material_color[600],
                                   ),
                                 ),
                                 Padding(
@@ -149,7 +149,7 @@ class _ProfileState extends State<Profile> {
                                     height: 22,
                                     width: 22,
                                     fit: BoxFit.fill,
-                                    color: Colors.black54,
+                                    color: cnst.app_primary_material_color[600],
                                   ),
                                 ),
                                 Padding(
@@ -195,7 +195,7 @@ class _ProfileState extends State<Profile> {
                 child: Column(
                   children: <Widget>[
                     GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         Navigator.pushNamed(context, '/AboutUs');
                       },
                       child: Container(
@@ -213,7 +213,7 @@ class _ProfileState extends State<Profile> {
                                     height: 22,
                                     width: 22,
                                     fit: BoxFit.fill,
-                                    color: Colors.black54,
+                                    color: cnst.app_primary_material_color[600],
                                   ),
                                 ),
                                 Padding(
@@ -248,7 +248,7 @@ class _ProfileState extends State<Profile> {
                       color: Colors.grey[300],
                     ),
                     GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         Navigator.pushNamed(context, '/ContactUs');
                       },
                       child: Container(
@@ -263,7 +263,7 @@ class _ProfileState extends State<Profile> {
                                   child: Icon(
                                     Icons.phone,
                                     size: 22,
-                                    color: Colors.black54,
+                                    color: cnst.app_primary_material_color[600],
                                   ),
                                 ),
                                 Padding(
@@ -298,7 +298,7 @@ class _ProfileState extends State<Profile> {
                       color: Colors.grey[300],
                     ),
                     GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         //rateApp();
                       },
                       child: Container(
@@ -313,7 +313,7 @@ class _ProfileState extends State<Profile> {
                                   child: Icon(
                                     Icons.star_border,
                                     size: 22,
-                                    color: Colors.black54,
+                                    color: cnst.app_primary_material_color[600],
                                   ),
                                 ),
                                 Padding(
@@ -371,7 +371,7 @@ class _ProfileState extends State<Profile> {
                               child: Icon(
                                 Icons.exit_to_app,
                                 size: 22,
-                                color: Colors.black54,
+                                color: cnst.app_primary_material_color[600],
                               ),
                             ),
                             Padding(
