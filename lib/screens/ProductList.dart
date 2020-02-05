@@ -61,7 +61,7 @@ class _ProductListState extends State<ProductList> {
               flexibleSpace: new FlexibleSpaceBar(
                 background: Column(
                   children: <Widget>[
-                    SizedBox(height: widthScreen*0.20),
+                    SizedBox(height: widthScreen * 0.20),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
                       child: Container(
@@ -192,12 +192,11 @@ class _ProductListState extends State<ProductList> {
                                   return ProductItemCard(catData[index]);
                                 })
                     : NoDataComponent(),*/
-
             child: AnimationLimiter(
                 child: GridView.builder(
                     //itemCount: searchMemberData.length,
-                   // physics: NeverScrollableScrollPhysics(),
-                    itemCount: 10,
+                    // physics: NeverScrollableScrollPhysics(),
+                    itemCount: 50,
                     //shrinkWrap: true,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,

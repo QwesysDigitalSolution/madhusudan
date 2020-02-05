@@ -35,6 +35,7 @@ dependencies:
   firebase_messaging: ^6.0.9
   flutter_local_notifications: ^0.9.1+1
   timeline_list: ^0.0.5
+  flutter_windowmanager: ^0.0.1+1
 
 dev_dependencies:
   flutter_test:
