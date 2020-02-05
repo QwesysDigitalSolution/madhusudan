@@ -71,7 +71,6 @@ class _LoginState extends State<Login> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: cnst.app_primary_material_color[900],
     ));
-
     double widt = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(
@@ -198,6 +197,5 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
-
   }
 }

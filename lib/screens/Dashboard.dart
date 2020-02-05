@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:madhusudan/common/ClassList.dart';
@@ -16,6 +20,11 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   CartData cartData = new CartData(CartCount: 1);
 
+  FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
+  StreamSubscription iosSubscription;
+  String fcmToken = "";
+
+
   List<String> menu_list = ["Dashboard", "Notification", "Profile"];
   final List<Widget> _children = [
     Home(),
@@ -31,6 +40,27 @@ class _DashboardState extends State<Dashboard> {
     // TODO: implement initState
     controller = new PageController();
     super.initState();
+    if (Platform.isIOS) {
+      iosSubscription =
+          _firebaseMessaging.onIosSettingsRegistered.listen((data) {
+            print("FFFFFFFF" + data.toString());
+            saveDeviceToken();
+          });
+      _firebaseMessaging
+          .requestNotificationPermissions(IosNotificationSettings());
+    } else {
+      saveDeviceToken();
+    }
+  }
+  saveDeviceToken() async {
+    _firebaseMessaging.getToken().then((String token) {
+      print("Original Token:$token");
+      setState(() {
+        fcmToken = token;
+        //sendFCMTokan(token);
+      });
+      print("FCM Token : $fcmToken");
+    });
   }
 
   @override
