@@ -173,6 +173,7 @@ class _CheckOutState extends State<CheckOut> {
   }
 
   CheckOut() async {
+    Navigator.pushReplacementNamed(context, '/OrderSuccess');
     /*try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String MemberId = prefs.getString(Session.MemberId);
