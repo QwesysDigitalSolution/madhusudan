@@ -16,7 +16,7 @@ class OrderDetail extends StatefulWidget {
   String orderId;
   String status;
 
-  OrderDetail(this.orderId,this.status);
+  OrderDetail(this.orderId, this.status);
 
   @override
   _OrderDetailState createState() => _OrderDetailState();
@@ -26,9 +26,42 @@ class _OrderDetailState extends State<OrderDetail> {
   ProgressDialog pr;
   bool isLoading = false;
 
-  var Order = {};
-  List OrderItems = [];
-  List OrderStatus = [];
+  var Order = {
+    "OrderId": 1,
+    "Date": "2/1/2020 12:00:00 AM",
+    "DeliveryDate": "2/6/2020 12:00:00 AM",
+    "DueDate": "",
+    "DeliveryCharge": 0.00,
+    "GiftCharge": 0.00,
+    "Discount": 42.00,
+    "DiscountPer": 0.00,
+    "SubTotal": 849.0,
+    "Total": 807.00,
+    "IsGiftWrap": false,
+  };
+  List OrderItems = [
+    {
+      "OrderItemId": 1,
+      "OrderId": 1,
+      "ItemId": 1,
+      "ItemName": "Olay Total Effects 7 In One Touch Of Foundation",
+      "Qty": 1,
+      "Rate": 807.0,
+      "Amount": 807.00,
+      "Discount": 0.00,
+      "DiscountPer": 0.00,
+      "NetAmount": 807.00,
+      "Image":
+          "https://5.imimg.com/data5/XS/GB/MY-22453630/self-design-pure-silk-pink-saree-500x500.jpg"
+    }
+  ];
+  List OrderStatus = [
+    {
+      "Date": "2/1/2020 3:41:19 PM",
+      "Status": "Order Placed",
+      "Notes": "Order Placed Successfully"
+    }
+  ];
   var OrderShippingAddress = {};
 
   @override
@@ -43,8 +76,8 @@ class _OrderDetailState extends State<OrderDetail> {
         progressWidget: Container(
           padding: EdgeInsets.all(15),
           child: CircularProgressIndicator(
-            valueColor:
-            new AlwaysStoppedAnimation<Color>(cnst.app_primary_material_color),
+            valueColor: new AlwaysStoppedAnimation<Color>(
+                cnst.app_primary_material_color),
           ),
         ),
         elevation: 10.0,
@@ -141,107 +174,108 @@ class _OrderDetailState extends State<OrderDetail> {
         body: Container(
           child: isLoading == false
               ? SingleChildScrollView(
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.only(left: 15, right: 15),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Text(
-                      'ITEMS',
-                      style: TextStyle(
-                          color: Colors.black54,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600),
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                  Container(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: OrderItems.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return OrderedItem(OrderItems[index],widget.status);
-                      },
-                    ),
-                  ),
-                  Divider(
-                    color: Colors.grey,
-                  ),
-                  Text(
-                    'ORDER STATUS',
-                    style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600),
-                    textAlign: TextAlign.left,
-                  ),
-                  (OrderStatus != null && OrderStatus.length > 0)
-                      ? Container(
-                    height: double.parse(
-                        (90 * OrderStatus.length).toString()),
-                    child: Timeline(
-                        children: OrderStatus.map((var data) {
-                          return TimelineModel(
-                            Card(
-                              child: Container(
-                                padding: EdgeInsets.all(10),
-                                child: Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      "${data["Status"]}",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    Divider(
-                                      color: Colors.grey,
-                                    ),
-                                    Text(
-                                      "${data["Date"].toString().substring(0, 10)}",
-                                    ),
-                                    Text(
-                                      "${data["Notes"]}",
-                                      style: TextStyle(
-                                          fontWeight:
-                                          FontWeight.w600,
-                                          fontSize: 12,
-                                          color: Colors.grey),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            position: TimelineItemPosition.random,
-                            iconBackground: Colors.white,
-                            icon: Icon(
-                              data["Status"].toString() ==
-                                  "Order Placed"
-                                  ? Icons.shopping_cart
-                                  : (data["Status"].toString() ==
-                                  "Order Process"
-                                  ? Icons.sync_problem
-                                  : (data["Status"]
-                                  .toString() ==
-                                  "Order Shipped"
-                                  ? Icons.local_shipping
-                                  : (data["Status"]
-                                  .toString() ==
-                                  "Order Cancelled"
-                                  ? Icons.cancel
-                                  : Icons.home))),
-                            ),
-                          );
-                        }).toList(),
-                        position: TimelinePosition.Left),
-                  )
-                      : Container(),
-                  /*Row(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: EdgeInsets.only(left: 15, right: 15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: Text(
+                            'ITEMS',
+                            style: TextStyle(
+                                color: Colors.black54,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600),
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
+                        Container(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: OrderItems.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return OrderedItem(
+                                  OrderItems[index], widget.status);
+                            },
+                          ),
+                        ),
+                        Divider(
+                          color: Colors.grey,
+                        ),
+                        Text(
+                          'ORDER STATUS',
+                          style: TextStyle(
+                              color: Colors.black54,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.left,
+                        ),
+                        (OrderStatus != null && OrderStatus.length > 0)
+                            ? Container(
+                                height: double.parse(
+                                    (90 * OrderStatus.length).toString()),
+                                child: Timeline(
+                                    children: OrderStatus.map((var data) {
+                                      return TimelineModel(
+                                        Card(
+                                          child: Container(
+                                            padding: EdgeInsets.all(10),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Text(
+                                                  "${data["Status"]}",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                Divider(
+                                                  color: Colors.grey,
+                                                ),
+                                                Text(
+                                                  "${data["Date"].toString().substring(0, 10)}",
+                                                ),
+                                                Text(
+                                                  "${data["Notes"]}",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 12,
+                                                      color: Colors.grey),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        position: TimelineItemPosition.random,
+                                        iconBackground: Colors.white,
+                                        icon: Icon(
+                                          data["Status"].toString() ==
+                                                  "Order Placed"
+                                              ? Icons.shopping_cart
+                                              : (data["Status"].toString() ==
+                                                      "Order Process"
+                                                  ? Icons.sync_problem
+                                                  : (data["Status"]
+                                                              .toString() ==
+                                                          "Order Shipped"
+                                                      ? Icons.local_shipping
+                                                      : (data["Status"]
+                                                                  .toString() ==
+                                                              "Order Cancelled"
+                                                          ? Icons.cancel
+                                                          : Icons.home))),
+                                        ),
+                                      );
+                                    }).toList(),
+                                    position: TimelinePosition.Left),
+                              )
+                            : Container(),
+                        /*Row(
                     children: <Widget>[
                       Container(
                         margin: EdgeInsets.only(left: 20),
@@ -363,220 +397,154 @@ class _OrderDetailState extends State<OrderDetail> {
                       ),
                     ],
                   ),*/
-                  Divider(
-                    color: Colors.grey,
-                  ),
-                  Text(
-                    'SHIPPING ADDRESS',
-                    style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600),
-                    textAlign: TextAlign.left,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
+                        Divider(
+                          color: Colors.grey,
+                        ),
                         Text(
-                          "${OrderShippingAddress["Name"]}",
+                          'SHIPPING ADDRESS',
                           style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
+                              color: Colors.black54,
+                              fontSize: 15,
                               fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.left,
                         ),
-                        Container(
-                          width: MediaQuery.of(context).size.width / 1.5,
-                          child: Text(
-                            "${OrderShippingAddress["Address"]}",
-                            style: TextStyle(
-                                fontSize: 14, color: Colors.black),
-                          ),
-                        ),
-                        Text(
-                          "${OrderShippingAddress["Pincode"]}",
-                          style: TextStyle(fontSize: 14),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Divider(
-                    color: Colors.grey,
-                  ),
-                  Text(
-                    'PAYMENT DETAIL',
-                    style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600),
-                    textAlign: TextAlign.left,
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: new Wrap(
-                      children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.only(
-                              left: 10, right: 10, bottom: 10),
-                          child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                'Sub Total',
+                                "${OrderShippingAddress["Name"]}",
                                 style: TextStyle(
-                                  fontSize: 16,
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              Container(
+                                width: MediaQuery.of(context).size.width / 1.5,
+                                child: Text(
+                                  "${OrderShippingAddress["Address"]}",
+                                  style: TextStyle(
+                                      fontSize: 14, color: Colors.black),
                                 ),
                               ),
                               Text(
-                                "${Order["SubTotal"]}",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 10, right: 10, bottom: 10),
-                          child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                'Discount',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
+                                "${OrderShippingAddress["Pincode"]}",
+                                style: TextStyle(fontSize: 14),
                               ),
-                              Text(
-                                "${Order["Discount"]}",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 10, right: 10, bottom: 10),
-                          child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                'Shipping Charges',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Text(
-                                "${Order["DeliveryCharge"]}",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 10, right: 10, bottom: 10),
-                          child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                'Gift Charges',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Text(
-                                "${Order["GiftCharge"]}",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 10, right: 10, bottom: 10),
-                          child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                'You Save',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Text(
-                                "${Order["Discount"]}",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                              )
                             ],
                           ),
                         ),
                         Divider(
                           color: Colors.grey,
                         ),
-                        Padding(
-                          padding:
-                          const EdgeInsets.only(left: 10, right: 10),
-                          child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
+                        Text(
+                          'PAYMENT DETAIL',
+                          style: TextStyle(
+                              color: Colors.black54,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.left,
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: new Wrap(
                             children: <Widget>[
-                              Text(
-                                'Net Paid',
-                                style: TextStyle(
-                                  fontSize: 16,
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 10, right: 10, bottom: 10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                      'Sub Total',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    Text(
+                                      "${Order["SubTotal"]}",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ),
-                              Text(
-                                "${Order["Total"]}",
-                                style: TextStyle(
-                                  fontSize: 16,
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 10, right: 10, bottom: 10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                      'Discount',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    Text(
+                                      "${Order["Discount"]}",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Divider(
+                                color: Colors.grey,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                      'Net Paid',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    Text(
+                                      "${Order["Total"]}",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
                         ),
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: EdgeInsets.only(top: 20, bottom: 20),
+                          height: 40,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                            color: Colors.grey[300],
+                          ),
+                          child: Center(
+                            child: Text(
+                              "Payment Mode :  COD",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 17.0,
+                                  fontWeight: FontWeight.w600),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: EdgeInsets.only(top: 20, bottom: 20),
-                    height: 40,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                      color: Colors.grey[300],
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Payment Mode :  COD",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 17.0,
-                            fontWeight: FontWeight.w600),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
+                )
               : LoadingComponent(),
         ));
   }

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:madhusudan/Common/Constants.dart' as cnst;
 import 'package:madhusudan/Common/Constants.dart';
 import 'package:madhusudan/Common/Services.dart';
-import 'package:madhusudan/screens/ProductDetails.dart';
+import 'package:madhusudan/screens/OrderDetail.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -105,8 +105,9 @@ class _MyOrderItemState extends State<MyOrderItem> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ProductDetails(
-              /*widget.order["Id"].toString()*/
+            builder: (context) => OrderDetail(
+              widget.order["Id"].toString(),
+              "pending",
             ),
           ),
         );
@@ -190,7 +191,9 @@ class _MyOrderItemState extends State<MyOrderItem> {
                       ),*/
                       Text(
                         cnst.inr_rupee + " ${productList[0]["NetAmount"]}",
-                        style: TextStyle(fontSize: 15, color: cnst.app_primary_material_color),
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: cnst.app_primary_material_color),
                       ),
                     ],
                   ),
@@ -220,7 +223,8 @@ class _MyOrderItemState extends State<MyOrderItem> {
                       margin: EdgeInsets.only(right: 5),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(8)),
-                          border: Border.all(color: cnst.app_primary_material_color)),
+                          border: Border.all(
+                              color: cnst.app_primary_material_color)),
                       child: MaterialButton(
                         shape: RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(8.0)),
