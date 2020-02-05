@@ -31,6 +31,7 @@ dependencies:
   intl: ^0.16.1
   image_picker: ^0.6.1+4
   fluttertoast: ^3.0.3
+  progress_dialog: ^1.2.0
 
 dev_dependencies:
   flutter_test:
