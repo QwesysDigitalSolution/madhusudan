@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/services.dart';
 import 'package:madhusudan/Common/Constants.dart' as cnst;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -34,9 +33,6 @@ class _splashState extends State<splash> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-    ));
     return Scaffold(
       body: Container(
         width: MediaQuery.of(context).size.width,

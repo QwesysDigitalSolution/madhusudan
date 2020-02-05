@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
-import 'package:madhusudan/screens/Login.dart';
-import 'package:madhusudan/screens/ProductList.dart';
-import 'package:madhusudan/screens/Login.dart';
 import 'package:madhusudan/screens/UploadPhotoOrder.dart';
 
 //screen list
 import 'screens/EditProfile.dart';
 import 'screens/Splash.dart';
 import 'screens/Dashboard.dart';
+import 'package:madhusudan/screens/Login.dart';
+import 'package:madhusudan/screens/ProductList.dart';
+import 'package:madhusudan/screens/MyCart.dart';
 
 void main() => runApp(MyApp());
 
@@ -38,6 +38,7 @@ class _MyAppState extends State<MyApp> {
         '/Dashboard': (context) => Dashboard(),
         '/UploadPhotoOrder': (context) => UploadPhotoOrder(),
         '/EditProfile': (context) => EditProfile(),
+        '/MyCart': (context) => MyCart(),
       },
       theme: ThemeData(
         textTheme: GoogleFonts.latoTextTheme(textTheme).copyWith(
