@@ -63,6 +63,7 @@ flutter:
     - images/myorder.png
     - images/info.png
     - images/icon_user.png
+    - images/check.png
     - assets/loading.gif
 
   # An image asset can refer to one or more resolution-specific "variants", see
