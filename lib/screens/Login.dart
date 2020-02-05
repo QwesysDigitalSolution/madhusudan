@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:madhusudan/Common/Constants.dart' as cnst;
+import 'package:madhusudan/common/Constants.dart' as cnst;
 import 'package:madhusudan/animation/FadeAnimation.dart';
 
 class Login extends StatefulWidget {
