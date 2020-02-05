@@ -14,7 +14,6 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
   File _orderPhoto;
   TextEditingController edtDescription = new TextEditingController();
 
-
   @override
   Widget build(BuildContext context) {
     double widt = MediaQuery.of(context).size.width;
@@ -46,7 +45,7 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
           children: <Widget>[
             Container(
               padding: EdgeInsets.only(
-                  bottom: widt*0.13, right: 10, left: 10, top: 10),
+                  bottom: widt * 0.13, right: 10, left: 10, top: 10),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -116,7 +115,8 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                       ],
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 20, left: 10, bottom: 5),
+                      padding:
+                          const EdgeInsets.only(top: 20, left: 10, bottom: 5),
                       child: Text(
                         'SHIPPING ADDRESS',
                         style: TextStyle(
@@ -131,7 +131,8 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                         borderRadius: new BorderRadius.circular(8.0),
                         color: Colors.grey[200],
                       ),
-                      padding: const EdgeInsets.only(left: 10, top: 10, bottom: 10),
+                      padding:
+                          const EdgeInsets.only(left: 10, top: 10, bottom: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
@@ -149,7 +150,8 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                                 width: MediaQuery.of(context).size.width / 1.5,
                                 child: Text(
                                   "Address",
-                                  style: TextStyle(fontSize: 14, color: Colors.black),
+                                  style: TextStyle(
+                                      fontSize: 14, color: Colors.black),
                                 ),
                               ),
                               Text(
@@ -162,7 +164,8 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                             //width: MediaQuery.of(context).size.width,
                             margin: EdgeInsets.only(right: 15),
                             decoration: BoxDecoration(
-                                shape: BoxShape.circle, color: Colors.grey[400]),
+                                shape: BoxShape.circle,
+                                color: Colors.grey[400]),
                             child: Padding(
                                 padding: const EdgeInsets.all(10),
                                 child: Icon(
@@ -175,7 +178,8 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 20, left: 10, bottom: 5),
+                      padding:
+                          const EdgeInsets.only(top: 20, left: 10, bottom: 5),
                       child: Text(
                         'DESCRIPTION',
                         style: TextStyle(
@@ -187,16 +191,22 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                     ),
                     Container(
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10.0),
+                        ),
+                      ),
                       child: TextFormField(
                         controller: edtDescription,
+                        autocorrect: true,
                         scrollPadding: EdgeInsets.all(0),
                         decoration: InputDecoration(
                             fillColor: Colors.grey[200],
                             filled: true,
                             //border: InputBorder.none,
                             border: new OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(8)),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8),
+                                ),
                                 borderSide: BorderSide.none),
                             hintText: "Enter Something"),
                         //maxLength: 10,
@@ -225,10 +235,9 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 margin: EdgeInsets.only(top: 10),
-                height: widt*0.115,
+                height: widt * 0.115,
                 decoration: BoxDecoration(
-                    borderRadius:
-                    BorderRadius.all(Radius.circular(0))),
+                    borderRadius: BorderRadius.all(Radius.circular(0))),
                 child: MaterialButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(0.0)),
@@ -263,8 +272,7 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                       Container(
                         decoration: BoxDecoration(
                           //shape: BoxShape.circle,
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(15)),
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
                           color: Colors.transparent,
                         ),
                         child: Padding(
@@ -287,8 +295,7 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                       Container(
                         decoration: BoxDecoration(
                           //shape: BoxShape.circle,
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(15)),
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
                           color: Colors.white,
                         ),
                         child: Padding(

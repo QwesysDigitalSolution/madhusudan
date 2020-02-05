@@ -1,5 +1,7 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
 import 'package:madhusudan/screens/UploadPhotoOrder.dart';
@@ -22,6 +24,48 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  FirebaseMessaging _firebaseMessaging = new FirebaseMessaging( );
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState( );
+    _firebaseMessaging.configure( onMessage: (Map<String, dynamic> message) {
+      final title = message['data']['Name'];
+      final body = message['data']['Mobile_Number'];
+      print( "onMessage" );
+      print( message );
+    }, onResume: (Map<String, dynamic> message) {
+      print( "onResume" );
+      print( message );
+    }, onLaunch: (Map<String, dynamic> message) {
+      print( "onLaunch" );
+      print( message );
+    } );
+
+    //For Ios Notification
+    _firebaseMessaging.requestNotificationPermissions(
+        const IosNotificationSettings(
+            sound: true, badge: true, alert: true ) );
+
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen( (IosNotificationSettings settings) {
+      print( "Setting reqistered : $settings" );
+    } );
+
+    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin( );
+    var android = new AndroidInitializationSettings( '@mipmap/ic_launcher' );
+    var iOS = new IOSInitializationSettings( );
+    var initSetttings = new InitializationSettings( android, iOS );
+    flutterLocalNotificationsPlugin.initialize( initSetttings,
+        onSelectNotification: onSelectNotification );
+  }
+
+  Future onSelectNotification(String payload) async {
+    debugPrint( "payload : $payload" );
+  }
+
   @override
   Widget build(BuildContext context) {
     /*SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(

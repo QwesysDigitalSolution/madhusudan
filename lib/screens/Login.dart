@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:madhusudan/Common/Constants.dart' as cnst;
@@ -11,11 +15,35 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   TextEditingController edtMobile = new TextEditingController();
   double widt;
+  FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
+  StreamSubscription iosSubscription;
+  String fcmToken = "";
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    if (Platform.isIOS) {
+      iosSubscription =
+          _firebaseMessaging.onIosSettingsRegistered.listen((data) {
+            print("FFFFFFFF" + data.toString());
+            saveDeviceToken();
+          });
+      _firebaseMessaging
+          .requestNotificationPermissions(IosNotificationSettings());
+    } else {
+      saveDeviceToken();
+    }
+  }
+  saveDeviceToken() async {
+    _firebaseMessaging.getToken().then((String token) {
+      print("Original Token:$token");
+      setState(() {
+        fcmToken = token;
+        //sendFCMTokan(token);
+      });
+      print("FCM Token : $fcmToken");
+    });
   }
 
   showMsg(String msg, {String title = 'Madhusudan'}) {
@@ -43,6 +71,7 @@ class _LoginState extends State<Login> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: cnst.app_primary_material_color[900],
     ));
+
     double widt = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(
@@ -169,5 +198,6 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+
   }
 }

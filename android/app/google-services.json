@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "871344868745",
+    "firebase_url": "https://madhusudan-6117a.firebaseio.com",
+    "project_id": "madhusudan-6117a",
+    "storage_bucket": "madhusudan-6117a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:871344868745:android:cace9e610c2582e2a3a558",
+        "android_client_info": {
+          "package_name": "com.qwesys.madhusudan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "871344868745-l5ri3uo7m9g8u8vkq1he00b7aj67acbb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2H-qQGhidTfqo4cAU6Np1w17YCMZv1C8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "871344868745-l5ri3uo7m9g8u8vkq1he00b7aj67acbb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

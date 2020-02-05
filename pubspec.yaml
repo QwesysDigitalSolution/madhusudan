@@ -32,6 +32,8 @@ dependencies:
   image_picker: ^0.6.1+4
   fluttertoast: ^3.0.3
   progress_dialog: ^1.2.0
+  firebase_messaging: ^6.0.9
+  flutter_local_notifications: ^0.9.1+1
   timeline_list: ^0.0.5
 
 dev_dependencies:
