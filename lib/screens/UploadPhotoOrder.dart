@@ -17,6 +17,8 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
 
   @override
   Widget build(BuildContext context) {
+    double widt = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -26,9 +28,7 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
         backgroundColor: Colors.white,
         leading: GestureDetector(
           onTap: () {
-            //Navigator.pop(context, "");
-            //Navigator.pop(context);
-            Navigator.pushReplacementNamed(context, '/Dashboard');
+            Navigator.pop(context);
           },
           child: Icon(
             Icons.arrow_back_ios,
@@ -46,7 +46,7 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
           children: <Widget>[
             Container(
               padding: EdgeInsets.only(
-                  bottom: 50, right: 10, left: 10, top: 10),
+                  bottom: widt*0.13, right: 10, left: 10, top: 10),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -54,8 +54,8 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                   children: <Widget>[
                     Center(
                       child: Text(
-                        "UPLOAD PRESCRIPTION",
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                        "UPLOAD ORDER PHOTO",
+                        style: TextStyle(fontSize: 12, color: Colors.black54),
                       ),
                     ),
                     Row(
@@ -225,7 +225,7 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 margin: EdgeInsets.only(top: 10),
-                height: 48,
+                height: widt*0.115,
                 decoration: BoxDecoration(
                     borderRadius:
                     BorderRadius.all(Radius.circular(0))),
