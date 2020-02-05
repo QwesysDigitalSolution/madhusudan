@@ -1,13 +1,19 @@
-class save_data_class {
+class CartData{
+  int CartCount;
+
+  CartData({this.CartCount});
+}
+
+class SaveDataClass {
   String Message;
   bool IsSuccess;
   String Data;
   bool IsRecord;
 
-  save_data_class({this.Message, this.IsSuccess, this.Data, this.IsRecord});
+  SaveDataClass({this.Message, this.IsSuccess, this.Data, this.IsRecord});
 
-  factory save_data_class.fromJson(Map<String, dynamic> json) {
-    return save_data_class(
+  factory SaveDataClass.fromJson(Map<String, dynamic> json) {
+    return SaveDataClass(
       Message: json['Message'] as String,
       IsSuccess: json['IsSuccess'] as bool,
       Data: json['Data'] as String,
