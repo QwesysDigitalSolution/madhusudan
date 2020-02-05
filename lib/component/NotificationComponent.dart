@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:madhusudan/Common/Constants.dart' as cnst;
+import 'package:madhusudan/common/Constants.dart' as cnst;
 
 class NotificationComponent extends StatefulWidget {
   var notification;

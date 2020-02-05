@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:madhusudan/Common/Constants.dart' as cnst;
+import 'package:madhusudan/common/Constants.dart' as cnst;
 import 'package:madhusudan/screens/ProductDetails.dart';
 
 class OrderedItem extends StatefulWidget {

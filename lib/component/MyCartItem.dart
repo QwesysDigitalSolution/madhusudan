@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:madhusudan/Common/Constants.dart' as cnst;
-import 'package:madhusudan/Component/LoadingComponent.dart';
+import 'package:madhusudan/common/Constants.dart' as cnst;
+import 'package:madhusudan/component/LoadingComponent.dart';
 import 'package:madhusudan/common/Services.dart';
 import 'package:madhusudan/screens/ProductDetails.dart';
 import 'package:progress_dialog/progress_dialog.dart';

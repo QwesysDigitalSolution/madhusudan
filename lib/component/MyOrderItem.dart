@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:madhusudan/Common/Constants.dart' as cnst;
-import 'package:madhusudan/Common/Constants.dart';
-import 'package:madhusudan/Common/Services.dart';
+import 'package:madhusudan/common/Constants.dart' as cnst;
+import 'package:madhusudan/common/Constants.dart';
+import 'package:madhusudan/common/Services.dart';
 import 'package:madhusudan/screens/OrderDetail.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
