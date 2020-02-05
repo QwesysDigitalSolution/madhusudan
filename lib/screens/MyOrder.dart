@@ -18,7 +18,36 @@ class MyOrder extends StatefulWidget {
 class _MyOrderState extends State<MyOrder> {
   String MemberId = "0";
   bool isLoading = false;
-  List CurrentOrderList = [];
+  List CurrentOrderList = [
+    {
+      "Id": 1,
+      "Date": "2/1/2020 12:00:00 AM",
+      "DeliveryDate": "2/6/2020 12:00:00 AM",
+      "DueDate": "",
+      "DeliveryCharge": 0.00,
+      "OtherCharge": 0.00,
+      "Discount": 42.00,
+      "DiscountPer": 0.00,
+      "OverAllTotal": 807.00,
+      "IsGiftWrap": false,
+      "CurrentStatus": "Order Placed",
+      "ItemsList": [
+        {
+          "OrderId": 1,
+          "ItemId": 1,
+          "ItemName": "Olay Total Effects 7 In One Touch Of Foundation",
+          "Qty": 1,
+          "Rate": 0.0,
+          "Amount": 807.00,
+          "Discount": 0.00,
+          "DiscountPer": 0.00,
+          "NetAmount": 807.00,
+          "Image":
+              "https://5.imimg.com/data5/XS/GB/MY-22453630/self-design-pure-silk-pink-saree-500x500.jpg"
+        }
+      ]
+    }
+  ];
 
   @override
   void initState() {
@@ -128,42 +157,44 @@ class _MyOrderState extends State<MyOrder> {
             ],
           ),
         ),
-        body: TabBarView(children: [
-          CurrentOrderList != null && CurrentOrderList.length > 0
-              ? ListView.builder(
-                  itemCount: CurrentOrderList.length,
-                  //shrinkWrap: true,
-                  itemBuilder: (BuildContext context, int index) {
-                    return MyOrderItem(
-                      CurrentOrderList[index],
-                      ((String action) {
-                        if (action == "OrderCancel") {
-                          setState(() {
-                            CurrentOrderList.removeAt(index);
-                          });
-                        }
-                      }),
-                    );
-                  })
-              : NoDataComponent(),
-          CurrentOrderList != null && CurrentOrderList.length > 0
-              ? ListView.builder(
-              itemCount: CurrentOrderList.length,
-              //shrinkWrap: true,
-              itemBuilder: (BuildContext context, int index) {
-                return MyOrderItem(
-                  CurrentOrderList[index],
-                  ((String action) {
-                    if (action == "OrderCancel") {
-                      setState(() {
-                        CurrentOrderList.removeAt(index);
-                      });
-                    }
-                  }),
-                );
-              })
-              : NoDataComponent(),
-        ]),
+        body: TabBarView(
+          children: [
+            CurrentOrderList != null && CurrentOrderList.length > 0
+                ? ListView.builder(
+                    itemCount: CurrentOrderList.length,
+                    //shrinkWrap: true,
+                    itemBuilder: (BuildContext context, int index) {
+                      return MyOrderItem(
+                        CurrentOrderList[index],
+                        ((String action) {
+                          if (action == "OrderCancel") {
+                            setState(() {
+                              CurrentOrderList.removeAt(index);
+                            });
+                          }
+                        }),
+                      );
+                    })
+                : NoDataComponent(),
+            CurrentOrderList != null && CurrentOrderList.length > 0
+                ? ListView.builder(
+                    itemCount: CurrentOrderList.length,
+                    //shrinkWrap: true,
+                    itemBuilder: (BuildContext context, int index) {
+                      return MyOrderItem(
+                        CurrentOrderList[index],
+                        ((String action) {
+                          if (action == "OrderCancel") {
+                            setState(() {
+                              CurrentOrderList.removeAt(index);
+                            });
+                          }
+                        }),
+                      );
+                    })
+                : NoDataComponent(),
+          ],
+        ),
       ),
     );
   }
