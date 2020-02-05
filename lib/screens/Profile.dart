@@ -350,7 +350,7 @@ class _ProfileState extends State<Profile> {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.pushReplacementNamed(context, '/Login');
+                Navigator.pushReplacementNamed(context, '/login');
               },
               child: Container(
                 //color: Colors.white,
@@ -376,7 +376,7 @@ class _ProfileState extends State<Profile> {
                             ),
                             Padding(
                               padding: const EdgeInsets.all(10.0),
-                              child: Text("Log Out",
+                              child: Text("Logout",
                                   style: TextStyle(
                                     fontSize: 16,
                                   )),

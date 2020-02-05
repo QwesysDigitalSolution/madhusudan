@@ -6,6 +6,7 @@ import 'package:madhusudan/screens/ProductDetails.dart';
 class ProductItemCard extends StatefulWidget {
   //var ItemData;
   int index;
+
   ProductItemCard(this.index);
 
   @override
@@ -24,11 +25,7 @@ class _ProductItemCardState extends State<ProductItemCard> {
                     ProductDetail(Id: widget.ItemData["Id"].toString())));*/
 
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    ProductDetails()));
-
+            context, MaterialPageRoute(builder: (context) => ProductDetails()));
       },
       child: AnimationConfiguration.staggeredGrid(
         duration: const Duration(milliseconds: 1000),
@@ -38,7 +35,8 @@ class _ProductItemCardState extends State<ProductItemCard> {
           verticalOffset: 50.0,
           child: FlipAnimation(
             child: Card(
-              margin: EdgeInsets.only(left: 5, right: 5, top: 5),
+              margin: EdgeInsets.only(left: 5, right: 5, top: 8),
+              elevation: 3,
               child: Container(
                 width: MediaQuery.of(context).size.width / 2,
                 //width: 170,
@@ -46,9 +44,7 @@ class _ProductItemCardState extends State<ProductItemCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Stack(
-                      children: <Widget>[
-                        /*widget.ItemData["Image"].toString() != "" &&
+                    /*widget.ItemData["Image"].toString() != "" &&
                                 widget.ItemData["Image"].toString() != "null"
                             ? Image.network(
                                 "${cnst.IMG_URL}${widget.ItemData["Image"]}",
@@ -56,52 +52,18 @@ class _ProductItemCardState extends State<ProductItemCard> {
                                 width: MediaQuery.of(context).size.width / 2,
                                 fit: BoxFit.fill,
                               )
-                            : */Container(
-                                height: 140,
-                                padding: EdgeInsets.only(left: 20, right: 20),
-                                width: MediaQuery.of(context).size.width / 2,
-                                child: Center(
-                                  child: Text(
-                                    'No Image Available',
-                                    textAlign: TextAlign.center,
-                                    style:
-                                        TextStyle(color: Colors.grey, fontSize: 20),
-                                  ),
-                                ),
-                              ),
-                        /*widget.ItemData["Mrp"].toString() !=
-                                widget.ItemData["SellingPrice"].toString()
-                            ?*/
-                        Positioned(
-                                bottom: 100,
-                                right: -10,
-                                top: -10,
-                                //left: 100,
-                                child: Container(
-                                  width: 70,
-                                  decoration: BoxDecoration(
-                                      color: cnst.app_primary_material_color,
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(15))),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(top: 10, left: 10),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        //"Off\n${cnst.inr_rupee} ${double.parse(widget.ItemData["Mrp"].toString()) - double.parse(widget.ItemData["SellingPrice"].toString())}",
-                                        "Off\n${cnst.inr_rupee} 100",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            //: Container(),
-                      ],
+                            : */
+                    Container(
+                      height: 140,
+                      padding: EdgeInsets.only(left: 20, right: 20),
+                      width: MediaQuery.of(context).size.width / 2,
+                      child: Center(
+                        child: Text(
+                          'No Image Available',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.grey, fontSize: 20),
+                        ),
+                      ),
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width / 2,
@@ -110,8 +72,8 @@ class _ProductItemCardState extends State<ProductItemCard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Padding(
-                            padding:
-                                const EdgeInsets.only(left: 10, right: 10, top: 10),
+                            padding: const EdgeInsets.only(
+                                left: 10, right: 10, top: 10),
                             child: Text(
                               //"${widget.ItemData["ItemName"]}",
                               "Demo",
