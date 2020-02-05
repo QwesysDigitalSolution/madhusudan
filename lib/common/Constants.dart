@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const String api_url = "";
+const String api_url = "http://ms.qwesys.com/wp-json/";
 const inr_rupee = "₹";
 const String img_url = "";
 

@@ -7,6 +7,6 @@ import 'package:madhusudan/common/Constants.dart' as cnst;
 
 Dio dio = new Dio();
 
-class services{
+class Services{
 
 }
