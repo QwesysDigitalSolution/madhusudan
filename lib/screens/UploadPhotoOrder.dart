@@ -3,6 +3,7 @@ import 'dart:io' as io;
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -23,13 +24,17 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
   String shippingAddress = "C-123 Pandesara Bamroli Road Surat";
   FlutterAudioRecorder _recorder;
   Recording _recording;
-  Recording _recordingNew;
+  Duration _duration;
+
+  //Recording _recordingNew;
   Timer _t;
   Widget _buttonIcon = Icon(Icons.do_not_disturb_on);
   String _alert;
+  StreamSubscription _durationSubscription;
 
   bool _isPlayed = true;
   AudioPlayer player = AudioPlayer();
+
   @override
   void initState() {
     super.initState();
@@ -122,17 +127,21 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
 
     setState(() {
       _recording = result;
-      _recordingNew = result;
+      // _recordingNew = result;
     });
   }
 
-  void _play() {
+  void _play() async {
     print("Path : ${_recording.path}");
-    print("Path New : ${_recordingNew.path}");
-    player.play(_recordingNew.path, isLocal: true);
     setState(() {
-      //stop flag
       _isPlayed = false;
+    });
+    player.play(_recording.path, isLocal: true);
+    player.onPlayerCompletion.listen((data) {
+      print("Completed");
+      setState(() {
+        _isPlayed = true;
+      });
     });
   }
 
@@ -422,65 +431,84 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                         style: TextStyle(color: Colors.black),
                       ),
                     ),
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(top: 10, left: 10, bottom: 5),
-                      child: Text(
-                        'Or',
-                        style: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600),
-                        textAlign: TextAlign.left,
+
+                    // Recordeing Start
+                    Center(
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.only(top: 10, left: 10, bottom: 5),
+                        child: Text(
+                          'Or',
+                          style: TextStyle(
+                              color: Colors.black54,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.left,
+                        ),
                       ),
                     ),
-                    Row(
-                      children: <Widget>[
-                        Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            color: cnst.app_primary_material_color,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(100)),
-                          ),
-                          child: IconButton(
-                            onPressed: _opt,
-                            icon: _buttonIcon,
-                          ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.95,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(30),
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            if (_recordingNew != "") {
-                              if (_isPlayed==false) {
-                                _stop();
-                              } else {
-                                _play();
-                              }
-                            }
-                          },
-                          child: Container(
-                            width: 100,
+                      ),
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Container(
                             height: 50,
+                            width: 50,
                             decoration: BoxDecoration(
-                              color: Colors.grey[300],
+                              color: cnst.app_primary_material_color,
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(30)),
+                                  BorderRadius.all(Radius.circular(100)),
                             ),
-                            child: Row(
-                              children: <Widget>[
-                                Padding(padding: EdgeInsets.only(left: 10)),
-                                Icon(
-                                 _isPlayed==true ?Icons.play_arrow:Icons.stop,
-                                  color: Colors.black,
-                                  size: 30,
-                                )
-                              ],
+                            child: IconButton(
+                              onPressed: _opt,
+                              icon: _buttonIcon,
                             ),
                           ),
-                        )
-                      ],
+                          Text(
+                            '${_recording?.duration.toString().substring(0, 7) ?? "-"}',
+                          ),
+                          _recording?.status == RecordingStatus.Stopped
+                              ? Container(
+                                  height: 50,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                    color: cnst.app_primary_material_color,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(100)),
+                                  ),
+                                  child: IconButton(
+                                    onPressed: () {
+                                      if (_recording != "") {
+                                        if (_isPlayed == false) {
+                                          _stop();
+                                        } else {
+                                          _play();
+                                        }
+                                      }
+                                    },
+                                    color: Colors.black,
+                                    icon: Icon(
+                                      _isPlayed == true
+                                          ? Icons.play_arrow
+                                          : Icons.stop,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                )
+                              : Container(),
+                        ],
+                      ),
                     ),
+                    //Recording End
+
                     _orderPhoto != null
                         ? Container(
                             padding: EdgeInsets.only(top: 10),
