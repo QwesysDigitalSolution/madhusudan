@@ -258,16 +258,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                               /*catData[0]["Mrp"].toString() !=
                         catData[0]["SellingPrice"].toString()
                         ? */
-                              Text(
-                                "${cnst.inr_rupee} 100",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  decoration: TextDecoration.lineThrough,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              // : Container(),
-                              Padding(padding: EdgeInsets.only(right: 10)),
                               Expanded(
                                 child: Text(
                                   //"${cnst.inr_rupee} ${catData[0]["SellingPrice"]}",

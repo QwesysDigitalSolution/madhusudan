@@ -63,6 +63,7 @@ class _OrderDetailState extends State<OrderDetail> {
     }
   ];
   var OrderShippingAddress = {};
+  String shippingAddress = "C-123 Pandesara Bamroli Road Surat";
 
   @override
   void initState() {
@@ -410,29 +411,13 @@ class _OrderDetailState extends State<OrderDetail> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                "${OrderShippingAddress["Name"]}",
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width / 1.5,
-                                child: Text(
-                                  "${OrderShippingAddress["Address"]}",
-                                  style: TextStyle(
-                                      fontSize: 14, color: Colors.black),
-                                ),
-                              ),
-                              Text(
-                                "${OrderShippingAddress["Pincode"]}",
-                                style: TextStyle(fontSize: 14),
-                              ),
-                            ],
+                          child: Container(
+                            width: MediaQuery.of(context).size.width / 1.5,
+                            child: Text(
+                              "${shippingAddress}",
+                              style: TextStyle(
+                                  fontSize: 14, color: Colors.black),
+                            ),
                           ),
                         ),
                         Divider(

@@ -203,7 +203,14 @@ class _MyCartItemState extends State<MyCartItem> {
                 children: <Widget>[
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, '/ViewItem');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProductDetails(
+                            /*Id: Product["ItemId"].toString(),*/
+                          ),
+                        ),
+                      );
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width / 1.8,

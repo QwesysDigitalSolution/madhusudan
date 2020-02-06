@@ -109,15 +109,6 @@ class _ProductItemCardState extends State<ProductItemCard> {
                                       )
                                     : Container(),*/
 
-                                Text(
-                                  "${cnst.inr_rupee} 100",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    decoration: TextDecoration.lineThrough,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                Padding(padding: EdgeInsets.only(right: 10)),
                                 Expanded(
                                   child: Text(
                                     //"${cnst.Inr_Rupee} ${widget.ItemData["SellingPrice"]}",
