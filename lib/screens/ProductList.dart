@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:madhusudan/animation/FadeAnimation.dart';
+import 'package:madhusudan/common/ClassList.dart';
+import 'package:madhusudan/common/StateContainer.dart';
 import 'package:madhusudan/component/LoadingComponent.dart';
 import 'package:madhusudan/component/NoDataComponent.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
@@ -13,7 +15,7 @@ class ProductList extends StatefulWidget {
 }
 
 class _ProductListState extends State<ProductList> {
-  //CartWishData cartWishData = new CartWishData();
+  CartData cartData = new CartData();
   List searchMemberData = new List();
   bool _isSearching = false, isfirst = false;
   bool isLoading = true;
@@ -21,8 +23,8 @@ class _ProductListState extends State<ProductList> {
 
   @override
   Widget build(BuildContext context) {
-    //final myInheritaedWidget = StateContainer.of(context);
-    //cartWishData = myInheritaedWidget.cartWishData;
+    final myInheritaedWidget = StateContainer.of(context);
+    cartData = myInheritaedWidget.cartData;
 
     final double widthScreen = MediaQuery.of(context).size.width;
     final double appBarHeight = kToolbarHeight;
@@ -130,8 +132,7 @@ class _ProductListState extends State<ProductList> {
                         child: Padding(
                             padding: const EdgeInsets.all(6.0),
                             child: Text(
-                              //"${cartWishData != null ? cartWishData.CartCount : 0}",
-                              "0",
+                              "${cartData != null ? cartData.CartCount : 0}",
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600,

@@ -5,6 +5,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
+import 'package:madhusudan/common/StateContainer.dart';
 import 'package:madhusudan/screens/ContactUs.dart';
 import 'package:madhusudan/screens/UploadPhotoOrder.dart';
 
@@ -18,7 +19,7 @@ import 'package:madhusudan/screens/MyCart.dart';
 import 'package:madhusudan/screens/OrderSuccess.dart';
 import 'package:madhusudan/screens/MyOrder.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(new StateContainer(child: MyApp()));
 
 class MyApp extends StatefulWidget {
   @override

@@ -93,8 +93,8 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    /*final myInheritaedWidget = StateContainer.of(context);
-    cartData = myInheritaedWidget.cartData;*/
+    final myInheritaedWidget = StateContainer.of(context);
+    cartData = myInheritaedWidget.cartData;
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: cnst.app_primary_material_color[900],

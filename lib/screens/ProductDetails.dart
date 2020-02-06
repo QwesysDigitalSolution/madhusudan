@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:madhusudan/common/ClassList.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
+import 'package:madhusudan/common/StateContainer.dart';
 import 'package:madhusudan/component/LoadingComponent.dart';
 import 'package:madhusudan/component/NoDataComponent.dart';
 
@@ -9,6 +11,7 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
+  CartData cartData = new CartData();
   int quantity = 1;
   bool isLoading = false;
 
@@ -34,6 +37,9 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   @override
   Widget build(BuildContext context) {
+    final myInheritaedWidget = StateContainer.of(context);
+    cartData = myInheritaedWidget.cartData;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -78,8 +84,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                   child: Padding(
                       padding: const EdgeInsets.all(6.0),
                       child: Text(
-                        //"${cartWishData != null ? cartWishData.CartCount : 0}",
-                        "0",
+                        "${cartData != null ? cartData.CartCount : 0}",
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
