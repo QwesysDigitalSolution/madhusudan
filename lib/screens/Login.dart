@@ -4,8 +4,12 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
 import 'package:madhusudan/animation/FadeAnimation.dart';
+import 'package:madhusudan/common/Services.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -20,10 +24,29 @@ class _LoginState extends State<Login> {
   StreamSubscription iosSubscription;
   String fcmToken = "";
 
+  ProgressDialog pr;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    pr = new ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: false);
+    pr.style(
+        message: "Please Wait",
+        borderRadius: 10.0,
+        progressWidget: Container(
+          padding: EdgeInsets.all(15),
+          child: CircularProgressIndicator(
+            valueColor: new AlwaysStoppedAnimation<Color>(
+                cnst.app_primary_material_color),
+          ),
+        ),
+        elevation: 10.0,
+        insetAnimCurve: Curves.easeInOut,
+        messageTextStyle: TextStyle(
+            color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w600));
+
     if (Platform.isIOS) {
       iosSubscription =
           _firebaseMessaging.onIosSettingsRegistered.listen((data) {
@@ -67,6 +90,75 @@ class _LoginState extends State<Login> {
       },
     );
   }
+
+  _checkLogin() async {
+    if (edtMobile.text != "") {
+      if (edtMobile.text.length == 10) {
+        try {
+          final result = await InternetAddress.lookup('google.com');
+          if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+            List formData = [
+              {"key": "MobileNo", "value": edtMobile.text},
+              {"key": "FCMToken", "value": fcmToken},
+            ];
+            Future res =
+            Services.GetServiceForList("wl/v1/GetLoginData", formData);
+            pr.show();
+            res.then((data) async {
+              pr.hide();
+              if (data != null && data.length > 0) {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                await prefs.setString(
+                    cnst.session.Member_Id, data[0]["Id"].toString());
+                await prefs.setString(cnst.session.Email, data[0]["EmailId"]);
+                await prefs.setString(cnst.session.Name, data[0]["Name"]);
+                await prefs.setString(cnst.session.Gender, data[0]["Gender"]);
+                await prefs.setString(cnst.session.Image, data[0]["Image"]);
+                await prefs.setString(cnst.session.Mobile, data[0]["MobileNo"]);
+                await prefs.setString(
+                    cnst.session.IsVerified, data[0]["IsVerified"].toString());
+
+                /*if (data[0]["IsVerified"].toString().toLowerCase() == "true") {
+                  Navigator.pushReplacementNamed(context, '/Dashboard');
+                } else {
+                  Navigator.pushReplacementNamed(context, '/OTPScreen');
+                }*/
+                Navigator.pushReplacementNamed(
+                    context, '/Dashboard');
+              } else {
+                showMsg("Mobile Number is Incorrect");
+              }
+            }, onError: (e) {
+              pr.hide();
+              showMsg("Try Again.");
+            });
+          }/* else {
+            pr.isShowing()?pr.hide():null;
+            showMsg("No Internet Connection.");
+          }*/
+        } on SocketException catch (_) {
+          pr.isShowing()?pr.hide():null;
+          showMsg("No Internet Connection.");
+        }
+      } else {
+        Fluttertoast.showToast(
+            msg: "Enter Valid Mobile Number.",
+            fontSize: 13,
+            backgroundColor: Colors.redAccent,
+            gravity: ToastGravity.TOP,
+            textColor: Colors.white);
+      }
+    } else {
+      Fluttertoast.showToast(
+          msg: "Enter Mobile Number.",
+          fontSize: 13,
+          backgroundColor: Colors.redAccent,
+          gravity: ToastGravity.TOP,
+          textColor: Colors.white);
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -138,10 +230,11 @@ class _LoginState extends State<Login> {
                             color: cnst.app_primary_material_color[600],
                             minWidth: MediaQuery.of(context).size.width - 20,
                             onPressed: () {
-                              //_checkLogin();
+                              _checkLogin();
                               //Navigator.pushReplacementNamed(context, '/Dashboard');
-                              Navigator.pushReplacementNamed(
-                                  context, '/Dashboard');
+                              /*Navigator.pushReplacementNamed(
+                                  context, '/Dashboard');*/
+
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,

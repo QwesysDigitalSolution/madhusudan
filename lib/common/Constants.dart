@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 
-const String api_url = "http://ms.qwesys.com/wp-json/";
+//const String api_url = "http://ms.qwesys.com/wp-json/";
+const String api_url = "http://mslive.qwesysdigitalsolutions.in/wp-json/";
 const inr_rupee = "₹";
 const String img_url = "";
 
 class session {
   static const String session_login = "login_data";
   static const String user_name = "user_name";
-  static const String member_id = "member_id";
+  static const String Member_Id = "Member_Id";
+  static const String Mobile = "Mobile";
+  static const String Email = "Email";
+  static const String Name = "Name";
+  static const String Gender = "Gender";
+  static const String Image = "Image";
+  static const String IsVerified = "IsVerified";
 }
 
 Map<int, Color> app_primary_colors = {

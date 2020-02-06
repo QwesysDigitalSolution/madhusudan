@@ -291,7 +291,7 @@ class _MyCartState extends State<MyCart> {
   UpdateCartWishCount() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String MemberId = prefs.getString(cnst.session.member_id);
+      String MemberId = prefs.getString(cnst.session.Member_Id);
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         List formData = [
