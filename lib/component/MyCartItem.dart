@@ -157,7 +157,7 @@ class _MyCartItemState extends State<MyCartItem> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => ProductDetails(
-                          /*Id: Product["ItemId"].toString(),*/
+                          Id: Product["ItemId"].toString(),
                           ),
                     ),
                   );
@@ -207,7 +207,7 @@ class _MyCartItemState extends State<MyCartItem> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => ProductDetails(
-                            /*Id: Product["ItemId"].toString(),*/
+                            Id: Product["ItemId"].toString(),
                           ),
                         ),
                       );
@@ -229,7 +229,7 @@ class _MyCartItemState extends State<MyCartItem> {
                 ),
               ),*/
                   Text(
-                    cnst.inr_rupee + " ${Product["SellingPrice"]}",
+                    cnst.inr_rupee + " ${Product["Mrp"]}",
                     style: TextStyle(fontSize: 15, color: cnst.app_primary_material_color),
                   ),
                   Container(

@@ -20,151 +20,26 @@ class _MyCartState extends State<MyCart> {
   final List<String> title = ["Face", "Eyes", "Lips", "Nails"];
   String MemberId = "0";
   bool isLoading = false;
-  List CartList = [
-    {
-      "ItemId": 1,
-      "CartId": 2,
-      "Qty": 1,
-      "ItemCode": "10001",
-      "ItemName": "Olay Total Effects 7 In One Touch Of Foundation",
-      "Mrp": 849.00,
-      "SellingPrice": 807.00,
-      "Discount": 0.0,
-      "DiscountPer": 0.0,
-      "Description": "Olay Total Effects 7 In One Touch Of Foundation : 2020-02-01",
-      "Image": "https://5.imimg.com/data5/XS/GB/MY-22453630/self-design-pure-silk-pink-saree-500x500.jpg"
-    },
-    {
-      "ItemId": 1,
-      "CartId": 2,
-      "Qty": 1,
-      "ItemCode": "10001",
-      "ItemName": "Olay Total Effects 7 In One Touch Of Foundation",
-      "Mrp": 849.00,
-      "SellingPrice": 807.00,
-      "Discount": 0.0,
-      "DiscountPer": 0.0,
-      "Description": "Olay Total Effects 7 In One Touch Of Foundation : 2020-02-01",
-      "Image": "https://images-na.ssl-images-amazon.com/images/I/71kK5wShumL._UY550_.jpg"
-    },
-    {
-      "ItemId": 1,
-      "CartId": 2,
-      "Qty": 1,
-      "ItemCode": "10001",
-      "ItemName": "Olay Total Effects 7 In One Touch Of Foundation",
-      "Mrp": 849.00,
-      "SellingPrice": 807.00,
-      "Discount": 0.0,
-      "DiscountPer": 0.0,
-      "Description": "Olay Total Effects 7 In One Touch Of Foundation : 2020-02-01",
-      "Image": "https://images-na.ssl-images-amazon.com/images/I/91NXYyxk9LL._UL1500_.jpg"
-    },
-    {
-      "ItemId": 1,
-      "CartId": 2,
-      "Qty": 1,
-      "ItemCode": "10001",
-      "ItemName": "Olay Total Effects 7 In One Touch Of Foundation",
-      "Mrp": 849.00,
-      "SellingPrice": 807.00,
-      "Discount": 0.0,
-      "DiscountPer": 0.0,
-      "Description": "Olay Total Effects 7 In One Touch Of Foundation : 2020-02-01",
-      "Image": "https://n2.sdlcdn.com/imgs/i/2/e/offline-selection-Red-Pink-Blue-SDL908906437-1-28686.jpeg"
-    },
-    {
-      "ItemId": 1,
-      "CartId": 2,
-      "Qty": 1,
-      "ItemCode": "10001",
-      "ItemName": "Olay Total Effects 7 In One Touch Of Foundation",
-      "Mrp": 849.00,
-      "SellingPrice": 807.00,
-      "Discount": 0.0,
-      "DiscountPer": 0.0,
-      "Description": "Olay Total Effects 7 In One Touch Of Foundation : 2020-02-01",
-      "Image": "https://n1.sdlcdn.com/imgs/g/n/6/Onlinefayda-Pink-Silk-Saree-SDL091337954-1-db58e.jpg"
-    },
-    {
-      "ItemId": 1,
-      "CartId": 2,
-      "Qty": 1,
-      "ItemCode": "10001",
-      "ItemName": "Olay Total Effects 7 In One Touch Of Foundation",
-      "Mrp": 849.00,
-      "SellingPrice": 807.00,
-      "Discount": 0.0,
-      "DiscountPer": 0.0,
-      "Description": "Olay Total Effects 7 In One Touch Of Foundation : 2020-02-01",
-      "Image": "https://img6.craftsvilla.com/image/upload/w_500/C/V/CV-35646-MCRAF78906166300-1543305436-Craftsvilla_1.jpg"
-    }
-  ];
+  List CartList = [];
   double subTotal = 0;
   double discount = 0;
-  double shippingCharges = 0;
-  double giftCharges = 0;
-  double youSave = 0;
   double totalAmt = 0;
-  double walletAmount = 0;
-  double walletAmountUsed = 0;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getLocalData();
-    CheckAvailablePoint();
   }
 
   getLocalData() async {
-    /*SharedPreferences prefs = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     String Gender = prefs.getString(cnst.session.Gender);
     setState(() {
-      MemberId = prefs.getString(Session.MemberId);
+      MemberId = prefs.getString(cnst.session.Member_Id);
     });
 
-    getOrderDetail();*/
-  }
-
-  CheckAvailablePoint() async {
-    /*try {
-      final result = await InternetAddress.lookup('google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        setState(() {
-          isLoading = true;
-        });
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        String MemberId = prefs.getString(Session.MemberId);
-
-        Future res = Services.GetCurrentAmountInWallet(MemberId);
-        res.then((data) async {
-          setState(() {
-            isLoading = false;
-          });
-          if (data.IsSuccess == true) {
-            setState(() {
-              walletAmount = double.parse(data.Data.toString());
-            });
-            print("walletAmount : $walletAmount");
-          }
-          CalculateTotal();
-        }, onError: (e) {
-          print("Error : on Login Call");
-          //showMsg("$e");
-          setState(() {
-            isLoading = false;
-          });
-          Fluttertoast.showToast(
-              msg: "$e",
-              backgroundColor: Colors.red,
-              gravity: ToastGravity.TOP,
-              toastLength: Toast.LENGTH_SHORT);
-        });
-      }
-    } on SocketException catch (_) {
-      showInternetMsg("No Internet Connection.");
-    }*/
+    getOrderDetail();
   }
 
   showInternetMsg(String msg) {
@@ -189,9 +64,9 @@ class _MyCartState extends State<MyCart> {
   }
 
   getOrderDetail() async {
-    /*try {
+    try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String MemberId = prefs.getString(Session.MemberId);
+      String MemberId = prefs.getString(cnst.session.Member_Id);
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         List formData = [
@@ -201,7 +76,7 @@ class _MyCartState extends State<MyCart> {
         setState(() {
           isLoading = true;
         });
-        Services.GetServiceForList("GetMyCart", formData).then((data) async {
+        Services.GetServiceForList("wl/v1/GetMyCart", formData).then((data) async {
           if (data.length > 0) {
             setState(() {
               CartList = data;
@@ -223,7 +98,7 @@ class _MyCartState extends State<MyCart> {
       }
     } on SocketException catch (_) {
       showMsg("No Internet Connection.");
-    }*/
+    }
   }
 
   CalculateTotal() async{

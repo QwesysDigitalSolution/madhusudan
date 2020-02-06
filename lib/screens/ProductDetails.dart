@@ -6,6 +6,8 @@ import 'package:madhusudan/component/LoadingComponent.dart';
 import 'package:madhusudan/component/NoDataComponent.dart';
 
 class ProductDetails extends StatefulWidget {
+  String Id;
+  ProductDetails({this.Id});
   @override
   _ProductDetailsState createState() => _ProductDetailsState();
 }
