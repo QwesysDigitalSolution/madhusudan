@@ -1,9 +1,13 @@
+import 'dart:async';
+import 'dart:io' as io;
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
+import 'package:path_provider/path_provider.dart';
 
 class UploadPhotoOrder extends StatefulWidget {
   @override
@@ -16,12 +20,141 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
   TextEditingController txtAddress = new TextEditingController();
   bool isAddressEdit = false;
   String shippingAddress = "C-123 Pandesara Bamroli Road Surat";
+  FlutterAudioRecorder _recorder;
+  Recording _recording;
+  Timer _t;
+  Widget _buttonIcon = Icon(Icons.do_not_disturb_on);
+  String _alert;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      _prepare();
+    });
+  }
+
+  Future _prepare() async {
+    var hasPermission = await FlutterAudioRecorder.hasPermissions;
+    if (hasPermission) {
+      await _init();
+      var result = await _recorder.current();
+      setState(() {
+        _recording = result;
+        _buttonIcon = _playerIcon(_recording.status);
+        _alert = "";
+      });
+    } else {
+      setState(() {
+        _alert = "Permission Required.";
+      });
+    }
+  }
+
+  Future _init() async {
+    String customPath = '/madhusudan_audio_recorder_';
+    io.Directory appDocDirectory;
+    if (io.Platform.isIOS) {
+      appDocDirectory = await getApplicationDocumentsDirectory();
+    } else {
+      appDocDirectory = await getExternalStorageDirectory();
+    }
+
+    // can add extension like ".mp4" ".wav" ".m4a" ".aac"
+    customPath = appDocDirectory.path +
+        customPath +
+        DateTime.now().millisecondsSinceEpoch.toString();
+
+    // .wav <---> AudioFormat.WAV
+    // .mp4 .m4a .aac <---> AudioFormat.AAC
+    // AudioFormat is optional, if given value, will overwrite path extension when there is conflicts.
+
+    _recorder = FlutterAudioRecorder(customPath,
+        audioFormat: AudioFormat.WAV, sampleRate: 22050);
+    await _recorder.initialized;
+  }
+
+  Widget _playerIcon(RecordingStatus status) {
+    switch (status) {
+      case RecordingStatus.Initialized:
+        {
+          return Icon(Icons.fiber_manual_record);
+        }
+      case RecordingStatus.Recording:
+        {
+          return Icon(Icons.stop);
+        }
+      case RecordingStatus.Stopped:
+        {
+          return Icon(Icons.replay);
+        }
+      default:
+        return Icon(Icons.do_not_disturb_on);
+    }
+  }
+
+  Future _startRecording() async {
+    await _recorder.start();
+    var current = await _recorder.current();
+    setState(() {
+      _recording = current;
+    });
+
+    _t = Timer.periodic(Duration(milliseconds: 10), (Timer t) async {
+      var current = await _recorder.current();
+      setState(() {
+        _recording = current;
+        _t = t;
+      });
+    });
+  }
+
+  Future _stopRecording() async {
+    var result = await _recorder.stop();
+    _t.cancel();
+
+    setState(() {
+      _recording = result;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     double widt = MediaQuery.of(context).size.width;
 
+    void _opt() async {
+      switch (_recording.status) {
+        case RecordingStatus.Initialized:
+          {
+            await _startRecording();
+            break;
+          }
+        case RecordingStatus.Recording:
+          {
+            await _stopRecording();
+            break;
+          }
+        case RecordingStatus.Stopped:
+          {
+            await _prepare();
+            break;
+          }
+
+        default:
+          break;
+      }
+
+      // 刷新按钮
+      setState(() {
+        _buttonIcon = _playerIcon(_recording.status);
+      });
+    }
+
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: _opt,
+        child: _buttonIcon,
+      ), // This trailing comma makes auto-formatting nicer for build methods.
       appBar: AppBar(
         title: Text(
           "Photo Order",
@@ -260,6 +393,19 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                         style: TextStyle(color: Colors.black),
                       ),
                     ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: 10, left: 10, bottom: 5),
+                      child: Text(
+                        'Or',
+                        style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600),
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+
                     _orderPhoto != null
                         ? Container(
                             padding: EdgeInsets.only(top: 10),
