@@ -166,6 +166,7 @@ class _MyOrderState extends State<MyOrder> {
                     itemBuilder: (BuildContext context, int index) {
                       return MyOrderItem(
                         CurrentOrderList[index],
+                        "Pending",
                         ((String action) {
                           if (action == "OrderCancel") {
                             setState(() {
@@ -183,6 +184,7 @@ class _MyOrderState extends State<MyOrder> {
                     itemBuilder: (BuildContext context, int index) {
                       return MyOrderItem(
                         CurrentOrderList[index],
+                        "Delivered",
                         ((String action) {
                           if (action == "OrderCancel") {
                             setState(() {

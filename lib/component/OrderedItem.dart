@@ -73,7 +73,14 @@ class _OrderedItemState extends State<OrderedItem> {
             children: <Widget>[
               GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, '/ViewItem');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductDetails(
+                        /*Id: widget.product["ItemId"].toString(),*/
+                      ),
+                    ),
+                  );
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width / 1.7,

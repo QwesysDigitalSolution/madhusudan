@@ -199,83 +199,12 @@ class _OrderDetailState extends State<OrderDetail> {
                             itemCount: OrderItems.length,
                             itemBuilder: (BuildContext context, int index) {
                               return OrderedItem(
-                                  OrderItems[index], widget.status);
+                                OrderItems[index],
+                                widget.status,
+                              );
                             },
                           ),
                         ),
-                        Divider(
-                          color: Colors.grey,
-                        ),
-                        Text(
-                          'ORDER STATUS',
-                          style: TextStyle(
-                              color: Colors.black54,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600),
-                          textAlign: TextAlign.left,
-                        ),
-                        (OrderStatus != null && OrderStatus.length > 0)
-                            ? Container(
-                                height: double.parse(
-                                    (90 * OrderStatus.length).toString()),
-                                child: Timeline(
-                                    children: OrderStatus.map((var data) {
-                                      return TimelineModel(
-                                        Card(
-                                          child: Container(
-                                            padding: EdgeInsets.all(10),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Text(
-                                                  "${data["Status"]}",
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                                Divider(
-                                                  color: Colors.grey,
-                                                ),
-                                                Text(
-                                                  "${data["Date"].toString().substring(0, 10)}",
-                                                ),
-                                                Text(
-                                                  "${data["Notes"]}",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontSize: 12,
-                                                      color: Colors.grey),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        position: TimelineItemPosition.random,
-                                        iconBackground: Colors.white,
-                                        icon: Icon(
-                                          data["Status"].toString() ==
-                                                  "Order Placed"
-                                              ? Icons.shopping_cart
-                                              : (data["Status"].toString() ==
-                                                      "Order Process"
-                                                  ? Icons.sync_problem
-                                                  : (data["Status"]
-                                                              .toString() ==
-                                                          "Order Shipped"
-                                                      ? Icons.local_shipping
-                                                      : (data["Status"]
-                                                                  .toString() ==
-                                                              "Order Cancelled"
-                                                          ? Icons.cancel
-                                                          : Icons.home))),
-                                        ),
-                                      );
-                                    }).toList(),
-                                    position: TimelinePosition.Left),
-                              )
-                            : Container(),
                         /*Row(
                     children: <Widget>[
                       Container(
@@ -415,8 +344,8 @@ class _OrderDetailState extends State<OrderDetail> {
                             width: MediaQuery.of(context).size.width / 1.5,
                             child: Text(
                               "${shippingAddress}",
-                              style: TextStyle(
-                                  fontSize: 14, color: Colors.black),
+                              style:
+                                  TextStyle(fontSize: 14, color: Colors.black),
                             ),
                           ),
                         ),

@@ -11,9 +11,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class MyOrderItem extends StatefulWidget {
   var order;
+  String status;
   Function onchange;
 
-  MyOrderItem(this.order, this.onchange);
+  MyOrderItem(this.order, this.status, this.onchange);
 
   @override
   _MyOrderItemState createState() => _MyOrderItemState();
@@ -217,6 +218,7 @@ class _MyOrderItemState extends State<MyOrderItem> {
                             fontWeight: FontWeight.w600),
                       ),
                     ),
+                    widget.status == "Pending" ?
                     Container(
                       width: MediaQuery.of(context).size.width / 2.7,
                       height: 35,
@@ -278,7 +280,8 @@ class _MyOrderItemState extends State<MyOrderItem> {
                           ],
                         ),
                       ),
-                    ),
+                    ) :
+                    Container(),
                   ],
                 ),
               ),
