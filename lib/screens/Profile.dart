@@ -268,10 +268,12 @@ class _ProfileState extends State<Profile> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(10.0),
-                                  child: Text("Contact Us",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                      )),
+                                  child: Text(
+                                    "Contact Us",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),

@@ -95,7 +95,7 @@ class _ProductItemCardState extends State<ProductItemCard> {
                             padding: const EdgeInsets.only(
                                 left: 10, right: 10, top: 3, bottom: 5),
                             child: Row(
-                              //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                             //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
                                 /*widget.ItemData["Mrp"].toString() !=
                                         widget.ItemData["SellingPrice"].toString()

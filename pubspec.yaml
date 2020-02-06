@@ -36,6 +36,7 @@ dependencies:
   flutter_local_notifications: ^0.9.1+1
   timeline_list: ^0.0.5
   flutter_windowmanager: ^0.0.1+1
+  google_maps_flutter: ^0.5.21+15
 
 dev_dependencies:
   flutter_test:

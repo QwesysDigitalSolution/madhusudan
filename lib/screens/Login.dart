@@ -14,6 +14,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   TextEditingController edtMobile = new TextEditingController();
+
   double widt;
   FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
   StreamSubscription iosSubscription;
@@ -26,15 +27,16 @@ class _LoginState extends State<Login> {
     if (Platform.isIOS) {
       iosSubscription =
           _firebaseMessaging.onIosSettingsRegistered.listen((data) {
-            print("FFFFFFFF" + data.toString());
-            saveDeviceToken();
-          });
+        print("FFFFFFFF" + data.toString());
+        saveDeviceToken();
+      });
       _firebaseMessaging
           .requestNotificationPermissions(IosNotificationSettings());
     } else {
       saveDeviceToken();
     }
   }
+
   saveDeviceToken() async {
     _firebaseMessaging.getToken().then((String token) {
       print("Original Token:$token");
@@ -71,6 +73,7 @@ class _LoginState extends State<Login> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: cnst.app_primary_material_color[900],
     ));
+
     double widt = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(

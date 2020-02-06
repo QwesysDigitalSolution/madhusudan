@@ -5,6 +5,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
+import 'package:madhusudan/screens/ContactUs.dart';
 import 'package:madhusudan/screens/UploadPhotoOrder.dart';
 
 //screen list
@@ -90,6 +91,7 @@ class _MyAppState extends State<MyApp> {
         '/MyCart': (context) => MyCart(),
         '/OrderSuccess': (context) => OrderSuccess(),
         '/MyOrder': (context) => MyOrder(),
+        '/ContactUs': (context) => ContactUs(),
       },
       theme: ThemeData(
         textTheme: GoogleFonts.latoTextTheme(textTheme).copyWith(
