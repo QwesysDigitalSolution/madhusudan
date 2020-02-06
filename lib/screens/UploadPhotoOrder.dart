@@ -12,7 +12,10 @@ class UploadPhotoOrder extends StatefulWidget {
 
 class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
   File _orderPhoto;
-  TextEditingController edtDescription = new TextEditingController();
+  TextEditingController txtDescription = new TextEditingController();
+  TextEditingController txtAddress = new TextEditingController();
+  bool isAddressEdit = false;
+  String shippingAddress = "C-123 Pandesara Bamroli Road Surat";
 
   @override
   Widget build(BuildContext context) {
@@ -136,44 +139,86 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                "Select Address",
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width / 1.5,
-                                child: Text(
-                                  "Address",
-                                  style: TextStyle(
-                                      fontSize: 14, color: Colors.black),
+                          isAddressEdit == false
+                              ? Container(
+                                  width:
+                                      MediaQuery.of(context).size.width / 1.5,
+                                  child: Text(
+                                    "${shippingAddress}",
+                                    style: TextStyle(
+                                        fontSize: 14, color: Colors.black),
+                                  ),
+                                )
+                              : Container(
+                                  width:
+                                      MediaQuery.of(context).size.width / 1.5,
+                                  child: TextFormField(
+                                    controller: txtAddress,
+                                    autocorrect: true,
+                                    scrollPadding: EdgeInsets.all(0),
+                                    decoration: InputDecoration(
+                                      fillColor: Colors.grey[200],
+                                      filled: true,
+                                      //border: InputBorder.none,
+                                      border: new OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(8),
+                                        ),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      hintText: "Enter Something",
+                                    ),
+                                    //maxLength: 10,
+                                    maxLines: 2,
+                                    keyboardType: TextInputType.text,
+                                    style: TextStyle(color: Colors.black),
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                "StateName",
-                                style: TextStyle(fontSize: 14),
-                              )
-                            ],
-                          ),
-                          Container(
-                            //width: MediaQuery.of(context).size.width,
-                            margin: EdgeInsets.only(right: 15),
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.grey[400]),
-                            child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Icon(
-                                  Icons.edit,
-                                  size: 15,
-                                  color: Colors.black,
-                                )),
-                          ),
+                          isAddressEdit == false
+                              ? GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      isAddressEdit = true;
+                                      txtAddress.text = shippingAddress;
+                                    });
+                                  },
+                                  child: Container(
+                                    //width: MediaQuery.of(context).size.width,
+                                    margin: EdgeInsets.only(right: 15),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.grey[400]),
+                                    child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Icon(
+                                          Icons.edit,
+                                          size: 15,
+                                          color: Colors.black,
+                                        )),
+                                  ),
+                                )
+                              : GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      isAddressEdit = false;
+                                      shippingAddress = txtAddress.text;
+                                    });
+                                  },
+                                  child: Container(
+                                    //width: MediaQuery.of(context).size.width,
+                                    margin: EdgeInsets.only(right: 15),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.grey[400]),
+                                    child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Icon(
+                                          Icons.check,
+                                          size: 15,
+                                          color: Colors.black,
+                                        )),
+                                  ),
+                                ),
                         ],
                       ),
                     ),
@@ -196,7 +241,7 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                         ),
                       ),
                       child: TextFormField(
-                        controller: edtDescription,
+                        controller: txtDescription,
                         autocorrect: true,
                         scrollPadding: EdgeInsets.all(0),
                         decoration: InputDecoration(
@@ -246,9 +291,9 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                   onPressed: () {
                     //_checkLogin();
                     if (_orderPhoto != null) {
-                      if (edtDescription.text != "") {
+                      if (txtDescription.text != "") {
                         //_addPhotoOrder();
-                        print("${edtDescription.text}");
+                        print("${txtDescription.text}");
                       } else {
                         Fluttertoast.showToast(
                             msg: "Enter Description.",

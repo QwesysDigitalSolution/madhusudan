@@ -6,7 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
 import 'package:madhusudan/common/Services.dart';
 import 'package:madhusudan/component/LoadingComponent.dart';
-import 'package:madhusudan/component/MyCartItem.dart';
+import 'package:madhusudan/component/CheckOutItem.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CheckOut extends StatefulWidget {
@@ -19,6 +19,8 @@ class CheckOut extends StatefulWidget {
 }
 
 class _CheckOutState extends State<CheckOut> {
+  TextEditingController txtAddress = new TextEditingController();
+
   String selectedType = "personal";
   String MemberId = "0";
   bool isLoading = false;
@@ -31,9 +33,9 @@ class _CheckOutState extends State<CheckOut> {
   double totalAmt = 0;
   double walletAmount = 0.0;
   double walletAmountUsed = 0.0;
-  var shippingAddress = {"Name" : "Kapil R Singh","Address":"C-123 Pandesara Bamroli Road Surat","Pincode":"394221"};
+  String shippingAddress = "C-123 Pandesara Bamroli Road Surat";
   String method = "COD";
-  bool isDeleveryAvailable = true;
+  bool isAddressEdit = false;
 
   @override
   void initState() {
@@ -47,7 +49,7 @@ class _CheckOutState extends State<CheckOut> {
   }
 
   getLocalData() async {
-   /* SharedPreferences prefs = await SharedPreferences.getInstance();
+    /* SharedPreferences prefs = await SharedPreferences.getInstance();
     String Gender = prefs.getString(Session.Gender);
     setState(() {
       MemberId = prefs.getString(Session.MemberId);
@@ -324,290 +326,295 @@ class _CheckOutState extends State<CheckOut> {
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: Stack(
-        children: <Widget>[
-          Container(
-              color: Colors.white,
-              width: MediaQuery.of(context).size.width,
-              //height: MediaQuery.of(context).size.height,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    height: MediaQuery.of(context).size.height - 175,
-                    margin: EdgeInsets.only(left: 10, right: 10, top: 5),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      //mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10, left: 10),
-                          child: Text(
-                            'SHIPPING ADDRESS',
-                            style: TextStyle(
-                                color: Colors.black54,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600),
-                            textAlign: TextAlign.left,
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            /*Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    AddressList((String action, var data) {
-                                      if (action == "Success") {
-                                        setState(() {
-                                          shippingAddress = data;
-                                        });
-                                        print("Selected Address" + data.toString());
-                                        if (data != null)
-                                          CheckDeleveryAvailability();
-                                      }
-                                    }),
-                              ),
-                            );*/
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 10, top: 5),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                shippingAddress != null
-                                    ? Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      "${shippingAddress["Name"]}",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width /
-                                          1.5,
-                                      child: Text(
-                                        "${shippingAddress["Address"]}",
-                                        style: TextStyle(
-                                            fontSize: 14, color: Colors.black),
-                                      ),
-                                    ),
-                                    Text(
-                                      "${shippingAddress["Pincode"]}",
-                                      style: TextStyle(fontSize: 14),
-                                    )
-                                  ],
-                                )
-                                    : Text(
-                                  "Select Address",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    /*Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            AddressList((String action, var data) {
-                                              if (action == "Success") {
-                                                setState(() {
-                                                  shippingAddress = data;
-                                                });
-                                                print("Selected Address" + data.toString());
-                                                if (data != null)
-                                                  CheckDeleveryAvailability();
-                                              }
-                                            }),
-                                      ),
-                                    );*/
-                                  },
-                                  child: Container(
-                                    margin: EdgeInsets.only(right: 15),
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.grey[200]),
-                                    child: Padding(
-                                        padding: const EdgeInsets.all(10),
-                                        child: Icon(
-                                          Icons.edit,
-                                          size: 15,
-                                          color: Colors.black,
-                                        )),
-                                  ),
-                                ),
-                              ],
+      body: SingleChildScrollView(
+        child: Stack(
+          children: <Widget>[
+            Container(
+                color: Colors.white,
+                width: MediaQuery.of(context).size.width,
+                //height: MediaQuery.of(context).size.height,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      height: MediaQuery.of(context).size.height - 175,
+                      margin: EdgeInsets.only(left: 10, right: 10, top: 5),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        //mainAxisSize: MainAxisSize.max,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10, left: 10),
+                            child: Text(
+                              'SHIPPING ADDRESS',
+                              style: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600),
+                              textAlign: TextAlign.left,
                             ),
                           ),
-                        ),
-                        Divider(
-                          color: Colors.grey,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10, left: 10),
-                          child: Text(
-                            'ITEMS',
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10, top: 5),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: new BorderRadius.circular(8.0),
+                                color: Colors.grey[200],
+                              ),
+                              padding: const EdgeInsets.only(
+                                left: 10,
+                                top: 10,
+                                bottom: 10,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  isAddressEdit == false
+                                      ? Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              1.5,
+                                          child: Text(
+                                            "${shippingAddress}",
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.black),
+                                          ),
+                                        )
+                                      : Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              1.5,
+                                          child: TextFormField(
+                                            controller: txtAddress,
+                                            autocorrect: true,
+                                            scrollPadding: EdgeInsets.all(0),
+                                            decoration: InputDecoration(
+                                              fillColor: Colors.grey[200],
+                                              filled: true,
+                                              //border: InputBorder.none,
+                                              border: new OutlineInputBorder(
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(8),
+                                                ),
+                                                borderSide: BorderSide.none,
+                                              ),
+                                              hintText: "Enter Something",
+                                            ),
+                                            //maxLength: 10,
+                                            maxLines: 2,
+                                            keyboardType: TextInputType.text,
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ),
+                                        ),
+                                  isAddressEdit == false
+                                      ? GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              isAddressEdit = true;
+                                              txtAddress.text = shippingAddress;
+                                            });
+                                          },
+                                          child: Container(
+                                            //width: MediaQuery.of(context).size.width,
+                                            margin: EdgeInsets.only(right: 15),
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.grey[400]),
+                                            child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(10),
+                                                child: Icon(
+                                                  Icons.edit,
+                                                  size: 15,
+                                                  color: Colors.black,
+                                                )),
+                                          ),
+                                        )
+                                      : GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              isAddressEdit = false;
+                                              shippingAddress = txtAddress.text;
+                                            });
+                                          },
+                                          child: Container(
+                                            //width: MediaQuery.of(context).size.width,
+                                            margin: EdgeInsets.only(right: 15),
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.grey[400]),
+                                            child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(10),
+                                                child: Icon(
+                                                  Icons.check,
+                                                  size: 15,
+                                                  color: Colors.black,
+                                                )),
+                                          ),
+                                        ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Divider(
+                            color: Colors.grey,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10, left: 10),
+                            child: Text(
+                              'ITEMS',
+                              style: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600),
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
+                          Expanded(
+                            child: ListView.builder(
+                              //physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: MyCartList.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return CheckOutItem(
+                                  MyCartList[index]
+                                );
+                              },
+                            ),
+                          ),
+                          /*Padding(
+                      padding: const EdgeInsets.only(top: 10, left: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            'Add Promo Code',
                             style: TextStyle(
-                                color: Colors.black54,
+                                color: cnst.app_primary_material_color,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600),
                             textAlign: TextAlign.left,
                           ),
-                        ),
-                        Expanded(
-                          child: ListView.builder(
-                            //physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: MyCartList.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return MyCartItem(
-                                MyCartList[index],
-                                ((String action) {
-                                  if (action == "ProductRemoved") {
-                                    setState(() {
-                                      MyCartList.removeAt(index);
-                                    });
-                                    CalculateTotal();
-                                  } else if (action == "QtyChange") {
-                                    CalculateTotal();
-                                  }
-                                }),
-                              );
-                            },
+                          Container(
+                            //width: MediaQuery.of(context).size.width,
+                            margin: EdgeInsets.only(right: 15),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.grey[200]),
+                            child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 15,
+                                  color: Colors.black,
+                                )),
                           ),
-                        ),
-                        /*Padding(
-                    padding: const EdgeInsets.only(top: 10, left: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          'Add Promo Code',
-                          style: TextStyle(
-                              color: cnst.app_primary_material_color,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600),
-                          textAlign: TextAlign.left,
-                        ),
-                        Container(
-                          //width: MediaQuery.of(context).size.width,
-                          margin: EdgeInsets.only(right: 15),
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.grey[200]),
-                          child: Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: Icon(
-                                Icons.arrow_forward_ios,
-                                size: 15,
-                                color: Colors.black,
-                              )),
-                        ),
-                      ],
+                        ],
+                      ),
+                    ),*/
+                        ],
+                      ),
                     ),
-                  ),*/
-                      ],
+                    Divider(
+                      color: Colors.grey,
                     ),
-                  ),
-                  Divider(
-                    color: Colors.grey,
-                  ),
-                  Container(
-                    height: 70,
-                    padding: EdgeInsets.only(left: 15, right: 15, bottom: 5),
-                    width: MediaQuery.of(context).size.width,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        GestureDetector(
-                          onTap: () {
-                            var calculation = {
-                              "subTotal": subTotal,
-                              "discount": discount,
-                              "totalAmt": totalAmt
-                            };
-                            _settingModalBottomSheet(context, calculation);
-                          },
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                "TOTAL",
-                                style:
-                                TextStyle(fontSize: 13, color: Colors.black54),
-                              ),
-                              Text(
-                                cnst.inr_rupee + " ${totalAmt}",
-                                style: TextStyle(fontSize: 17, color: Colors.black),
-                              ),
-                              Text(
-                                "Click here see full detail.",
-                                style:
-                                TextStyle(fontSize: 13, color: Colors.black54),
-                              ),
-                            ],
-                          ),
-                        ),
-                        isDeleveryAvailable == true
-                            ? Container(
-                          width: 165,
-                          //margin: EdgeInsets.only(top: 20),
-                          height: 45,
-                          decoration: BoxDecoration(
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(8))),
-                          child: MaterialButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(8.0)),
-                            color: cnst.app_primary_colors[600],
-                            //minWidth: MediaQuery.of(context).size.width - 20,
-                            onPressed: () {
-                              CheckOut();
+                    Container(
+                      height: 70,
+                      padding: EdgeInsets.only(left: 15, right: 15, bottom: 5),
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: () {
+                              var calculation = {
+                                "subTotal": subTotal,
+                                "discount": discount,
+                                "totalAmt": totalAmt
+                              };
+                              _settingModalBottomSheet(context, calculation);
                             },
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  "PLACE ORDER",
+                                  "TOTAL",
                                   style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.w600),
-                                  textAlign: TextAlign.center,
+                                      fontSize: 13, color: Colors.black54),
                                 ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    //shape: BoxShape.circle,
-                                    borderRadius:
-                                    BorderRadius.all(Radius.circular(12)),
-                                    color: Colors.white,
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(7.0),
-                                    child: Icon(
-                                      Icons.arrow_forward_ios,
-                                      color: cnst.app_primary_colors[600],
-                                      size: 18,
-                                    ),
-                                  ),
+                                Text(
+                                  cnst.inr_rupee + " ${totalAmt}",
+                                  style: TextStyle(
+                                      fontSize: 17, color: Colors.black),
+                                ),
+                                Text(
+                                  "Click here see full detail.",
+                                  style: TextStyle(
+                                      fontSize: 13, color: Colors.black54),
                                 ),
                               ],
                             ),
                           ),
-                        )
-                            : Container(),
-                      ],
+                          Container(
+                            width: 165,
+                            //margin: EdgeInsets.only(top: 20),
+                            height: 45,
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8))),
+                            child: MaterialButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: new BorderRadius.circular(8.0)),
+                              color: cnst.app_primary_colors[600],
+                              //minWidth: MediaQuery.of(context).size.width - 20,
+                              onPressed: () {
+                                CheckOut();
+                              },
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    "PLACE ORDER",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14.0,
+                                        fontWeight: FontWeight.w600),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      //shape: BoxShape.circle,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(12)),
+                                      color: Colors.white,
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(7.0),
+                                      child: Icon(
+                                        Icons.arrow_forward_ios,
+                                        color: cnst.app_primary_colors[600],
+                                        size: 18,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              )),
-          isLoading == true ? LoadingComponent() : Container()
-        ],
+                  ],
+                )),
+            isLoading == true ? LoadingComponent() : Container()
+          ],
+        ),
       ),
     );
   }
