@@ -9,9 +9,9 @@ import 'package:madhusudan/screens/ContactUs.dart';
 import 'package:madhusudan/screens/UploadPhotoOrder.dart';
 
 //screen list
-import 'screens/EditProfile.dart';
-import 'screens/Splash.dart';
-import 'screens/Dashboard.dart';
+import 'package:madhusudan/screens/EditProfile.dart';
+import 'package:madhusudan/screens/Splash.dart';
+import 'package:madhusudan/screens/Dashboard.dart';
 import 'package:madhusudan/screens/Login.dart';
 import 'package:madhusudan/screens/ProductList.dart';
 import 'package:madhusudan/screens/MyCart.dart';
