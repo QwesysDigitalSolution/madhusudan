@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io' as io;
 import 'dart:io';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -22,10 +23,13 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
   String shippingAddress = "C-123 Pandesara Bamroli Road Surat";
   FlutterAudioRecorder _recorder;
   Recording _recording;
+  Recording _recordingNew;
   Timer _t;
   Widget _buttonIcon = Icon(Icons.do_not_disturb_on);
   String _alert;
 
+  bool _isPlayed = true;
+  AudioPlayer player = AudioPlayer();
   @override
   void initState() {
     super.initState();
@@ -69,8 +73,8 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
     // .mp4 .m4a .aac <---> AudioFormat.AAC
     // AudioFormat is optional, if given value, will overwrite path extension when there is conflicts.
 
-    _recorder = FlutterAudioRecorder(customPath,
-        audioFormat: AudioFormat.WAV, sampleRate: 22050);
+    //_recorder = FlutterAudioRecorder(customPath, audioFormat: AudioFormat.WAV, sampleRate: 22050);
+    _recorder = FlutterAudioRecorder("${customPath}.mp4", sampleRate: 22050);
     await _recorder.initialized;
   }
 
@@ -78,18 +82,21 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
     switch (status) {
       case RecordingStatus.Initialized:
         {
-          return Icon(Icons.fiber_manual_record);
+          return Icon(
+            Icons.settings_voice,
+            color: Colors.white,
+          );
         }
       case RecordingStatus.Recording:
         {
-          return Icon(Icons.stop);
+          return Icon(Icons.stop, color: Colors.white);
         }
       case RecordingStatus.Stopped:
         {
-          return Icon(Icons.replay);
+          return Icon(Icons.replay, color: Colors.white);
         }
       default:
-        return Icon(Icons.do_not_disturb_on);
+        return Icon(Icons.do_not_disturb_on, color: Colors.white);
     }
   }
 
@@ -115,6 +122,28 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
 
     setState(() {
       _recording = result;
+      _recordingNew = result;
+    });
+  }
+
+  void _play() {
+    print("Path : ${_recording.path}");
+    print("Path New : ${_recordingNew.path}");
+    player.play(_recordingNew.path, isLocal: true);
+    setState(() {
+      //stop flag
+      _isPlayed = false;
+    });
+  }
+
+  void _stop() {
+    //AudioPlayer player = AudioPlayer();
+    /*print("Path : ${_recording.path}");
+    print("Path New : ${_recordingNew.path}");*/
+    player.pause();
+    setState(() {
+      //stop flag
+      _isPlayed = true;
     });
   }
 
@@ -151,10 +180,10 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
     }
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
+      /*floatingActionButton: FloatingActionButton(
         onPressed: _opt,
         child: _buttonIcon,
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),*/ // This trailing comma makes auto-formatting nicer for build methods.
       appBar: AppBar(
         title: Text(
           "Photo Order",
@@ -405,7 +434,53 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                         textAlign: TextAlign.left,
                       ),
                     ),
-
+                    Row(
+                      children: <Widget>[
+                        Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            color: cnst.app_primary_material_color,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(100)),
+                          ),
+                          child: IconButton(
+                            onPressed: _opt,
+                            icon: _buttonIcon,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            if (_recordingNew != "") {
+                              if (_isPlayed==false) {
+                                _stop();
+                              } else {
+                                _play();
+                              }
+                            }
+                          },
+                          child: Container(
+                            width: 100,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30)),
+                            ),
+                            child: Row(
+                              children: <Widget>[
+                                Padding(padding: EdgeInsets.only(left: 10)),
+                                Icon(
+                                 _isPlayed==true ?Icons.play_arrow:Icons.stop,
+                                  color: Colors.black,
+                                  size: 30,
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                     _orderPhoto != null
                         ? Container(
                             padding: EdgeInsets.only(top: 10),
