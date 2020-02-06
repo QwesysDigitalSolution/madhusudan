@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:madhusudan/common/ClassList.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
+import 'package:madhusudan/common/StateContainer.dart';
 
 //Screens List
 import 'package:madhusudan/screens/Home.dart';
@@ -18,7 +19,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  CartData cartData = new CartData(CartCount: 1);
+  CartData cartData = new CartData();
 
   FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
   StreamSubscription iosSubscription;
@@ -95,6 +96,10 @@ class _DashboardState extends State<Dashboard> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: cnst.app_primary_material_color[900],
     ));
+
+    final myInheritaedWidget = StateContainer.of(context);
+    cartData = myInheritaedWidget.cartData;
+
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
 import 'package:madhusudan/common/Services.dart';
+import 'package:madhusudan/common/StateContainer.dart';
 import 'package:madhusudan/component/MyCartItem.dart';
 import 'package:madhusudan/screens/CheckOut.dart';
 /*import 'package:madhusudan/screens/StateContainer.dart';*/
@@ -288,9 +289,9 @@ class _MyCartState extends State<MyCart> {
   }
 
   UpdateCartWishCount() async {
-    /*try {
+    try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String MemberId = prefs.getString(Session.MemberId);
+      String MemberId = prefs.getString(cnst.session.member_id);
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         List formData = [
@@ -301,13 +302,12 @@ class _MyCartState extends State<MyCart> {
         setState(() {
           isLoading = true;
         });
-        Services.GetServiceForList("WishListCartCounter", formData).then(
+        /*Services.GetServiceForList("WishListCartCounter", formData).then(
                 (data) async {
               if (data.length > 0) {
                 final myInheritaedWidget = StateContainer.of(context);
-                myInheritaedWidget.updateCartWishData(
+                myInheritaedWidget.updateCartData(
                   cartCount: data[0]["cartcounter"],
-                  wishCount: data[0]["wishcounter"],
                 );
                 setState(() {
                   isLoading = false;
@@ -321,11 +321,11 @@ class _MyCartState extends State<MyCart> {
           setState(() {
             isLoading = false;
           });
-        });
+        });*/
       }
     } on SocketException catch (_) {
       showMsg("No Internet Connection.");
-    }*/
+    }
   }
 
   showMsg(String msg, {String title = 'Kaya Cosmetics'}) {
