@@ -85,7 +85,6 @@ class _MyAppState extends State<MyApp> {
       routes: {
         '/': (context) => splash(),
         '/login': (context) => Login(),
-        '/ProductList': (context) => ProductList(),
         '/Dashboard': (context) => Dashboard(),
         '/UploadPhotoOrder': (context) => UploadPhotoOrder(),
         '/EditProfile': (context) => EditProfile(),

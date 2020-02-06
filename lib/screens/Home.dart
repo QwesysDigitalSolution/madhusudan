@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
+import 'package:madhusudan/screens/ProductList.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -31,7 +32,15 @@ class _HomeState extends State<Home> {
               children: <Widget>[
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/ProductList');
+                    //Navigator.pushNamed(context, '/ProductList');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProductList(
+                          "Box"
+                        ),
+                      ),
+                    );
                   },
                   child: Container(
                     //margin: EdgeInsets.symmetric(horizontal: 20,vertical: 5),
@@ -61,7 +70,15 @@ class _HomeState extends State<Home> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/ProductList');
+                    //Navigator.pushNamed(context, '/ProductList');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProductList(
+                            "Loose"
+                        ),
+                      ),
+                    );
                   },
                   child: Container(
                     //margin: EdgeInsets.symmetric(horizontal: 20,vertical: 5),
