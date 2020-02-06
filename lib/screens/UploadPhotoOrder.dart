@@ -473,7 +473,7 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                             ),
                           ),
                           Text(
-                            '${_recording?.duration.toString().substring(0, 7) ?? "-"}',
+                            '${_recording != null ? _recording.duration.toString().substring(0, 7) : "-"}',
                           ),
                           _recording?.status == RecordingStatus.Stopped
                               ? Container(
