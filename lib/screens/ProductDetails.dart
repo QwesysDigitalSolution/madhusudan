@@ -1,6 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:audioplayers/audioplayers.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:madhusudan/common/ClassList.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
@@ -8,6 +12,7 @@ import 'package:madhusudan/common/Services.dart';
 import 'package:madhusudan/common/StateContainer.dart';
 import 'package:madhusudan/component/LoadingComponent.dart';
 import 'package:madhusudan/component/NoDataComponent.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,11 +26,23 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
+  TextEditingController txtDescription = new TextEditingController();
   CartData cartData = new CartData();
   int quantity = 1;
   bool isLoading = true;
   List catData = new List();
   List imageList = new List();
+
+  //Audio File
+  FlutterAudioRecorder _recorder;
+  Recording _recording;
+  AudioPlayer player = AudioPlayer();
+  bool _isPlayed = true;
+  String _alert;
+
+  //Recording _recordingNew;
+  Timer _t;
+  Widget _buttonIcon = Icon(Icons.do_not_disturb_on);
 
   ProgressDialog pr;
 
@@ -33,7 +50,123 @@ class _ProductDetailsState extends State<ProductDetails> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    Future.microtask(() {
+      _prepare();
+    });
     getItemDetails();
+  }
+
+  Future _prepare() async {
+    var hasPermission = await FlutterAudioRecorder.hasPermissions;
+    if (hasPermission) {
+      await _init();
+      var result = await _recorder.current();
+      setState(() {
+        _recording = result;
+        _buttonIcon = _playerIcon(_recording.status);
+        _alert = "";
+      });
+    } else {
+      setState(() {
+        _alert = "Permission Required.";
+      });
+    }
+  }
+
+  Future _init() async {
+    String customPath = '/madhusudan_audio_recorder_';
+    Directory appDocDirectory;
+    if (Platform.isIOS) {
+      appDocDirectory = await getApplicationDocumentsDirectory();
+    } else {
+      appDocDirectory = await getExternalStorageDirectory();
+    }
+
+    // can add extension like ".mp4" ".wav" ".m4a" ".aac"
+    customPath = appDocDirectory.path +
+        customPath +
+        DateTime.now().millisecondsSinceEpoch.toString();
+
+    // .wav <---> AudioFormat.WAV
+    // .mp4 .m4a .aac <---> AudioFormat.AAC
+    // AudioFormat is optional, if given value, will overwrite path extension when there is conflicts.
+
+    //_recorder = FlutterAudioRecorder(customPath, audioFormat: AudioFormat.WAV, sampleRate: 22050);
+    _recorder = FlutterAudioRecorder("${customPath}.mp4", sampleRate: 22050);
+    await _recorder.initialized;
+  }
+
+  Widget _playerIcon(RecordingStatus status) {
+    switch (status) {
+      case RecordingStatus.Initialized:
+        {
+          return Icon(
+            Icons.settings_voice,
+            color: Colors.white,
+          );
+        }
+      case RecordingStatus.Recording:
+        {
+          return Icon(Icons.stop, color: Colors.white);
+        }
+      case RecordingStatus.Stopped:
+        {
+          return Icon(Icons.replay, color: Colors.white);
+        }
+      default:
+        return Icon(Icons.do_not_disturb_on, color: Colors.white);
+    }
+  }
+
+  Future _startRecording() async {
+    await _recorder.start();
+    var current = await _recorder.current();
+    setState(() {
+      _recording = current;
+    });
+
+    _t = Timer.periodic(Duration(milliseconds: 10), (Timer t) async {
+      var current = await _recorder.current();
+      setState(() {
+        _recording = current;
+        _t = t;
+      });
+    });
+  }
+
+  Future _stopRecording() async {
+    var result = await _recorder.stop();
+    _t.cancel();
+
+    setState(() {
+      _recording = result;
+      // _recordingNew = result;
+    });
+  }
+
+  void _play() async {
+    print("Path : ${_recording.path}");
+    setState(() {
+      _isPlayed = false;
+    });
+    player.play(_recording.path, isLocal: true);
+    player.onPlayerCompletion.listen((data) {
+      print("Completed");
+      setState(() {
+        _isPlayed = true;
+      });
+    });
+  }
+
+  void _stop() {
+    //AudioPlayer player = AudioPlayer();
+    /*print("Path : ${_recording.path}");
+    print("Path New : ${_recordingNew.path}");*/
+    player.pause();
+    setState(() {
+      //stop flag
+      _isPlayed = true;
+    });
   }
 
   showMsg(String msg, {String title = 'Madhusudan'}) {
@@ -122,6 +255,65 @@ class _ProductDetailsState extends State<ProductDetails> {
     //pr.isShowing() ? pr.hide() : null;
   }
 
+  addToCart() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String MemberId = prefs.getString(cnst.session.Member_Id);
+
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        pr.show();
+        String filename = "";
+        File compressedFile;
+
+        /*if (_orderPhoto != null) {
+          var file = _orderPhoto.path.split('/');
+          filename = "user.png";
+
+          if (file != null && file.length > 0)
+            filename = file[file.length - 1].toString();
+
+          ImageProperties properties =
+          await FlutterNativeImage.getImageProperties(_orderPhoto.path);
+          compressedFile = await FlutterNativeImage.compressImage(
+              _orderPhoto.path,
+              quality: 80,
+              targetWidth: 600,
+              targetHeight:
+              (properties.height * 600 / properties.width).round());
+        }*/
+
+        FormData formData = new FormData.fromMap({
+          "UserId": MemberId,
+          "ItemId": 0,
+          "Qty": 1,
+          "Comment": "",
+          /*"AudioFile": _orderPhoto != null
+              ? await MultipartFile.fromFile(compressedFile.path,
+              filename: filename.toString())
+              : null*/
+        });
+        print("Add To Cart Data =  $formData");
+        Services.PostServiceForSave("wl/v1/AddToCart", formData).then(
+            (data) async {
+          pr.hide();
+          if (data.Data == "1") {
+            Navigator.pushReplacementNamed(context, '/PlaceOrder');
+          } else {
+            showMsg(data.Message, title: "Error");
+          }
+        }, onError: (e) {
+          pr.hide();
+          showMsg("Try Again.");
+        });
+      } else {
+        showMsg("No Internet Connection.");
+      }
+    } on SocketException catch (_) {
+      showMsg("No Internet Connection.");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final myInheritaedWidget = StateContainer.of(context);
@@ -129,6 +321,33 @@ class _ProductDetailsState extends State<ProductDetails> {
     final size = MediaQuery.of(context).size;
     final width = size.width;
     final height = size.height;
+
+    void _opt() async {
+      switch (_recording.status) {
+        case RecordingStatus.Initialized:
+          {
+            await _startRecording();
+            break;
+          }
+        case RecordingStatus.Recording:
+          {
+            await _stopRecording();
+            break;
+          }
+        case RecordingStatus.Stopped:
+          {
+            await _prepare();
+            break;
+          }
+
+        default:
+          break;
+      }
+
+      setState(() {
+        _buttonIcon = _playerIcon(_recording.status);
+      });
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -207,8 +426,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 itemBuilder: (BuildContext, int index) {
                                   return new FadeInImage.assetNetwork(
                                     placeholder: 'assets/loading.gif',
-                                    image:
-                                        "${imageList[index]["Image"]}",
+                                    image: "${imageList[index]["Image"]}",
                                     fit: BoxFit.fill,
                                     width:
                                         MediaQuery.of(context).size.width / 2,
@@ -370,7 +588,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 minWidth:
                                     MediaQuery.of(context).size.width - 20,
                                 onPressed: () {
-                                  //addtoCart('addToCart');
+                                  _settingModalBottomSheet(context, (data) {
+                                    if(data == "record"){
+                                      _opt();
+                                    }
+                                  });
                                 },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -449,5 +671,149 @@ class _ProductDetailsState extends State<ProductDetails> {
           //: NoDataComponent(),
           ),
     );
+  }
+
+  @override
+  void _settingModalBottomSheet(context, Function onChange) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            padding: EdgeInsets.only(left: 20,right: 20,top: 20,bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: new Wrap(
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10.0),
+                    ),
+                  ),
+                  child: TextFormField(
+                    controller: txtDescription,
+                    autocorrect: true,
+                    scrollPadding: EdgeInsets.all(0),
+                    decoration: InputDecoration(
+                        fillColor: Colors.grey[200],
+                        filled: true,
+                        //border: InputBorder.none,
+                        border: new OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8),
+                            ),
+                            borderSide: BorderSide.none),
+                        hintText: "Enter Something"),
+                    //maxLength: 10,
+                    maxLines: 4,
+                    keyboardType: TextInputType.text,
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+                Center(
+                  child: Text("OR"),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.95,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(30),
+                    ),
+                  ),
+                  padding: EdgeInsets.all(10),
+                  margin: EdgeInsets.only(top: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          color: cnst.app_primary_material_color,
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(100)),
+                        ),
+                        child: IconButton(
+                          onPressed: (){
+                            onChange("record");
+                          },
+                          icon: _buttonIcon,
+                        ),
+                      ),
+                      Text(
+                        '${_recording != null ? _recording.duration.toString().substring(0, 7) : "-"}',
+                      ),
+                      _recording?.status == RecordingStatus.Stopped
+                          ? Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          color: cnst.app_primary_material_color,
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(100)),
+                        ),
+                        child: IconButton(
+                          onPressed: () {
+                            if (_recording != "") {
+                              if (_isPlayed == false) {
+                                _stop();
+                              } else {
+                                _play();
+                              }
+                            }
+                          },
+                          color: Colors.black,
+                          icon: Icon(
+                            _isPlayed == true
+                                ? Icons.play_arrow
+                                : Icons.stop,
+                            color: Colors.white,
+                          ),
+                        ),
+                      )
+                          : Container(),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 10, right: 10),
+                  height: 50,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
+                  child: MaterialButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(8.0)),
+                    color: cnst.app_primary_material_color[600],
+                    minWidth: MediaQuery.of(context).size.width - 20,
+                    onPressed: () {},
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Image.asset(
+                          "images/shoppingcart.png",
+                          height: 20,
+                          width: 20,
+                          fit: BoxFit.fill,
+                          color: Colors.white,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 8, bottom: 8, left: 8, right: 4),
+                          child: Text(
+                            "Continue",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w600),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
   }
 }

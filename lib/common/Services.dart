@@ -43,4 +43,32 @@ class Services{
     }
   }
 
+  static Future<SaveDataClass> PostServiceForSave(String APIName, body) async {
+    print(body.toString());
+    String url = cnst.api_url + '$APIName';
+    print("$APIName : " + url);
+    try {
+      final response = await dio.post(url, data: body);
+      if (response.statusCode == 200) {
+        SaveDataClass saveData =
+        new SaveDataClass(Message: 'No Data', IsSuccess: false, Data: '0');
+        var responseData = response.data;
+
+        print("$APIName Response: " + responseData.toString());
+
+        saveData.Message = responseData["Message"].toString();
+        saveData.IsSuccess =
+        responseData["IsSuccess"].toString() == "true" ? true : false;
+        saveData.Data = responseData["Data"].toString();
+
+        return saveData;
+      } else {
+        print("Server Error");
+        throw Exception(response.data.toString());
+      }
+    } catch (e) {
+      print("App Error ${e.toString()}");
+      throw Exception(e.toString());
+    }
+  }
 }
