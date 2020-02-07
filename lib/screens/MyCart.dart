@@ -8,6 +8,7 @@ import 'package:madhusudan/common/Services.dart';
 import 'package:madhusudan/common/StateContainer.dart';
 import 'package:madhusudan/component/MyCartItem.dart';
 import 'package:madhusudan/screens/CheckOut.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 /*import 'package:madhusudan/screens/StateContainer.dart';*/
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,11 +25,29 @@ class _MyCartState extends State<MyCart> {
   double subTotal = 0;
   double discount = 0;
   double totalAmt = 0;
+  ProgressDialog pr;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    pr = new ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: false);
+    pr.style(
+        message: "Please Wait",
+        borderRadius: 10.0,
+        progressWidget: Container(
+          padding: EdgeInsets.all(15),
+          child: CircularProgressIndicator(
+            valueColor: new AlwaysStoppedAnimation<Color>(
+                cnst.app_primary_material_color),
+          ),
+        ),
+        elevation: 10.0,
+        insetAnimCurve: Curves.easeInOut,
+        messageTextStyle: TextStyle(
+            color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w600));
+
     getLocalData();
   }
 
@@ -65,6 +84,8 @@ class _MyCartState extends State<MyCart> {
 
   getOrderDetail() async {
     try {
+      pr = new ProgressDialog(context);
+      pr.show();
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String MemberId = prefs.getString(cnst.session.Member_Id);
       final result = await InternetAddress.lookup('google.com');
@@ -77,6 +98,7 @@ class _MyCartState extends State<MyCart> {
           isLoading = true;
         });
         Services.GetServiceForList("wl/v1/GetMyCart", formData).then((data) async {
+          pr.hide();
           if (data.length > 0) {
             setState(() {
               CartList = data;
@@ -91,12 +113,16 @@ class _MyCartState extends State<MyCart> {
             });
           }
         }, onError: (e) {
+          pr.hide();
           setState(() {
             isLoading = false;
           });
         });
+      }else{
+        pr.hide();
       }
     } on SocketException catch (_) {
+      pr.hide();
       showMsg("No Internet Connection.");
     }
   }
