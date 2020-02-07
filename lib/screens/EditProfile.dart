@@ -1,10 +1,15 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
+import 'package:madhusudan/common/Services.dart';
 import 'package:madhusudan/component/LoadingComponent.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProfile extends StatefulWidget {
   @override
@@ -18,6 +23,29 @@ class _EditProfileState extends State<EditProfile> {
   bool isLoading = false;
 
   File _memberImage;
+
+  ProgressDialog pr;
+  showPrDialog() async{
+    pr = new ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: false);
+    pr.style(
+        message: "Please Wait",
+        borderRadius: 10.0,
+        progressWidget: Container(
+          padding: EdgeInsets.all(15),
+          child: CircularProgressIndicator(
+            valueColor: new AlwaysStoppedAnimation<Color>(
+                cnst.app_primary_material_color),
+          ),
+        ),
+        elevation: 10.0,
+        insetAnimCurve: Curves.easeInOut,
+        messageTextStyle: TextStyle(
+            color: Colors.black,
+            fontSize: 17.0,
+            fontWeight: FontWeight.w600));
+  }
+
 
   void _profileImagePopup(context) {
     showModalBottomSheet(
@@ -37,7 +65,8 @@ class _EditProfileState extends State<EditProfile> {
                         setState(() {
                           _memberImage = image;
                         });
-                        //sendUserProfileImg();
+                        await showPrDialog();
+                       // sendUserProfileImg();
                       }
                       Navigator.pop(context);
                     }),
@@ -52,6 +81,7 @@ class _EditProfileState extends State<EditProfile> {
                         setState(() {
                           _memberImage = image;
                         });
+                        await showPrDialog();
                         //sendUserProfileImg();
                       }
                       Navigator.pop(context);
@@ -61,6 +91,83 @@ class _EditProfileState extends State<EditProfile> {
           );
         });
   }
+
+  /*sendUserProfileImg() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        await showPrDialog();
+        pr.show();
+
+        String filename = "";
+        File compressedFile;
+
+        if (_memberImage != null) {
+          var file = _memberImage.path.split('/');
+          filename = "user.png";
+
+          if (file != null && file.length > 0)
+            filename = file[file.length - 1].toString();
+
+          ImageProperties properties =
+          await FlutterNativeImage.getImageProperties(_memberImage.path);
+          compressedFile = await FlutterNativeImage.compressImage(
+              _memberImage.path,
+              quality: 80,
+              targetWidth: 600,
+              targetHeight:
+              (properties.height * 600 / properties.width).round());
+        }
+
+        *//*FormData formData = new FormData.from(
+          {
+            "Id": memberId,
+            "Image": _imageOffer != null
+                ? new UploadFileInfo(compressedFile, filename.toString())
+                : null
+          },
+        );*//*
+        *//*FormData formData = new FormData.fromMap({
+          "UserId": MemberId,
+          "ImagePath": _memberImage != null
+              ? await MultipartFile.fromFile(compressedFile.path,
+              filename: filename.toString())
+              : null
+        });*//*
+
+        FormData formData = new FormData.fromMap({
+          "UserId": MemberId,
+          "ImagePath": _memberImage != null
+              ? await MultipartFile.fromFile(compressedFile.path,
+              filename: filename.toString())
+              : null
+        });
+
+        Services.GetServiceForList("UpdateProfileImage", formData).then(
+                (data) async {
+              pr.hide();
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+
+              *//*if (data.Data != "0" && data.Data != "") {
+                await prefs.setString(Session.Image, data.Data);
+                showMsg("Profile Updated Successfully.");
+              } else {
+                showMsg(data.Message);
+              }*//*
+            }, onError: (e) {
+          pr.hide();
+        });
+      } else {
+        pr.hide();
+        showMsg("No Internet Connection.");
+      }
+    } on SocketException catch (_) {
+      showMsg("No Internet Connection.");
+    }
+  }*/
+
+
 
   bool validateEmail(String value) {
     Pattern pattern =

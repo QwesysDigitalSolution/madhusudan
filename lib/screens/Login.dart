@@ -110,11 +110,11 @@ class _LoginState extends State<Login> {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 await prefs.setString(
                     cnst.session.Member_Id, data[0]["Id"].toString());
-                await prefs.setString(cnst.session.Email, data[0]["EmailId"]);
+                await prefs.setString(cnst.session.Email, data[0]["Email"]);
                 await prefs.setString(cnst.session.Name, data[0]["Name"]);
-                await prefs.setString(cnst.session.Gender, data[0]["Gender"]);
-                await prefs.setString(cnst.session.Image, data[0]["Image"]);
-                await prefs.setString(cnst.session.Mobile, data[0]["MobileNo"]);
+                  await prefs.setString(cnst.session.Image, data[0]["Image"]);
+                await prefs.setString(cnst.session.Mobile, data[0]["Mobile"]);
+                await prefs.setString(cnst.session.Address, data[0]["Address"]);
                 await prefs.setString(
                     cnst.session.IsVerified, data[0]["IsVerified"].toString());
 
@@ -123,6 +123,7 @@ class _LoginState extends State<Login> {
                 } else {
                   Navigator.pushReplacementNamed(context, '/OTPScreen');
                 }*/
+
                 Navigator.pushReplacementNamed(
                     context, '/Dashboard');
               } else {

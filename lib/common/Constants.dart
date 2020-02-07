@@ -13,6 +13,7 @@ class session {
   static const String Email = "Email";
   static const String Name = "Name";
   static const String Gender = "Gender";
+  static const String Address = "Address";
   static const String Image = "Image";
   static const String IsVerified = "IsVerified";
 }

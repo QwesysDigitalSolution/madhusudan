@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -9,10 +10,27 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   String Name = "", Mobile = "", MemberId = "", MemberImage = "";
 
-  /*String getName() {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getLocalData();
+  }
+
+  String getName() {
     getLocalData();
     return Name;
-  }*/
+  }
+
+  getLocalData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      MemberId = prefs.getString(cnst.session.Member_Id);
+      Name = prefs.getString(cnst.session.Name);
+      Mobile = prefs.getString(cnst.session.Mobile);
+      MemberImage = prefs.getString(cnst.session.Image);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +56,6 @@ class _ProfileState extends State<Profile> {
                         ? ClipOval(
                             child: FadeInImage.assetNetwork(
                               placeholder: "assets/loading.gif",
-                              //image: "${cnst.img_url}${MemberImage}",
                               image: "${MemberImage}",
                               fit: BoxFit.cover,
                             ),
@@ -55,18 +72,14 @@ class _ProfileState extends State<Profile> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        "Name",
-                        //"${getName()}",
+                        "${getName()}",
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w600),
+                            fontSize: 18, fontWeight: FontWeight.w600),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: Text(
-                          "Mobile",
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.w600),
-                        ),
+                      Text(
+                        "${Mobile}",
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w500),
                       )
                     ],
                   )
