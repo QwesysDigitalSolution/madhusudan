@@ -18,14 +18,11 @@ class _ProductItemCardState extends State<ProductItemCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        /*Navigator.push(
+        Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    ProductDetail(Id: widget.ItemData["Id"].toString())));*/
-
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => ProductDetails()));
+                    ProductDetails(Id: widget.ItemData["Id"].toString())));
       },
       child: AnimationConfiguration.staggeredGrid(
         duration: const Duration(milliseconds: 1000),
