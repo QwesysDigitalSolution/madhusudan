@@ -29,29 +29,13 @@ class _ProductListState extends State<ProductList> {
   bool _isSearching = false, isfirst = false;
   bool isLoading = true;
   List catData = new List();
-
+  TextEditingController txtSearch=new TextEditingController();
   ProgressDialog pr;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    pr = new ProgressDialog(context,
-        type: ProgressDialogType.Normal, isDismissible: false);
-    pr.style(
-        message: "Please Wait",
-        borderRadius: 10.0,
-        progressWidget: Container(
-          padding: EdgeInsets.all(15),
-          child: CircularProgressIndicator(
-            valueColor: new AlwaysStoppedAnimation<Color>(
-                cnst.app_primary_material_color),
-          ),
-        ),
-        elevation: 10.0,
-        insetAnimCurve: Curves.easeInOut,
-        messageTextStyle: TextStyle(
-            color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w600));
 
     getproduct();
   }
@@ -76,8 +60,31 @@ class _ProductListState extends State<ProductList> {
     );
   }
 
+  showPrDialog() async{
+    pr = new ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: false);
+    pr.style(
+        message: "Please Wait",
+        borderRadius: 10.0,
+        progressWidget: Container(
+          padding: EdgeInsets.all(15),
+          child: CircularProgressIndicator(
+            valueColor: new AlwaysStoppedAnimation<Color>(
+                cnst.app_primary_material_color),
+          ),
+        ),
+        elevation: 10.0,
+        insetAnimCurve: Curves.easeInOut,
+        messageTextStyle: TextStyle(
+            color: Colors.black,
+            fontSize: 17.0,
+            fontWeight: FontWeight.w600));
+  }
+
   getproduct() async {
     try {
+      await showPrDialog();
+      pr.show();
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String MemberId = prefs.getString(cnst.session.Member_Id);
       final result = await InternetAddress.lookup('google.com');
@@ -87,7 +94,7 @@ class _ProductListState extends State<ProductList> {
           {"key": "UserId", "value": MemberId.toString()},
         ];
         print("GetProductListByType Data = ${formData}");
-        pr.show();
+        //pr.show();
         setState(() {
           isLoading = true;
         });
@@ -115,6 +122,7 @@ class _ProductListState extends State<ProductList> {
         });
       }
     } on SocketException catch (_) {
+      pr.isShowing() ? pr.hide() : null;
       showMsg("No Internet Connection.");
     }
   }
@@ -168,6 +176,7 @@ class _ProductListState extends State<ProductList> {
                         height: 40,
                         width: double.infinity,
                         child: CupertinoTextField(
+                          controller: txtSearch,
                           keyboardType: TextInputType.text,
                           placeholder: "Search Product",
                           onChanged: (val) {

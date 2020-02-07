@@ -40,6 +40,7 @@ dependencies:
   flutter_audio_recorder: ^0.5.2
   path_provider: any
   audioplayers: any
+  flutter_swiper:  ^1.1.6
 
 dev_dependencies:
   flutter_test:

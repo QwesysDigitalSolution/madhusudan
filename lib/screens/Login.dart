@@ -95,6 +95,7 @@ class _LoginState extends State<Login> {
     if (edtMobile.text != "") {
       if (edtMobile.text.length == 10) {
         try {
+          pr.show();
           final result = await InternetAddress.lookup('google.com');
           if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
             List formData = [
@@ -103,7 +104,6 @@ class _LoginState extends State<Login> {
             ];
             Future res =
             Services.GetServiceForList("wl/v1/GetLoginData", formData);
-            pr.show();
             res.then((data) async {
               pr.hide();
               if (data != null && data.length > 0) {
