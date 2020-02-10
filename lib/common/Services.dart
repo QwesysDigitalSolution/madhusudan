@@ -71,4 +71,46 @@ class Services {
       throw Exception(e.toString());
     }
   }
+
+  static Future<SaveDataClass> GetServiceForSave(
+      String APIName, List params) async {
+    String Url = APIName + "?";
+    for (int i = 0; i < params.length; i++) {
+      Url = Url + '${params[i]["key"]}=${params[i]["value"]}';
+      if (i + 1 != params.length) Url = Url + "&";
+    }
+
+    String url = cnst.api_url + '$Url';
+    print("$APIName URL: " + url);
+    try {
+      Response response = await dio.get(url);
+
+      if (response.statusCode == 200) {
+        SaveDataClass saveData = new SaveDataClass(
+            Message: 'No Data', IsSuccess: false, IsRecord: false, Data: "");
+        print("$APIName Response: " + response.data.toString());
+        var responseData = response.data;
+
+        /*saveData.Message = responseData["Message"];
+        saveData.IsSuccess = responseData["IsSuccess"];
+        saveData.IsSuccess = responseData["IsSuccess"];
+        saveData.Data = responseData["Data"].toString();*/
+        print("$APIName Response: " + responseData.toString());
+
+        saveData.Message = responseData["Message"].toString();
+        saveData.IsSuccess =
+        responseData["IsSuccess"].toString() == "true" ? true : false;
+        saveData.Data = responseData["Data"].toString();
+
+        return saveData;
+      } else {
+        throw Exception("Something Went Wrong");
+      }
+    } catch (e) {
+      print("$APIName Erorr : " + e.toString());
+      throw Exception(e);
+    }
+  }
+
+
 }

@@ -6,6 +6,7 @@ import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
 import 'package:madhusudan/common/StateContainer.dart';
+import 'package:madhusudan/screens/AboutUs.dart';
 import 'package:madhusudan/screens/ContactUs.dart';
 import 'package:madhusudan/screens/UploadPhotoOrder.dart';
 
@@ -92,6 +93,7 @@ class _MyAppState extends State<MyApp> {
         '/OrderSuccess': (context) => OrderSuccess(),
         '/MyOrder': (context) => MyOrder(),
         '/ContactUs': (context) => ContactUs(),
+        '/AboutUs': (context) => AboutUs(),
       },
       theme: ThemeData(
         textTheme: GoogleFonts.latoTextTheme(textTheme).copyWith(

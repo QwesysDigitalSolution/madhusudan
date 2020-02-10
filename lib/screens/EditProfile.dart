@@ -202,6 +202,47 @@ class _EditProfileState extends State<EditProfile> {
       return false;
   }
 
+  _updateMemberInfo() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      //String memberId = prefs.getString(Session.MemberId);
+
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        await showPrDialog();
+        pr.show();
+
+        List formData = [
+          {"key": "Name", "value": txtName.text.trim()},
+          {"key": "Email", "value": txtEmail.text.trim()},
+          {"key": "UserId", "value": MemberId},
+        ];
+
+        Services.GetServiceForSave("wl/v1/UpdateMemberInfo", formData).then(
+                (data) async {
+              pr.hide();
+              if (data.Data == "1" && data.IsSuccess == true) {
+                await prefs.setString(cnst.session.Name, txtName.text);
+
+                await prefs.setString(cnst.session.Email, txtEmail.text);
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/Dashboard', (Route<dynamic> route) => false);
+              } else {
+                showMsg(data.Message, title: "Error");
+              }
+            }, onError: (e) {
+          pr.hide();
+          showMsg("Try Again.");
+        });
+      } /*else {
+        showMsg("No Internet Connection.");
+      }*/
+    } on SocketException catch (_) {
+      showMsg("No Internet Connection.");
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -322,7 +363,7 @@ class _EditProfileState extends State<EditProfile> {
                                       if (txtEmail.text != "") {
                                         if (validateEmail(txtEmail.text) ==
                                             false) {
-                                          //_updateMemberInfo();
+                                          _updateMemberInfo();
                                         } else {
                                           Fluttertoast.showToast(
                                               msg: "Enter Valid Email.",
