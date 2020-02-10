@@ -7,7 +7,7 @@ import 'package:madhusudan/common/Constants.dart' as cnst;
 
 Dio dio = new Dio();
 
-class Services{
+class Services {
   static Future<List> GetServiceForList(String APIName, List params) async {
     String Url = "";
     if (params.length > 0) {
@@ -51,14 +51,14 @@ class Services{
       final response = await dio.post(url, data: body);
       if (response.statusCode == 200) {
         SaveDataClass saveData =
-        new SaveDataClass(Message: 'No Data', IsSuccess: false, Data: '0');
+            new SaveDataClass(Message: 'No Data', IsSuccess: false, Data: '0');
         var responseData = response.data;
 
         print("$APIName Response: " + responseData.toString());
 
         saveData.Message = responseData["Message"].toString();
         saveData.IsSuccess =
-        responseData["IsSuccess"].toString() == "true" ? true : false;
+            responseData["IsSuccess"].toString() == "true" ? true : false;
         saveData.Data = responseData["Data"].toString();
 
         return saveData;

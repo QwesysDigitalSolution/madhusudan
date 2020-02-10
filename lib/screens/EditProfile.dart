@@ -18,14 +18,33 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile> {
   String Name = "", Email = "", MemberId = "", MemberImage = "";
-  TextEditingController edtName = new TextEditingController();
-  TextEditingController edtEmail = new TextEditingController();
+  TextEditingController txtName = new TextEditingController();
+  TextEditingController txtEmail = new TextEditingController();
   bool isLoading = false;
 
   File _memberImage;
 
   ProgressDialog pr;
-  showPrDialog() async{
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getLocalData();
+  }
+
+  getLocalData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      MemberId = prefs.getString(cnst.session.Member_Id);
+      //Name = prefs.getString(cnst.session.Name);
+      MemberImage = prefs.getString(cnst.session.Image);
+      txtName.text=prefs.getString(cnst.session.Name);
+      txtEmail.text=prefs.getString(cnst.session.Email);
+    });
+  }
+
+  showPrDialog() async {
     pr = new ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: false);
     pr.style(
@@ -41,11 +60,8 @@ class _EditProfileState extends State<EditProfile> {
         elevation: 10.0,
         insetAnimCurve: Curves.easeInOut,
         messageTextStyle: TextStyle(
-            color: Colors.black,
-            fontSize: 17.0,
-            fontWeight: FontWeight.w600));
+            color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w600));
   }
-
 
   void _profileImagePopup(context) {
     showModalBottomSheet(
@@ -64,9 +80,10 @@ class _EditProfileState extends State<EditProfile> {
                       if (image != null) {
                         setState(() {
                           _memberImage = image;
+                          print(_memberImage);
                         });
                         await showPrDialog();
-                       // sendUserProfileImg();
+                        sendUserProfileImg();
                       }
                       Navigator.pop(context);
                     }),
@@ -80,9 +97,10 @@ class _EditProfileState extends State<EditProfile> {
                       if (image != null) {
                         setState(() {
                           _memberImage = image;
+
                         });
                         await showPrDialog();
-                        //sendUserProfileImg();
+                        sendUserProfileImg();
                       }
                       Navigator.pop(context);
                     }),
@@ -92,14 +110,32 @@ class _EditProfileState extends State<EditProfile> {
         });
   }
 
-  /*sendUserProfileImg() async {
+  showMsg(String msg, {String title = 'Madhusudan'}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text(title),
+          content: new Text(msg),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Okay"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  sendUserProfileImg() async {
     try {
       final result = await InternetAddress.lookup('google.com');
-
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         await showPrDialog();
         pr.show();
-
         String filename = "";
         File compressedFile;
 
@@ -111,63 +147,50 @@ class _EditProfileState extends State<EditProfile> {
             filename = file[file.length - 1].toString();
 
           ImageProperties properties =
-          await FlutterNativeImage.getImageProperties(_memberImage.path);
+              await FlutterNativeImage.getImageProperties(_memberImage.path);
           compressedFile = await FlutterNativeImage.compressImage(
               _memberImage.path,
-              quality: 80,
+              quality: 100,
               targetWidth: 600,
               targetHeight:
-              (properties.height * 600 / properties.width).round());
+                  (properties.height * 600 / properties.width).round());
         }
-
-        *//*FormData formData = new FormData.from(
-          {
-            "Id": memberId,
-            "Image": _imageOffer != null
-                ? new UploadFileInfo(compressedFile, filename.toString())
-                : null
-          },
-        );*//*
-        *//*FormData formData = new FormData.fromMap({
-          "UserId": MemberId,
-          "ImagePath": _memberImage != null
-              ? await MultipartFile.fromFile(compressedFile.path,
-              filename: filename.toString())
-              : null
-        });*//*
 
         FormData formData = new FormData.fromMap({
           "UserId": MemberId,
-          "ImagePath": _memberImage != null
+          "Photo": _memberImage != null
               ? await MultipartFile.fromFile(compressedFile.path,
-              filename: filename.toString())
+                  filename: filename.toString())
               : null
         });
 
-        Services.GetServiceForList("UpdateProfileImage", formData).then(
-                (data) async {
-              pr.hide();
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-
-              *//*if (data.Data != "0" && data.Data != "") {
-                await prefs.setString(Session.Image, data.Data);
-                showMsg("Profile Updated Successfully.");
-              } else {
-                showMsg(data.Message);
-              }*//*
-            }, onError: (e) {
+        Services.PostServiceForSave("wl/v1/UpdateMemberPhoto", formData).then(
+            (data) async {
           pr.hide();
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+
+          if (data.Data != "0" && data.Data != "") {
+            await prefs.setString(cnst.session.Image, data.Data);
+            showMsg("Profile Updated Successfully.");
+          } else {
+            showMsg(data.Message);
+            setState(() {
+              _memberImage = null;
+            });
+          }
+        }, onError: (e) {
+          pr.hide();
+          showMsg("Try Again.");
+          setState(() {
+            _memberImage = null;
+          });
         });
-      } else {
-        pr.hide();
-        showMsg("No Internet Connection.");
       }
     } on SocketException catch (_) {
+      pr.isShowing() ? pr.hide() : Container();
       showMsg("No Internet Connection.");
     }
-  }*/
-
-
+  }
 
   bool validateEmail(String value) {
     Pattern pattern =
@@ -247,7 +270,7 @@ class _EditProfileState extends State<EditProfile> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               TextFormField(
-                                controller: edtName,
+                                controller: txtName,
                                 cursorColor: Theme.of(context).cursorColor,
                                 decoration: InputDecoration(
                                   counterText: "",
@@ -264,7 +287,7 @@ class _EditProfileState extends State<EditProfile> {
                               ),
                               Padding(padding: EdgeInsets.only(top: 15)),
                               TextFormField(
-                                controller: edtEmail,
+                                controller: txtEmail,
                                 cursorColor: Theme.of(context).cursorColor,
                                 decoration: InputDecoration(
                                   counterText: "",
@@ -295,9 +318,9 @@ class _EditProfileState extends State<EditProfile> {
                                   minWidth:
                                       MediaQuery.of(context).size.width - 20,
                                   onPressed: () {
-                                    if (edtName.text != "") {
-                                      if (edtEmail.text != "") {
-                                        if (validateEmail(edtEmail.text) ==
+                                    if (txtName.text != "") {
+                                      if (txtEmail.text != "") {
+                                        if (validateEmail(txtEmail.text) ==
                                             false) {
                                           //_updateMemberInfo();
                                         } else {

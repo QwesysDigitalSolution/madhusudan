@@ -29,7 +29,7 @@ class _ProductListState extends State<ProductList> {
   bool _isSearching = false, isfirst = false;
   bool isLoading = true;
   List catData = new List();
-  TextEditingController txtSearch=new TextEditingController();
+  TextEditingController txtSearch = new TextEditingController();
   ProgressDialog pr;
 
   @override
@@ -60,7 +60,7 @@ class _ProductListState extends State<ProductList> {
     );
   }
 
-  showPrDialog() async{
+  showPrDialog() async {
     pr = new ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: false);
     pr.style(
@@ -76,19 +76,17 @@ class _ProductListState extends State<ProductList> {
         elevation: 10.0,
         insetAnimCurve: Curves.easeInOut,
         messageTextStyle: TextStyle(
-            color: Colors.black,
-            fontSize: 17.0,
-            fontWeight: FontWeight.w600));
+            color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w600));
   }
 
   getproduct() async {
     try {
       await showPrDialog();
-      pr.show();
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String MemberId = prefs.getString(cnst.session.Member_Id);
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        pr.show();
         List formData = [
           {"key": "Type", "value": widget.type.toString()},
           {"key": "UserId", "value": MemberId.toString()},
@@ -122,7 +120,7 @@ class _ProductListState extends State<ProductList> {
         });
       }
     } on SocketException catch (_) {
-      pr.isShowing() ? pr.hide() : null;
+      //pr.isShowing() ? pr.hide() : null;
       showMsg("No Internet Connection.");
     }
   }

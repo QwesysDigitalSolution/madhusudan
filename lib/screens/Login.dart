@@ -95,9 +95,10 @@ class _LoginState extends State<Login> {
     if (edtMobile.text != "") {
       if (edtMobile.text.length == 10) {
         try {
-          pr.show();
+
           final result = await InternetAddress.lookup('google.com');
           if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+            pr.show();
             List formData = [
               {"key": "MobileNo", "value": edtMobile.text},
               {"key": "FCMToken", "value": fcmToken},
@@ -158,8 +159,6 @@ class _LoginState extends State<Login> {
           textColor: Colors.white);
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
