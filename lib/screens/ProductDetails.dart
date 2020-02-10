@@ -266,39 +266,34 @@ class _ProductDetailsState extends State<ProductDetails> {
         String filename = "";
         File compressedFile;
 
-        /*if (_orderPhoto != null) {
-          var file = _orderPhoto.path.split('/');
+        if (_recording != null) {
+          var file = _recording.path.split('/');
           filename = "user.png";
 
           if (file != null && file.length > 0)
             filename = file[file.length - 1].toString();
-
-          ImageProperties properties =
-          await FlutterNativeImage.getImageProperties(_orderPhoto.path);
-          compressedFile = await FlutterNativeImage.compressImage(
-              _orderPhoto.path,
-              quality: 80,
-              targetWidth: 600,
-              targetHeight:
-              (properties.height * 600 / properties.width).round());
-        }*/
+        }
 
         FormData formData = new FormData.fromMap({
           "UserId": MemberId,
-          "ItemId": 0,
-          "Qty": 1,
-          "Comment": "",
-          /*"AudioFile": _orderPhoto != null
-              ? await MultipartFile.fromFile(compressedFile.path,
-              filename: filename.toString())
-              : null*/
+          "ItemId": widget.Id,
+          "Qty": quantity,
+          "Comment": txtDescription.text,
+          "AudioFile": _recorder != null
+              ? await MultipartFile.fromFile(
+                  _recording.path,
+                  filename: filename,
+                )
+              : null
         });
         print("Add To Cart Data =  $formData");
+        print("Add To Cart Data =  ${MemberId}");
         Services.PostServiceForSave("wl/v1/AddToCart", formData).then(
             (data) async {
           pr.hide();
           if (data.Data == "1") {
             Navigator.pushReplacementNamed(context, '/PlaceOrder');
+            showMsg("Item Added To Cart Successfully");
           } else {
             showMsg(data.Message, title: "Error");
           }
@@ -567,6 +562,109 @@ class _ProductDetailsState extends State<ProductDetails> {
                         ),
                       ),
                       Container(
+                        padding: EdgeInsets.only(
+                            left: 20,
+                            right: 20,
+                            top: 20,
+                            bottom: MediaQuery.of(context).viewInsets.bottom),
+                        child: new Wrap(
+                          children: <Widget>[
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10.0),
+                                ),
+                              ),
+                              child: TextFormField(
+                                controller: txtDescription,
+                                autocorrect: true,
+                                scrollPadding: EdgeInsets.all(0),
+                                decoration: InputDecoration(
+                                    fillColor: Colors.grey[200],
+                                    filled: true,
+                                    //border: InputBorder.none,
+                                    border: new OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(8),
+                                        ),
+                                        borderSide: BorderSide.none),
+                                    hintText: "Enter Something"),
+                                //maxLength: 10,
+                                maxLines: 4,
+                                keyboardType: TextInputType.text,
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                            Center(
+                              child: Text("OR"),
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.95,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(30),
+                                ),
+                              ),
+                              padding: EdgeInsets.all(10),
+                              margin: EdgeInsets.only(top: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Container(
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                      color: cnst.app_primary_material_color,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(100)),
+                                    ),
+                                    child: IconButton(
+                                      onPressed: _opt,
+                                      icon: _buttonIcon,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${_recording != null ? _recording.duration.toString().substring(0, 7) : "-"}',
+                                  ),
+                                  _recording?.status == RecordingStatus.Stopped
+                                      ? Container(
+                                          height: 50,
+                                          width: 50,
+                                          decoration: BoxDecoration(
+                                            color:
+                                                cnst.app_primary_material_color,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(100)),
+                                          ),
+                                          child: IconButton(
+                                            onPressed: () {
+                                              if (_recording != "") {
+                                                if (_isPlayed == false) {
+                                                  _stop();
+                                                } else {
+                                                  _play();
+                                                }
+                                              }
+                                            },
+                                            color: Colors.black,
+                                            icon: Icon(
+                                              _isPlayed == true
+                                                  ? Icons.play_arrow
+                                                  : Icons.stop,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        )
+                                      : Container(),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
                         padding:
                             EdgeInsets.only(left: 10, right: 10, bottom: 15),
                         child: Row(
@@ -588,11 +686,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 minWidth:
                                     MediaQuery.of(context).size.width - 20,
                                 onPressed: () {
-                                  _settingModalBottomSheet(context, (data) {
-                                    if(data == "record"){
-                                      _opt();
-                                    }
-                                  });
+                                  addToCart();
                                 },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -673,147 +767,154 @@ class _ProductDetailsState extends State<ProductDetails> {
     );
   }
 
-  @override
+/*@override
   void _settingModalBottomSheet(context, Function onChange) {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
-          return Container(
-            padding: EdgeInsets.only(left: 20,right: 20,top: 20,bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: new Wrap(
-              children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10.0),
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              padding: EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  top: 20,
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: new Wrap(
+                children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10.0),
+                      ),
+                    ),
+                    child: TextFormField(
+                      controller: txtDescription,
+                      autocorrect: true,
+                      scrollPadding: EdgeInsets.all(0),
+                      decoration: InputDecoration(
+                          fillColor: Colors.grey[200],
+                          filled: true,
+                          //border: InputBorder.none,
+                          border: new OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8),
+                              ),
+                              borderSide: BorderSide.none),
+                          hintText: "Enter Something"),
+                      //maxLength: 10,
+                      maxLines: 4,
+                      keyboardType: TextInputType.text,
+                      style: TextStyle(color: Colors.black),
                     ),
                   ),
-                  child: TextFormField(
-                    controller: txtDescription,
-                    autocorrect: true,
-                    scrollPadding: EdgeInsets.all(0),
-                    decoration: InputDecoration(
-                        fillColor: Colors.grey[200],
-                        filled: true,
-                        //border: InputBorder.none,
-                        border: new OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(8),
-                            ),
-                            borderSide: BorderSide.none),
-                        hintText: "Enter Something"),
-                    //maxLength: 10,
-                    maxLines: 4,
-                    keyboardType: TextInputType.text,
-                    style: TextStyle(color: Colors.black),
+                  Center(
+                    child: Text("OR"),
                   ),
-                ),
-                Center(
-                  child: Text("OR"),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.95,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(30),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.95,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(30),
+                      ),
                     ),
-                  ),
-                  padding: EdgeInsets.all(10),
-                  margin: EdgeInsets.only(top: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          color: cnst.app_primary_material_color,
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(100)),
-                        ),
-                        child: IconButton(
-                          onPressed: (){
-                            onChange("record");
-                          },
-                          icon: _buttonIcon,
-                        ),
-                      ),
-                      Text(
-                        '${_recording != null ? _recording.duration.toString().substring(0, 7) : "-"}',
-                      ),
-                      _recording?.status == RecordingStatus.Stopped
-                          ? Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          color: cnst.app_primary_material_color,
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(100)),
-                        ),
-                        child: IconButton(
-                          onPressed: () {
-                            if (_recording != "") {
-                              if (_isPlayed == false) {
-                                _stop();
-                              } else {
-                                _play();
-                              }
-                            }
-                          },
-                          color: Colors.black,
-                          icon: Icon(
-                            _isPlayed == true
-                                ? Icons.play_arrow
-                                : Icons.stop,
-                            color: Colors.white,
-                          ),
-                        ),
-                      )
-                          : Container(),
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 10, right: 10),
-                  height: 50,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(8))),
-                  child: MaterialButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(8.0)),
-                    color: cnst.app_primary_material_color[600],
-                    minWidth: MediaQuery.of(context).size.width - 20,
-                    onPressed: () {},
+                    padding: EdgeInsets.all(10),
+                    margin: EdgeInsets.only(top: 10),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Image.asset(
-                          "images/shoppingcart.png",
-                          height: 20,
-                          width: 20,
-                          fit: BoxFit.fill,
-                          color: Colors.white,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 8, bottom: 8, left: 8, right: 4),
-                          child: Text(
-                            "Continue",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w600),
-                            textAlign: TextAlign.center,
+                        Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            color: cnst.app_primary_material_color,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(100)),
+                          ),
+                          child: IconButton(
+                            onPressed: () {
+                              onChange("record");
+                            },
+                            icon: _buttonIcon,
                           ),
                         ),
+                        Text(
+                          '${_recording != null ? _recording.duration.toString().substring(0, 7) : "-"}',
+                        ),
+                        _recording?.status == RecordingStatus.Stopped
+                            ? Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                  color: cnst.app_primary_material_color,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(100)),
+                                ),
+                                child: IconButton(
+                                  onPressed: () {
+                                    if (_recording != "") {
+                                      if (_isPlayed == false) {
+                                        _stop();
+                                      } else {
+                                        _play();
+                                      }
+                                    }
+                                  },
+                                  color: Colors.black,
+                                  icon: Icon(
+                                    _isPlayed == true
+                                        ? Icons.play_arrow
+                                        : Icons.stop,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              )
+                            : Container(),
                       ],
                     ),
                   ),
-                ),
-              ],
-            ),
-          );
+                  Container(
+                    margin: EdgeInsets.only(top: 10, right: 10),
+                    height: 50,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(8))),
+                    child: MaterialButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(8.0)),
+                      color: cnst.app_primary_material_color[600],
+                      minWidth: MediaQuery.of(context).size.width - 20,
+                      onPressed: () {},
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Image.asset(
+                            "images/shoppingcart.png",
+                            height: 20,
+                            width: 20,
+                            fit: BoxFit.fill,
+                            color: Colors.white,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 8, bottom: 8, left: 8, right: 4),
+                            child: Text(
+                              "Continue",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w600),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          });
         });
-  }
+  }*/
 }
