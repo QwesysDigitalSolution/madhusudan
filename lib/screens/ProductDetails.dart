@@ -15,6 +15,8 @@ import 'package:madhusudan/component/NoDataComponent.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:madhusudan/utils/DatabaseHelper.dart';
 
 class ProductDetails extends StatefulWidget {
   String Id;
@@ -26,6 +28,7 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
+  DatabaseHelper databaseHelper = DatabaseHelper();
   TextEditingController txtDescription = new TextEditingController();
   CartData cartData = new CartData();
   int quantity = 1;
@@ -309,6 +312,44 @@ class _ProductDetailsState extends State<ProductDetails> {
     }
   }
 
+  void _showOverlay(BuildContext context, String image) {
+    print("Method Call");
+    Future res = databaseHelper.getPhotoOpenCountList("2");
+    res.then((data) {
+      print("Method Success");
+      print(data.toString());
+      if (data != null && data.length > 0) {
+        print("Image Count : " + data[0].Count);
+        if(int.parse(data[0].Count.toString()) <= 10){
+          PhotoOpenCountClass photoCount = new PhotoOpenCountClass(
+            PhotoId: "2",
+            MemberId: "3",
+            Count: "1",
+          );
+          databaseHelper.updatePhotoOpenCount(photoCount).then((data) {
+            print("Update Callback : $data");
+            Navigator.of(context).push(ImagePreview(image: image));
+          });
+        }   else{
+          showMsg("You have reached to max count to open this image please select other image");
+        }
+      } else {
+        print("Image Count : 0");
+        PhotoOpenCountClass photoCount = new PhotoOpenCountClass(
+          PhotoId: "2",
+          MemberId: "3",
+          Count: "1",
+        );
+        databaseHelper.insertPhotoOpenCount(photoCount).then((data) {
+          print("Insert Callback : $data");
+          Navigator.of(context).push(ImagePreview(image: image));
+        });
+      }
+    }, onError: (e) {
+      print("Error : " + e.toString());
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final myInheritaedWidget = StateContainer.of(context);
@@ -414,43 +455,49 @@ class _ProductDetailsState extends State<ProductDetails> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      imageList != null && imageList.length > 0
-                          ? Container(
-                              height: height / 2,
-                              child: Swiper(
-                                itemBuilder: (BuildContext, int index) {
-                                  return new FadeInImage.assetNetwork(
-                                    placeholder: 'assets/loading.gif',
-                                    image: "${imageList[index]["Image"]}",
-                                    fit: BoxFit.fill,
-                                    width:
-                                        MediaQuery.of(context).size.width / 2,
-                                    height: 200,
-                                  );
+                      if (imageList != null && imageList.length > 0)
+                        Container(
+                          height: height / 2,
+                          child: Swiper(
+                            itemBuilder: (BuildContext, int index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  _showOverlay(
+                                      context, imageList[index]["Image"]);
                                 },
-                                itemCount: imageList.length,
-                                itemHeight: 110,
-                                pagination: new SwiperPagination(
-                                    builder: DotSwiperPaginationBuilder(
-                                  color: Colors.grey[400],
-                                )),
-                                control: new SwiperControl(
-                                    color: cnst.app_primary_material_color),
-                              ),
-                            )
-                          : Container(
-                              width: MediaQuery.of(context).size.width / 2,
-                              height: 200,
-                              padding: EdgeInsets.only(left: 20, right: 20),
-                              child: Center(
-                                child: Text(
-                                  'No Image Available',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 20),
+                                child: new FadeInImage.assetNetwork(
+                                  placeholder: 'assets/loading.gif',
+                                  image: "${imageList[index]["Image"]}",
+                                  fit: BoxFit.fill,
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  height: 200,
                                 ),
-                              ),
+                              );
+                            },
+                            itemCount: imageList.length,
+                            itemHeight: 110,
+                            pagination: new SwiperPagination(
+                                builder: DotSwiperPaginationBuilder(
+                              color: Colors.grey[400],
+                            )),
+                            control: new SwiperControl(
+                                color: cnst.app_primary_material_color),
+                          ),
+                        )
+                      else
+                        Container(
+                          width: MediaQuery.of(context).size.width / 2,
+                          height: 200,
+                          padding: EdgeInsets.only(left: 20, right: 20),
+                          child: Center(
+                            child: Text(
+                              'No Image Available',
+                              textAlign: TextAlign.center,
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 20),
                             ),
+                          ),
+                        ),
                       Container(
                         padding: const EdgeInsets.only(
                             left: 15, top: 10, bottom: 10),
@@ -766,155 +813,128 @@ class _ProductDetailsState extends State<ProductDetails> {
           ),
     );
   }
+}
 
-/*@override
-  void _settingModalBottomSheet(context, Function onChange) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-            return Container(
-              padding: EdgeInsets.only(
-                  left: 20,
-                  right: 20,
-                  top: 20,
-                  bottom: MediaQuery.of(context).viewInsets.bottom),
-              child: new Wrap(
-                children: <Widget>[
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10.0),
-                      ),
-                    ),
-                    child: TextFormField(
-                      controller: txtDescription,
-                      autocorrect: true,
-                      scrollPadding: EdgeInsets.all(0),
-                      decoration: InputDecoration(
-                          fillColor: Colors.grey[200],
-                          filled: true,
-                          //border: InputBorder.none,
-                          border: new OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8),
-                              ),
-                              borderSide: BorderSide.none),
-                          hintText: "Enter Something"),
-                      //maxLength: 10,
-                      maxLines: 4,
-                      keyboardType: TextInputType.text,
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                  Center(
-                    child: Text("OR"),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.95,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(30),
-                      ),
-                    ),
-                    padding: EdgeInsets.all(10),
-                    margin: EdgeInsets.only(top: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            color: cnst.app_primary_material_color,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(100)),
-                          ),
-                          child: IconButton(
-                            onPressed: () {
-                              onChange("record");
-                            },
-                            icon: _buttonIcon,
-                          ),
-                        ),
-                        Text(
-                          '${_recording != null ? _recording.duration.toString().substring(0, 7) : "-"}',
-                        ),
-                        _recording?.status == RecordingStatus.Stopped
-                            ? Container(
-                                height: 50,
-                                width: 50,
-                                decoration: BoxDecoration(
-                                  color: cnst.app_primary_material_color,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(100)),
-                                ),
-                                child: IconButton(
-                                  onPressed: () {
-                                    if (_recording != "") {
-                                      if (_isPlayed == false) {
-                                        _stop();
-                                      } else {
-                                        _play();
-                                      }
-                                    }
-                                  },
-                                  color: Colors.black,
-                                  icon: Icon(
-                                    _isPlayed == true
-                                        ? Icons.play_arrow
-                                        : Icons.stop,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              )
-                            : Container(),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: 10, right: 10),
-                    height: 50,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: MaterialButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(8.0)),
-                      color: cnst.app_primary_material_color[600],
-                      minWidth: MediaQuery.of(context).size.width - 20,
-                      onPressed: () {},
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Image.asset(
-                            "images/shoppingcart.png",
-                            height: 20,
-                            width: 20,
-                            fit: BoxFit.fill,
-                            color: Colors.white,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 8, bottom: 8, left: 8, right: 4),
-                            child: Text(
-                              "Continue",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w600),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+/*class TutorialOverlay extends StatelessWidget {
+  final String image;
+  TutorialOverlay({this.image});
+
+  @override
+  Widget build(BuildContext context) {
+    print('image URl : ' + image);
+    return SafeArea(
+      child: Stack(
+        children: <Widget>[
+          Container(
+            height: MediaQuery
+                .of(context)
+                .size
+                .height,
+            width: MediaQuery
+                .of(context)
+                .size
+                .width,
+            child: Hero(
+              tag: "Sliderimage",
+              child: PhotoView(
+                imageProvider: NetworkImage(image),
               ),
-            );
-          });
-        });
-  }*/
+            ),
+          ),
+          Positioned(
+            //width: MediaQuery.of(context).size.width,
+            right: 10,
+            child: IconButton(
+              color: Colors.white,
+              onPressed: () => Navigator.pop(context),
+              icon: Icon(Icons.close, color: Colors.white,),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}*/
+
+class ImagePreview extends ModalRoute<void> {
+  String image;
+
+  ImagePreview({this.image});
+
+  @override
+  Duration get transitionDuration => Duration(milliseconds: 500);
+
+  @override
+  bool get opaque => false;
+
+  @override
+  bool get barrierDismissible => false;
+
+  @override
+  Color get barrierColor => Colors.black.withOpacity(0.5);
+
+  @override
+  String get barrierLabel => null;
+
+  @override
+  bool get maintainState => true;
+
+  @override
+  Widget buildPage(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+  ) {
+    // This makes sure that text and other content follows the material style
+    return Material(
+      type: MaterialType.transparency,
+      // make sure that the overlay content is not cut off
+      child: SafeArea(
+        child: _buildOverlayContent(context),
+      ),
+    );
+  }
+
+  Widget _buildOverlayContent(BuildContext context) {
+    print('image URl : ' + image);
+    return Stack(
+      children: <Widget>[
+        Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Hero(
+            tag: "Sliderimage",
+            child: PhotoView(
+              imageProvider: NetworkImage(image),
+            ),
+          ),
+        ),
+        Positioned(
+          //width: MediaQuery.of(context).size.width,
+          right: 10,
+          child: IconButton(
+            color: Colors.white,
+            onPressed: () => Navigator.pop(context),
+            icon: Icon(
+              Icons.close,
+              color: Colors.white,
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  @override
+  Widget buildTransitions(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation, Widget child) {
+    // You can add your own animations for the overlay content
+    return FadeTransition(
+      opacity: animation,
+      child: ScaleTransition(
+        scale: animation,
+        child: child,
+      ),
+    );
+  }
 }
