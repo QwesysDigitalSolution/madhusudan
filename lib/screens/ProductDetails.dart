@@ -11,6 +11,7 @@ import 'package:madhusudan/common/Services.dart';
 import 'package:madhusudan/common/StateContainer.dart';
 import 'package:madhusudan/component/LoadingComponent.dart';
 import 'package:madhusudan/component/NoDataComponent.dart';
+import 'package:madhusudan/utils/Shimmer.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -213,7 +214,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   getItemDetails() async {
     try {
       await showPrDialog();
-      pr.show();
+      //pr.show();
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String MemberId = prefs.getString(cnst.session.Member_Id);
       final result = await InternetAddress.lookup('google.com');
@@ -230,7 +231,7 @@ class _ProductDetailsState extends State<ProductDetails> {
         Services.GetServiceForList(
                 "wl/v1/GetProductDetailByProductId", formData)
             .then((data) async {
-          pr.hide();
+          //pr.hide();
           if (data.length > 0) {
             setState(() {
               catData = data;
@@ -251,7 +252,10 @@ class _ProductDetailsState extends State<ProductDetails> {
         });
       }
     } on SocketException catch (_) {
-      pr.isShowing() ? pr.hide() : null;
+      //pr.isShowing() ? pr.hide() : null;
+      setState(() {
+        isLoading = false;
+      });
       showMsg("No Internet Connection.");
     }
     //pr.isShowing() ? pr.hide() : null;
@@ -319,7 +323,7 @@ class _ProductDetailsState extends State<ProductDetails> {
       print(data.toString());
       if (data != null && data.length > 0) {
         print("Image Count : " + data[0].Count);
-        if(int.parse(data[0].Count.toString()) <= 10){
+        if (int.parse(data[0].Count.toString()) <= 10) {
           PhotoOpenCountClass photoCount = new PhotoOpenCountClass(
             PhotoId: "2",
             MemberId: "3",
@@ -329,8 +333,9 @@ class _ProductDetailsState extends State<ProductDetails> {
             print("Update Callback : $data");
             Navigator.of(context).push(ImagePreview(image: image));
           });
-        }   else{
-          showMsg("You have reached to max count to open this image please select other image");
+        } else {
+          showMsg(
+              "You have reached to max count to open this image please select other image");
         }
       } else {
         print("Image Count : 0");
@@ -446,10 +451,10 @@ class _ProductDetailsState extends State<ProductDetails> {
           width: MediaQuery.of(context).size.width,
           //height: MediaQuery.of(context).size.height,
           child: isLoading == true
-              ? Container()
-              : /* catData.length > 0
-                ? */
-              SingleChildScrollView(
+              ? ShimmerProductDetailCardSkeleton(
+                  isCircularImage: false,
+                )
+              : SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,

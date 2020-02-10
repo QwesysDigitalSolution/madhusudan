@@ -257,7 +257,8 @@ class _ProductListState extends State<ProductList> {
             width: MediaQuery.of(context).size.width,
             child: isLoading == true
                 ? ShimmerGridListSkeleton(
-                    length: 5,isCircularImage: false,
+                    length: 10,
+                    isCircularImage: false,
                   )
                 : catData.length > 0 && catData != null
                     ? searchMemberData.length != 0
@@ -299,11 +300,11 @@ class _ProductListState extends State<ProductList> {
                                     itemCount: catData.length,
                                     //shrinkWrap: true,
                                     gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                        SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: 2,
                                       childAspectRatio:
-                                      MediaQuery.of(context).size.width /
-                                          (430),
+                                          MediaQuery.of(context).size.width /
+                                              (430),
                                     ),
                                     itemBuilder:
                                         (BuildContext context, int index) {

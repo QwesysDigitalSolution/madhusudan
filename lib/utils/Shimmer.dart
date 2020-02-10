@@ -855,6 +855,7 @@ class _ShimmerDarkCardPageSkeletonState
   }
 }
 
+// Grid View Card
 class ShimmerGridCardSkeleton extends StatefulWidget {
   final bool isCircularImage;
   final bool isBottomLinesActive;
@@ -986,6 +987,146 @@ class ShimmerGridListSkeleton extends StatelessWidget {
         return ShimmerGridCardSkeleton(
           isCircularImage: isCircularImage,
           isBottomLinesActive: isBottomLinesActive,
+        );
+      },
+    );
+  }
+}
+
+
+// Product Detail
+class ShimmerProductDetailCardSkeleton extends StatefulWidget {
+  final bool isCircularImage;
+  final bool isBottomLinesActive;
+
+  ShimmerProductDetailCardSkeleton(
+      {this.isCircularImage = true, this.isBottomLinesActive = true});
+
+  @override
+  _ShimmerProductDetailCardSkeletonState createState() =>
+      _ShimmerProductDetailCardSkeletonState();
+}
+
+class _ShimmerProductDetailCardSkeletonState extends State<ShimmerProductDetailCardSkeleton>
+    with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+  Animation<double> animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 1),
+    );
+
+    animation = Tween<double>(begin: -1.0, end: 2.0).animate(
+        CurvedAnimation(curve: Curves.easeInOutSine, parent: _controller));
+
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed ||
+          status == AnimationStatus.dismissed) {
+        _controller.repeat();
+      } else if (status == AnimationStatus.dismissed) {
+        _controller.forward();
+      }
+    });
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, child) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Container(
+            color: Colors.white,
+            padding: EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  height: width * 0.8,
+                  width: width * 0.8,
+                  decoration:
+                  myBoxDec(animation, isCircle: widget.isCircularImage),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      height: height * 0.007,
+                      width: width * 0.80,
+                      decoration: myBoxDec(animation),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      height: height * 0.007,
+                      width: width * 0.85,
+                      decoration: myBoxDec(animation),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      height: height * 0.007,
+                      width: width * 0.90,
+                      decoration: myBoxDec(animation),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Container(
+                      height: height * 0.007,
+                      width: width * 0.85,
+                      decoration: myBoxDec(animation),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      height: height * 0.007,
+                      width: width * 0.90,
+                      decoration: myBoxDec(animation),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      height: height * 0.007,
+                      width: width * 0.90,
+                      decoration: myBoxDec(animation),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      height: height * 0.007,
+                      width: width * 0.90,
+                      decoration: myBoxDec(animation),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
