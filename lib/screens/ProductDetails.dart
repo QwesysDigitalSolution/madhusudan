@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -814,47 +813,6 @@ class _ProductDetailsState extends State<ProductDetails> {
     );
   }
 }
-
-/*class TutorialOverlay extends StatelessWidget {
-  final String image;
-  TutorialOverlay({this.image});
-
-  @override
-  Widget build(BuildContext context) {
-    print('image URl : ' + image);
-    return SafeArea(
-      child: Stack(
-        children: <Widget>[
-          Container(
-            height: MediaQuery
-                .of(context)
-                .size
-                .height,
-            width: MediaQuery
-                .of(context)
-                .size
-                .width,
-            child: Hero(
-              tag: "Sliderimage",
-              child: PhotoView(
-                imageProvider: NetworkImage(image),
-              ),
-            ),
-          ),
-          Positioned(
-            //width: MediaQuery.of(context).size.width,
-            right: 10,
-            child: IconButton(
-              color: Colors.white,
-              onPressed: () => Navigator.pop(context),
-              icon: Icon(Icons.close, color: Colors.white,),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}*/
 
 class ImagePreview extends ModalRoute<void> {
   String image;

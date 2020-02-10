@@ -13,6 +13,7 @@ import 'package:madhusudan/common/Constants.dart' as cnst;
 import 'package:madhusudan/component/ProductItemCard.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:madhusudan/utils/Shimmer.dart';
 
 class ProductList extends StatefulWidget {
   String type;
@@ -36,7 +37,6 @@ class _ProductListState extends State<ProductList> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
     getproduct();
   }
 
@@ -86,7 +86,7 @@ class _ProductListState extends State<ProductList> {
       String MemberId = prefs.getString(cnst.session.Member_Id);
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        pr.show();
+        //pr.show();
         List formData = [
           {"key": "Type", "value": widget.type.toString()},
           {"key": "UserId", "value": MemberId.toString()},
@@ -98,7 +98,7 @@ class _ProductListState extends State<ProductList> {
         });
         Services.GetServiceForList("wl/v1/GetProductListByType", formData).then(
             (data) async {
-          pr.hide();
+          //pr.hide();
           if (data.length > 0) {
             setState(() {
               catData = data;
@@ -115,7 +115,7 @@ class _ProductListState extends State<ProductList> {
           setState(() {
             isLoading = false;
           });
-          pr.isShowing() ? pr.hide() : null;
+          //pr.isShowing() ? pr.hide() : null;
           showMsg("Try Again.");
         });
       }
@@ -256,7 +256,9 @@ class _ProductListState extends State<ProductList> {
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             child: isLoading == true
-                ? Container()
+                ? ShimmerGridListSkeleton(
+                    length: 5,isCircularImage: false,
+                  )
                 : catData.length > 0 && catData != null
                     ? searchMemberData.length != 0
                         ? AnimationLimiter(
@@ -297,11 +299,11 @@ class _ProductListState extends State<ProductList> {
                                     itemCount: catData.length,
                                     //shrinkWrap: true,
                                     gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                    SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: 2,
                                       childAspectRatio:
-                                          MediaQuery.of(context).size.width /
-                                              (430),
+                                      MediaQuery.of(context).size.width /
+                                          (430),
                                     ),
                                     itemBuilder:
                                         (BuildContext context, int index) {
@@ -310,21 +312,6 @@ class _ProductListState extends State<ProductList> {
                                     }),
                               )
                     : NoDataComponent(),
-            /*child: AnimationLimiter(
-                child: GridView.builder(
-                    //itemCount: searchMemberData.length,
-                    // physics: NeverScrollableScrollPhysics(),
-                    itemCount: 50,
-                    //shrinkWrap: true,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio:
-                          MediaQuery.of(context).size.width / (430),
-                    ),
-                    itemBuilder: (BuildContext context, int index) {
-                      //return ProductItemCard(searchMemberData[index]);
-                      return ProductItemCard(index);
-                    })),*/
           ),
         ),
       ),
