@@ -4,14 +4,17 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:madhusudan/common/ClassList.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
 import 'package:madhusudan/common/StateContainer.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 //Screens List
 import 'package:madhusudan/screens/Home.dart';
 import 'package:madhusudan/screens/Notification.dart';
 import 'package:madhusudan/screens/Profile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -19,12 +22,13 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  final DBRfef = FirebaseDatabase.instance.reference();
   CartData cartData = new CartData();
 
   FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
   StreamSubscription iosSubscription;
   String fcmToken = "";
-
+  String MemberId = "0";
 
   List<String> menu_list = ["Dashboard", "Notification", "Profile"];
   final List<Widget> _children = [
@@ -41,26 +45,57 @@ class _DashboardState extends State<Dashboard> {
     // TODO: implement initState
     controller = new PageController();
     super.initState();
+    //Firebase DB
     if (Platform.isIOS) {
-      iosSubscription =
-          _firebaseMessaging.onIosSettingsRegistered.listen((data) {
-            print("FFFFFFFF" + data.toString());
-            saveDeviceToken();
-          });
+      _firebaseMessaging.onIosSettingsRegistered.listen((data) {
+        setFirebase();
+      });
       _firebaseMessaging
           .requestNotificationPermissions(IosNotificationSettings());
     } else {
-      saveDeviceToken();
+      setFirebase();
     }
   }
-  saveDeviceToken() async {
+
+  setFirebase() async {
+    //Local Data
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      MemberId = prefs.getString(cnst.session.Member_Id);
+    });
+
+    //Get FCM Token & Set Value To FirebaseDB
     _firebaseMessaging.getToken().then((String token) {
-      print("Original Token:$token");
+      print("FCM Token : $token");
       setState(() {
         fcmToken = token;
-        //sendFCMTokan(token);
       });
-      print("FCM Token : $fcmToken");
+      DBRfef.child(MemberId).once().then((DataSnapshot dataSnapshot) {
+        print("Data Value On Load : ${dataSnapshot.value}");
+        if (dataSnapshot.value == null)
+          DBRfef.child(MemberId).set({"Token": token.toString()});
+        else if (dataSnapshot.value != token)
+          DBRfef.child(MemberId).update({"Token": token.toString()});
+      });
+    });
+
+    //On Child Value Change
+    DBRfef.child(MemberId).onChildChanged.listen((Event event) async {
+      print("DB Value Change : " + event.snapshot.value.toString());
+      String newToken = event.snapshot.value.toString();
+      if (newToken != fcmToken) {
+        await prefs.clear();
+        Fluttertoast.showToast(
+          msg: "User Login To New Device !",
+          fontSize: 18,
+          backgroundColor: Colors.black,
+          gravity: ToastGravity.TOP,
+          textColor: Colors.white,
+          toastLength: Toast.LENGTH_LONG,
+          timeInSecForIos: 5,
+        );
+        Navigator.pushReplacementNamed(context, "/login");
+      }
     });
   }
 
