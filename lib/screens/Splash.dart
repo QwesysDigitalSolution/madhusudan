@@ -3,6 +3,7 @@ import 'package:madhusudan/Common/Constants.dart' as cnst;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:madhusudan/animation/FadeAnimation.dart';
+import 'package:madhusudan/common/Constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class splash extends StatefulWidget {
@@ -17,17 +18,23 @@ class _splashState extends State<splash> {
     super.initState();
     Timer(Duration(seconds: 3), () async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      /*String MemberId = prefs.getString(Session.MemberId);
-      String veri = prefs.getString(Session.IsVerified);
+      String MemberId = prefs.getString(session.Member_Id);
+      //String veri = prefs.getString(session.IsVerified);
 
-      if (MemberId != null && MemberId != "" && veri=="true") {
+      /*if (MemberId != null && MemberId != "" && veri=="true") {
         controller.stop(canceled: true);
         Navigator.pushReplacementNamed(context, '/Dashboard');
       } else {
         controller.stop(canceled: true);
         Navigator.pushReplacementNamed(context, '/Login');
       }*/
-      Navigator.pushReplacementNamed(context, '/login');
+
+      if (MemberId != null && MemberId != "") {
+        Navigator.pushReplacementNamed(context, '/Dashboard');
+      } else {
+        Navigator.pushReplacementNamed(context, '/login');
+      }
+      //Navigator.pushReplacementNamed(context, '/login');
     });
   }
 

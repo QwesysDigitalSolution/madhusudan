@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get_version/get_version.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -8,13 +11,17 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+
   String Name = "", Mobile = "", MemberId = "", MemberImage = "";
+
+  String appPackage;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getLocalData();
+    setPack();
   }
 
   String getName() {
@@ -30,6 +37,32 @@ class _ProfileState extends State<Profile> {
       Mobile = prefs.getString(cnst.session.Mobile);
       MemberImage = prefs.getString(cnst.session.Image);
     });
+  }
+
+  setPack() async {
+    try {
+      appPackage = await GetVersion.appID;
+    } on PlatformException {
+      appPackage = 'Failed to get project version.';
+    }
+    setState(() {
+      appPackage = appPackage;
+    });
+  }
+
+  rateApp() async {
+    String url = 'https://play.google.com/store/apps/details?id=${appPackage}';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  _logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    Navigator.pushReplacementNamed(context, "/login");
   }
 
   @override
@@ -80,7 +113,7 @@ class _ProfileState extends State<Profile> {
                         "${Mobile}",
                         style: TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w500),
-                      )
+                      ),
                     ],
                   )
                 ],
@@ -314,7 +347,8 @@ class _ProfileState extends State<Profile> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        //rateApp();
+                        rateApp();
+                        //https://play.google.com/store/search?q=whatsapp&hl=en
                       },
                       child: Container(
                         color: Colors.white,
@@ -365,7 +399,8 @@ class _ProfileState extends State<Profile> {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.pushReplacementNamed(context, '/login');
+                _logout();
+                //Navigator.pushReplacementNamed(context, '/login');
               },
               child: Container(
                 //color: Colors.white,

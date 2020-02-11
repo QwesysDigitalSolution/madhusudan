@@ -16,16 +16,7 @@ class ContactUs extends StatefulWidget {
 
 class _ContactUsState extends State<ContactUs> {
   Completer<GoogleMapController> _controller = Completer();
-
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(21.195050, 72.834830),
-    zoom: 11.0,
-  );
-
-  static final CameraPosition _kLake = CameraPosition(
-    target: LatLng(21.195050, 72.834830),
-    zoom: 11.0,
-  );
+  var LATI, LONG;
   bool isLoading = true;
   ProgressDialog pr;
   List list = new List();
@@ -33,15 +24,15 @@ class _ContactUsState extends State<ContactUs> {
   @override
   void initState() {
     // TODO: implement initState
-    _goToTheLake();
+    //_goToTheLake();
     super.initState();
     getContactUs();
   }
 
-  Future<void> _goToTheLake() async {
+  /*Future<void> _goToTheLake() async {
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
-  }
+  }*/
 
   showPrDialog() async {
     pr = new ProgressDialog(context,
@@ -103,9 +94,12 @@ class _ContactUsState extends State<ContactUs> {
 
         Services.GetServiceForList("wl/v1/GetContactUs", formData).then(
             (data) async {
-              pr.hide();
+          pr.hide();
           if (data.length > 0) {
+            var latlong = data[0]["Latlong"].split(',');
             setState(() {
+              LATI = double.parse(latlong[0]);
+              LONG = double.parse(latlong[1]);
               list = data;
               isLoading = false;
             });
@@ -138,22 +132,22 @@ class _ContactUsState extends State<ContactUs> {
     // TODO(iskakaushik): Remove this when collection literals makes it to stable.
     // https://github.com/flutter/flutter/issues/28312
     // ignore: prefer_collection_literals
-    var latlong=list[0]["Latlong"].split(',');
-
+    if (list[0]["Latlong"].toString() != "") {
+      /*var latlong=list[0]["Latlong"].split(',');
     var Lat=double.parse(latlong[0]);
-    var Long=double.parse(latlong[1]);
-    return <Marker>[
-      Marker(
-        markerId: MarkerId("${list[0]["Name"]}"),
-        draggable: false,
-        position: LatLng(Lat, Long),
-        infoWindow: InfoWindow(
-          title: "${list[0]["Name"]}",
-          snippet:
-              "${list[0]["Address"].toString()}",
+    var Long=double.parse(latlong[1]);*/
+      return <Marker>[
+        Marker(
+          markerId: MarkerId("${list[0]["Name"]}"),
+          draggable: false,
+          position: LatLng(LATI, LONG),
+          infoWindow: InfoWindow(
+            title: "${list[0]["Name"]}",
+            snippet: "${list[0]["Address"].toString()}",
+          ),
         ),
-      ),
-    ].toSet();
+      ].toSet();
+    }
   }
 
   @override
@@ -187,14 +181,21 @@ class _ContactUsState extends State<ContactUs> {
                     children: <Widget>[
                       Container(
                         height: 200,
-                        child: GoogleMap(
-                          mapType: MapType.terrain,
-                          initialCameraPosition: _kGooglePlex,
-                          onMapCreated: (GoogleMapController controller) {
-                            _controller.complete(controller);
-                          },
-                          markers: _createMarker(),
-                        ),
+                        child: LATI != "" && LONG != ""
+                            ? GoogleMap(
+                                mapType: MapType.terrain,
+                                initialCameraPosition: CameraPosition(
+                                  target: LatLng(LATI, LONG),
+                                  zoom: 11.0,
+                                ),
+                                onMapCreated: (GoogleMapController controller) {
+                                  _controller.complete(controller);
+                                },
+                                markers: _createMarker(),
+                              )
+                            : Center(
+                                child: Text("Localtion Not Available"),
+                              ),
                       ),
                       Container(
                         padding: EdgeInsets.all(10.0),
@@ -211,30 +212,33 @@ class _ContactUsState extends State<ContactUs> {
                               ListTile(
                                 leading: Icon(Icons.phone),
                                 title: Text('Mobile'),
-                                subtitle: Text("${list[0]["Mobile"].toString()}"),
+                                subtitle:
+                                    Text("${list[0]["Mobile"].toString()}"),
                               ),
                               ListTile(
                                 leading: Icon(Icons.map),
                                 title: Text('Address'),
-                                subtitle: Text("${list[0]["Address"].toString()}"),
+                                subtitle:
+                                    Text("${list[0]["Address"].toString()}"),
                               ),
                               ListTile(
                                 leading: Icon(Icons.map),
                                 title: Text('Branch Office'),
-                                subtitle: Text("${list[0]["Branch Office"].toString()}"),
+                                subtitle: Text(
+                                    "${list[0]["Branch Office"].toString()}"),
                               ),
                               ListTile(
                                 leading: Icon(Icons.email),
                                 title: Text('Email'),
-                                subtitle: Text("${list[0]["Email"].toString()}"),
+                                subtitle:
+                                    Text("${list[0]["Email"].toString()}"),
                               ),
                               ListTile(
                                 leading: Icon(Icons.web),
                                 title: Text('Website'),
-                                subtitle: Text("${list[0]["WebsiteLink"].toString()}"),
-                                onTap: (){
-
-                                },
+                                subtitle: Text(
+                                    "${list[0]["WebsiteLink"].toString()}"),
+                                onTap: () {},
                               ),
                             ],
                           ),
