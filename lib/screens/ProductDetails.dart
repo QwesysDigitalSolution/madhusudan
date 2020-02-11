@@ -35,6 +35,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   bool isLoading = true;
   List catData = new List();
   List imageList = new List();
+  String MemberId = "0";
 
   //Audio File
   FlutterAudioRecorder _recorder;
@@ -216,12 +217,15 @@ class _ProductDetailsState extends State<ProductDetails> {
       await showPrDialog();
       //pr.show();
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String MemberId = prefs.getString(cnst.session.Member_Id);
+      String memberId = prefs.getString(cnst.session.Member_Id);
+      setState(() {
+        MemberId = memberId;
+      });
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         List formData = [
           {"key": "ItemId", "value": widget.Id.toString()},
-          {"key": "UserId", "value": MemberId},
+          {"key": "UserId", "value": memberId},
         ];
         print("getItemDetails Data = ${formData}");
         //pr.show();
@@ -315,18 +319,15 @@ class _ProductDetailsState extends State<ProductDetails> {
     }
   }
 
-  void _showOverlay(BuildContext context, String image) {
-    print("Method Call");
-    Future res = databaseHelper.getPhotoOpenCountList("2");
+  void _showOverlay(BuildContext context, String id, String image) {
+    Future res = databaseHelper.getPhotoOpenCountList(id);
     res.then((data) {
-      print("Method Success");
-      print(data.toString());
       if (data != null && data.length > 0) {
         print("Image Count : " + data[0].Count);
-        if (int.parse(data[0].Count.toString()) <= 10) {
+        if (int.parse(data[0].Count.toString()) < 10) {
           PhotoOpenCountClass photoCount = new PhotoOpenCountClass(
-            PhotoId: "2",
-            MemberId: "3",
+            PhotoId: id,
+            MemberId: MemberId,
             Count: "1",
           );
           databaseHelper.updatePhotoOpenCount(photoCount).then((data) {
@@ -335,13 +336,14 @@ class _ProductDetailsState extends State<ProductDetails> {
           });
         } else {
           showMsg(
-              "You have reached to max count to open this image please select other image");
+            "You have reached to max count to open this image please select other image",
+          );
         }
       } else {
         print("Image Count : 0");
         PhotoOpenCountClass photoCount = new PhotoOpenCountClass(
-          PhotoId: "2",
-          MemberId: "3",
+          PhotoId: id,
+          MemberId: MemberId,
           Count: "1",
         );
         databaseHelper.insertPhotoOpenCount(photoCount).then((data) {
@@ -467,7 +469,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                               return GestureDetector(
                                 onTap: () {
                                   _showOverlay(
-                                      context, imageList[index]["Image"]);
+                                      context,
+                                      imageList[index]["Id"].toString(),
+                                      imageList[index]["Image"]);
                                 },
                                 child: new FadeInImage.assetNetwork(
                                   placeholder: 'assets/loading.gif',
