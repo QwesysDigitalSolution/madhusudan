@@ -96,7 +96,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     // AudioFormat is optional, if given value, will overwrite path extension when there is conflicts.
 
     //_recorder = FlutterAudioRecorder(customPath, audioFormat: AudioFormat.WAV, sampleRate: 22050);
-    _recorder = FlutterAudioRecorder("${customPath}.mp4", sampleRate: 22050);
+    _recorder = FlutterAudioRecorder("${customPath}", sampleRate: 22050);
     await _recorder.initialized;
   }
 
@@ -297,12 +297,12 @@ class _ProductDetailsState extends State<ProductDetails> {
               : null
         });
         print("Add To Cart Data =  $formData");
-        print("Add To Cart Data =  ${MemberId}");
+        print("Add To Item Id =  ${widget.Id}");
         Services.PostServiceForSave("wl/v1/AddToCart", formData).then(
             (data) async {
           pr.hide();
           if (data.Data == "1") {
-            Navigator.pushReplacementNamed(context, '/PlaceOrder');
+            //Navigator.pushReplacementNamed(context, '/OrderSuccess');
             showMsg("Item Added To Cart Successfully");
           } else {
             showMsg(data.Message, title: "Error");

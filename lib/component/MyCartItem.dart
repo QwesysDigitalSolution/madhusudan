@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
 import 'package:madhusudan/component/LoadingComponent.dart';
@@ -22,6 +23,7 @@ class _MyCartItemState extends State<MyCartItem> {
   var Product = {};
   ProgressDialog pr;
   bool isLoading = false;
+  String MemberId = "0";
 
   @override
   void initState() {
@@ -49,29 +51,41 @@ class _MyCartItemState extends State<MyCartItem> {
 
     print("Product Single Data");
     print(widget.product1);
+    getLocalData();
+  }
+
+  getLocalData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String Gender = prefs.getString(cnst.session.Gender);
+    setState(() {
+      MemberId = prefs.getString(cnst.session.Member_Id);
+    });
   }
 
   removeFromCart() async {
-    /*try {
+    try {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        var formData = {"Id": Product["CartId"].toString()};
+        FormData formData = new FormData.fromMap({
+          "Id": Product["CartId"].toString(),
+          "UserId": MemberId,
+        });
         print("RemoveCartItem Data = ${formData}");
         setState(() {
           isLoading = true;
         });
-        Services.PostServiceForSave("RemoveCartItem", formData).then(
-                (data) async {
-              setState(() {
-                isLoading = false;
-              });
-              if (data.Data == "1") {
-                showMsg("Product Removed Successfully.");
-                widget.onChange("ProductRemoved");
-              } else {
-                showMsg(data.Message, title: "Error");
-              }
-            }, onError: (e) {
+        Services.PostServiceForSave("wl/v1/RemoveCartItem", formData).then(
+            (data) async {
+          setState(() {
+            isLoading = false;
+          });
+          if (data.Data == "1") {
+            showMsg("Product Removed Successfully.");
+            widget.onChange("ProductRemoved");
+          } else {
+            showMsg(data.Message, title: "Error");
+          }
+        }, onError: (e) {
           setState(() {
             isLoading = false;
           });
@@ -83,32 +97,34 @@ class _MyCartItemState extends State<MyCartItem> {
         isLoading = false;
       });
       showMsg("No Internet Connection.");
-    }*/
+    }
   }
 
   updateCart() async {
-    /*try {
+    try {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        var formData = {
+        FormData formData = new FormData.fromMap({
+          "UserId": MemberId,
           "Id": Product["CartId"].toString(),
-          "Qty": Product["Qty"].toString()
-        };
+          "Qty": Product["Qty"].toString(),
+        });
+
         print("UpdateCartItem Data = ${formData}");
         setState(() {
           isLoading = true;
         });
-        Services.PostServiceForSave("UpdateCartItem", formData).then(
-                (data) async {
-              setState(() {
-                isLoading = false;
-              });
-              if (data.Data == "1") {
-                widget.onChange("QtyChange");
-              } else {
-                showMsg(data.Message, title: "Error");
-              }
-            }, onError: (e) {
+        Services.PostServiceForSave("wl/v1/UpdateCartItem", formData).then(
+            (data) async {
+          setState(() {
+            isLoading = false;
+          });
+          if (data.Data == "1") {
+            widget.onChange("QtyChange");
+          } else {
+            showMsg(data.Message, title: "Error");
+          }
+        }, onError: (e) {
           setState(() {
             isLoading = false;
           });
@@ -120,7 +136,7 @@ class _MyCartItemState extends State<MyCartItem> {
         isLoading = false;
       });
       showMsg("No Internet Connection.");
-    }*/
+    }
   }
 
   showMsg(String msg, {String title = 'Kaya Cosmetics'}) {
@@ -157,8 +173,8 @@ class _MyCartItemState extends State<MyCartItem> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => ProductDetails(
-                          Id: Product["ItemId"].toString(),
-                          ),
+                        Id: Product["ItemId"].toString(),
+                      ),
                     ),
                   );
                 },
@@ -230,7 +246,8 @@ class _MyCartItemState extends State<MyCartItem> {
               ),*/
                   Text(
                     cnst.inr_rupee + " ${Product["Mrp"]}",
-                    style: TextStyle(fontSize: 15, color: cnst.app_primary_material_color),
+                    style: TextStyle(
+                        fontSize: 15, color: cnst.app_primary_material_color),
                   ),
                   Container(
                     child: Row(
@@ -272,7 +289,8 @@ class _MyCartItemState extends State<MyCartItem> {
                         GestureDetector(
                           onTap: () {
                             setState(() {
-                              Product["Qty"] = Product["Qty"] + 1;
+                              Product["Qty"] =
+                                  int.parse(Product["Qty"].toString()) + 1;
                             });
 
                             updateCart();

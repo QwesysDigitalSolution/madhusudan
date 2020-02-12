@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:madhusudan/common/ClassList.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
+import 'package:madhusudan/common/Services.dart';
 import 'package:madhusudan/common/StateContainer.dart';
 import 'package:firebase_database/firebase_database.dart';
 
@@ -54,6 +56,45 @@ class _DashboardState extends State<Dashboard> {
           .requestNotificationPermissions(IosNotificationSettings());
     } else {
       setFirebase();
+    }
+    UpdateCartCount();
+  }
+
+  UpdateCartCount() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String MemberId = prefs.getString(cnst.session.Member_Id);
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        FormData formData = new FormData.fromMap({
+          "UserId": MemberId
+        });
+        print("getItemDetails Data = ${formData}");
+        //pr.show();
+        /*setState(() {
+          isLoading = true;
+        });*/
+        Services.PostServiceForSave("wl/v1/GetCartCount", formData).then(
+                (data) async {
+              if (data.IsSuccess == true) {
+                final myInheritaedWidget = StateContainer.of(context);
+                myInheritaedWidget.updateCartData(
+                  cartCount: int.parse(data.Data),
+                );
+                /*setState(() {
+                  isLoading = false;
+                });*/
+              } else {
+                showMsg(data.Message, title: "Error");
+              }
+            }, onError: (e) {
+          /*setState(() {
+            isLoading = false;
+          });*/
+        });
+      }
+    } on SocketException catch (_) {
+      showMsg("No Internet Connection.");
     }
   }
 
