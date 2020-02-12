@@ -213,7 +213,7 @@ class _ProductListState extends State<ProductList> {
               actions: <Widget>[
                 GestureDetector(
                   onTap: () {
-                    // Navigator.pushNamed(context, '/MyCart');
+                    Navigator.pushNamed(context, '/MyCart');
                   },
                   child: Stack(
                     children: <Widget>[
@@ -221,11 +221,12 @@ class _ProductListState extends State<ProductList> {
                         padding: const EdgeInsets.only(
                             top: 10, right: 15, bottom: 10),
                         child: Center(
-                            child: Icon(
-                          Icons.shopping_cart,
-                          size: 30,
-                          color: cnst.app_primary_material_color,
-                        )),
+                          child: Icon(
+                            Icons.shopping_cart,
+                            size: 30,
+                            color: cnst.app_primary_material_color,
+                          ),
+                        ),
                       ),
                       Container(
                         //width: MediaQuery.of(context).size.width,

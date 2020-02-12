@@ -411,7 +411,7 @@ class _ProductDetailsState extends State<ProductDetails> {
         actions: <Widget>[
           GestureDetector(
             onTap: () {
-              //Navigator.pushNamed(context, '/MyCart');
+              Navigator.pushNamed(context, '/MyCart');
             },
             child: Stack(
               children: <Widget>[
