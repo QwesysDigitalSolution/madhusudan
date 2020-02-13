@@ -30,6 +30,7 @@ class ProductDetails extends StatefulWidget {
 class _ProductDetailsState extends State<ProductDetails> {
   DatabaseHelper databaseHelper = DatabaseHelper();
   TextEditingController txtDescription = new TextEditingController();
+  TextEditingController txtQty = new TextEditingController();
   CartData cartData = new CartData();
   int quantity = 1;
   bool isLoading = true;
@@ -58,6 +59,9 @@ class _ProductDetailsState extends State<ProductDetails> {
       _prepare();
     });
     getItemDetails();
+    setState(() {
+      txtQty.text = "1";
+    });
   }
 
   Future _prepare() async {
@@ -98,6 +102,42 @@ class _ProductDetailsState extends State<ProductDetails> {
     //_recorder = FlutterAudioRecorder(customPath, audioFormat: AudioFormat.WAV, sampleRate: 22050);
     _recorder = FlutterAudioRecorder("${customPath}", sampleRate: 22050);
     await _recorder.initialized;
+  }
+
+  UpdateCartCount() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String MemberId = prefs.getString(cnst.session.Member_Id);
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        FormData formData = new FormData.fromMap({"UserId": MemberId});
+        print("getItemDetails Data = ${formData}");
+        //pr.show();
+        setState(() {
+          isLoading = true;
+        });
+        Services.PostServiceForSave("wl/v1/GetCartCount", formData).then(
+            (data) async {
+          if (data.IsSuccess == true) {
+            final myInheritaedWidget = StateContainer.of(context);
+            myInheritaedWidget.updateCartData(
+              cartCount: int.parse(data.Data.toString()),
+            );
+            setState(() {
+              isLoading = false;
+            });
+          } else {
+            showMsg(data.Message, title: "Error");
+          }
+        }, onError: (e) {
+          setState(() {
+            isLoading = false;
+          });
+        });
+      }
+    } on SocketException catch (_) {
+      showMsg("No Internet Connection.");
+    }
   }
 
   Widget _playerIcon(RecordingStatus status) {
@@ -304,6 +344,12 @@ class _ProductDetailsState extends State<ProductDetails> {
           if (data.Data == "1") {
             //Navigator.pushReplacementNamed(context, '/OrderSuccess');
             showMsg("Item Added To Cart Successfully");
+            setState(() {
+              txtDescription.text = "";
+              _recording = null;
+              quantity = 1;
+            });
+            UpdateCartCount();
           } else {
             showMsg(data.Message, title: "Error");
           }
@@ -562,55 +608,64 @@ class _ProductDetailsState extends State<ProductDetails> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  if (quantity != 1) quantity--;
-                                });
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 10),
-                                child: Container(
-                                  //width: MediaQuery.of(context).size.width,
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.grey[300]),
-                                  child: Padding(
-                                      padding: const EdgeInsets.all(14.0),
-                                      child: Text(
-                                        "-",
-                                        style: TextStyle(fontSize: 30),
-                                      )),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.all(Radius.circular(10),),
+                              ),
+                              child: new IconButton(
+                                icon: new Icon(
+                                  Icons.remove,
+                                  color: Colors.white,
                                 ),
+                                onPressed: (){
+                                  int qty = txtQty.text != null && txtQty.text != "" ? int.parse(txtQty.text) : 0;
+                                  if (qty != 1) {
+                                    qty--;
+                                    setState(() {
+                                      txtQty.text = qty.toString();
+                                    });
+                                  }
+                                },
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(5),
-                              child: Text(
-                                quantity.toString(),
-                                style: TextStyle(fontSize: 20),
+                            Container(
+                              width: 80,
+                              margin: EdgeInsets.only(left: 10,right: 10),
+                              child: TextFormField(
+                                controller: txtQty,
+                                cursorColor: Theme.of(context).cursorColor,
+                                decoration: InputDecoration(
+                                  border: new OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(8),
+                                    ),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  counterText: "",
+                                  filled: true,
+                                ),
+                                maxLength: 5,
+                                keyboardType: TextInputType.phone,
                               ),
                             ),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  quantity++;
-                                });
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Container(
-                                  //width: MediaQuery.of(context).size.width,
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.grey[300]),
-                                  child: Padding(
-                                      padding: const EdgeInsets.all(12.0),
-                                      child: Text(
-                                        "+",
-                                        style: TextStyle(fontSize: 20),
-                                      )),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.all(Radius.circular(10),),
+                              ),
+                              child: new IconButton(
+                                icon: new Icon(
+                                  Icons.add,
+                                  color: Colors.white,
                                 ),
+                                onPressed: (){
+                                  int qty = txtQty.text != null && txtQty.text != "" ? int.parse(txtQty.text) : 0;
+                                  qty++;
+                                  setState(() {
+                                    txtQty.text = qty.toString();
+                                  });
+                                },
                               ),
                             ),
                           ],
@@ -639,10 +694,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     filled: true,
                                     //border: InputBorder.none,
                                     border: new OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(8),
-                                        ),
-                                        borderSide: BorderSide.none),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(8),
+                                      ),
+                                      borderSide: BorderSide.none,
+                                    ),
                                     hintText: "Enter Something"),
                                 //maxLength: 10,
                                 maxLines: 4,

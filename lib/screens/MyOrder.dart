@@ -18,36 +18,8 @@ class MyOrder extends StatefulWidget {
 class _MyOrderState extends State<MyOrder> {
   String MemberId = "0";
   bool isLoading = false;
-  List CurrentOrderList = [
-    {
-      "Id": 1,
-      "Date": "2/1/2020 12:00:00 AM",
-      "DeliveryDate": "2/6/2020 12:00:00 AM",
-      "DueDate": "",
-      "DeliveryCharge": 0.00,
-      "OtherCharge": 0.00,
-      "Discount": 42.00,
-      "DiscountPer": 0.00,
-      "OverAllTotal": 807.00,
-      "IsGiftWrap": false,
-      "CurrentStatus": "Order Placed",
-      "ItemsList": [
-        {
-          "OrderId": 1,
-          "ItemId": 1,
-          "ItemName": "Olay Total Effects 7 In One Touch Of Foundation",
-          "Qty": 1,
-          "Rate": 0.0,
-          "Amount": 807.00,
-          "Discount": 0.00,
-          "DiscountPer": 0.00,
-          "NetAmount": 807.00,
-          "Image":
-              "https://5.imimg.com/data5/XS/GB/MY-22453630/self-design-pure-silk-pink-saree-500x500.jpg"
-        }
-      ]
-    }
-  ];
+  List CurrentOrderList;
+  List DeliverdOrderList;
 
   @override
   void initState() {
@@ -57,30 +29,30 @@ class _MyOrderState extends State<MyOrder> {
   }
 
   getLocalData() async {
-    /*SharedPreferences prefs = await SharedPreferences.getInstance();
-    String Gender = prefs.getString(Session.Gender);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      MemberId = prefs.getString(Session.MemberId);
+      MemberId = prefs.getString(cnst.session.Member_Id);
     });
 
-    getOrderDetail();*/
+    getPendingOrderDetail();
   }
 
-  getOrderDetail() async {
-    /*try {
+  getPendingOrderDetail() async {
+    try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String MemberId = prefs.getString(Session.MemberId);
+      String MemberId = prefs.getString(cnst.session.Member_Id);
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         List formData = [
-          {"key": "UserId", "value": MemberId}
+          {"key": "UserId", "value": MemberId},
+          {"key": "Status", "value": "Pending"}
         ];
         print("GetSubCategory Data = ${formData}");
         //pr.show();
         setState(() {
           isLoading = true;
         });
-        Services.GetServiceForList("GetCurrentOrder", formData).then(
+        Services.GetServiceForList("wl/v1/GetOrderByType", formData).then(
                 (data) async {
               if (data.length > 0) {
                 setState(() {
@@ -102,7 +74,7 @@ class _MyOrderState extends State<MyOrder> {
       }
     } on SocketException catch (_) {
       showMsg("No Internet Connection.");
-    }*/
+    }
   }
 
   showMsg(String msg, {String title = 'Kaya Cosmetics'}) {
@@ -177,18 +149,18 @@ class _MyOrderState extends State<MyOrder> {
                       );
                     })
                 : NoDataComponent(),
-            CurrentOrderList != null && CurrentOrderList.length > 0
+            DeliverdOrderList != null && DeliverdOrderList.length > 0
                 ? ListView.builder(
-                    itemCount: CurrentOrderList.length,
+                    itemCount: DeliverdOrderList.length,
                     //shrinkWrap: true,
                     itemBuilder: (BuildContext context, int index) {
                       return MyOrderItem(
-                        CurrentOrderList[index],
+                        DeliverdOrderList[index],
                         "Delivered",
                         ((String action) {
                           if (action == "OrderCancel") {
                             setState(() {
-                              CurrentOrderList.removeAt(index);
+                              DeliverdOrderList.removeAt(index);
                             });
                           }
                         }),

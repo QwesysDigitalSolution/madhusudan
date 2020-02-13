@@ -28,8 +28,8 @@ class _OrderedItemState extends State<OrderedItem> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => ProductDetails(
-                      /*Id: widget.product["ItemId"].toString(),*/
-                      ),
+                    Id: widget.product["ItemId"].toString(),
+                  ),
                 ),
               );
             },
@@ -77,8 +77,8 @@ class _OrderedItemState extends State<OrderedItem> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => ProductDetails(
-                        /*Id: widget.product["ItemId"].toString(),*/
-                      ),
+                          /*Id: widget.product["ItemId"].toString(),*/
+                          ),
                     ),
                   );
                 },
@@ -90,16 +90,10 @@ class _OrderedItemState extends State<OrderedItem> {
                   ),
                 ),
               ),
-              /*Container(
-                width: MediaQuery.of(context).size.width / 1.8,
-                child: Text(
-                  "7, Hot Pink",
-                  style: TextStyle(fontSize: 15,color: Colors.black45),
-                ),
-              ),*/
               Text(
-                cnst.inr_rupee + " ${widget.product["Amount"]}",
-                style: TextStyle(fontSize: 15, color: cnst.app_primary_material_color),
+                cnst.inr_rupee + " ${int.parse(widget.product["Mrp"])}",
+                style: TextStyle(
+                    fontSize: 15, color: cnst.app_primary_material_color),
               ),
               Text(
                 "Quantity : ${widget.product["Qty"]}",

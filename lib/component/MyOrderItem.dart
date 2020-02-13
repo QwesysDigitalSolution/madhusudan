@@ -107,7 +107,7 @@ class _MyOrderItemState extends State<MyOrderItem> {
           context,
           MaterialPageRoute(
             builder: (context) => OrderDetail(
-              widget.order["Id"].toString(),
+              widget.order,
               "pending",
             ),
           ),
@@ -191,7 +191,8 @@ class _MyOrderItemState extends State<MyOrderItem> {
                         ),
                       ),*/
                       Text(
-                        cnst.inr_rupee + " ${productList[0]["NetAmount"]}",
+                        cnst.inr_rupee +
+                            "${int.parse(productList[0]["Mrp"]) * int.parse(productList[0]["Qty"])}",
                         style: TextStyle(
                             fontSize: 15,
                             color: cnst.app_primary_material_color),
@@ -211,77 +212,80 @@ class _MyOrderItemState extends State<MyOrderItem> {
                       child: Text(
                         "Total Amount:  " +
                             cnst.inr_rupee +
-                            " ${widget.order["OverAllTotal"]} /-",
+                            " ${widget.order["Total"]} /-",
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 18,
                             fontWeight: FontWeight.w600),
                       ),
                     ),
-                    widget.status == "Pending" ?
-                    Container(
-                      width: MediaQuery.of(context).size.width / 2.7,
-                      height: 35,
-                      margin: EdgeInsets.only(right: 5),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                          border: Border.all(
-                              color: cnst.app_primary_material_color)),
-                      child: MaterialButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(8.0)),
-                        color: Colors.white,
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              // return object of type Dialog
-                              return AlertDialog(
-                                title: new Text("Order Cancel Conformation"),
-                                content: new Text(
-                                    "Are you sure you want to cancel this order?"),
-                                actions: <Widget>[
-                                  // usually buttons at the bottom of the dialog
-                                  new FlatButton(
-                                    child: new Text("Close"),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
+                    widget.status == "Pending"
+                        ? Container(
+                            width: MediaQuery.of(context).size.width / 2.7,
+                            height: 35,
+                            margin: EdgeInsets.only(right: 5),
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
+                                border: Border.all(
+                                    color: cnst.app_primary_material_color)),
+                            child: MaterialButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: new BorderRadius.circular(8.0)),
+                              color: Colors.white,
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    // return object of type Dialog
+                                    return AlertDialog(
+                                      title:
+                                          new Text("Order Cancel Conformation"),
+                                      content: new Text(
+                                          "Are you sure you want to cancel this order?"),
+                                      actions: <Widget>[
+                                        // usually buttons at the bottom of the dialog
+                                        new FlatButton(
+                                          child: new Text("Close"),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        new FlatButton(
+                                          child: new Text("Accept"),
+                                          onPressed: () {
+                                            OrderCancel();
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.cancel,
+                                    color: cnst.app_primary_material_color,
+                                    size: 15,
                                   ),
-                                  new FlatButton(
-                                    child: new Text("Accept"),
-                                    onPressed: () {
-                                      OrderCancel();
-                                      Navigator.of(context).pop();
-                                    },
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 5),
+                                    child: Text(
+                                      "Cancel Order",
+                                      style: TextStyle(
+                                          color:
+                                              cnst.app_primary_material_color,
+                                          fontSize: 13.0,
+                                          fontWeight: FontWeight.w600),
+                                    ),
                                   ),
                                 ],
-                              );
-                            },
-                          );
-                        },
-                        child: Row(
-                          children: <Widget>[
-                            Icon(
-                              Icons.cancel,
-                              color: cnst.app_primary_material_color,
-                              size: 15,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 5),
-                              child: Text(
-                                "Cancel Order",
-                                style: TextStyle(
-                                    color: cnst.app_primary_material_color,
-                                    fontSize: 13.0,
-                                    fontWeight: FontWeight.w600),
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ) :
-                    Container(),
+                          )
+                        : Container(),
                   ],
                 ),
               ),

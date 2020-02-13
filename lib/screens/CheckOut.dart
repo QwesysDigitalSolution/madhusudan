@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -7,11 +8,11 @@ import 'package:madhusudan/common/Constants.dart' as cnst;
 import 'package:madhusudan/common/Services.dart';
 import 'package:madhusudan/component/LoadingComponent.dart';
 import 'package:madhusudan/component/CheckOutItem.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CheckOut extends StatefulWidget {
   List CartItem;
-
   CheckOut(this.CartItem);
 
   @override
@@ -25,159 +26,69 @@ class _CheckOutState extends State<CheckOut> {
   String MemberId = "0";
   bool isLoading = false;
   List MyCartList = [];
-  double subTotal = 0;
-  double discount = 0;
-  double shippingCharges = 0;
-  double giftCharges = 0;
-  double youSave = 0;
   double totalAmt = 0;
-  double walletAmount = 0.0;
-  double walletAmountUsed = 0.0;
-  String shippingAddress = "C-123 Pandesara Bamroli Road Surat";
+  String shippingAddress = "";
   String method = "COD";
   bool isAddressEdit = false;
+  ProgressDialog pr;
 
   @override
   void initState() {
+    pr = new ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: false);
+    pr.style(
+        message: "Please Wait",
+        borderRadius: 10.0,
+        progressWidget: Container(
+          padding: EdgeInsets.all(15),
+          child: CircularProgressIndicator(
+            valueColor: new AlwaysStoppedAnimation<Color>(
+                cnst.app_primary_material_color),
+          ),
+        ),
+        elevation: 10.0,
+        insetAnimCurve: Curves.easeInOut,
+        messageTextStyle: TextStyle(
+            color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w600));
     // TODO: implement initState
     setState(() {
       MyCartList = widget.CartItem;
-      walletAmount = 0;
     });
     CalculateTotal();
     super.initState();
   }
 
   getLocalData() async {
-    /* SharedPreferences prefs = await SharedPreferences.getInstance();
-    String Gender = prefs.getString(Session.Gender);
-    setState(() {
-      MemberId = prefs.getString(Session.MemberId);
-    });*/
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+     setState(() {
+       MemberId = prefs.getString(cnst.session.Member_Id);
+       shippingAddress = prefs.getString(cnst.session.Address);
+     });
   }
 
   CalculateTotal() async {
-    /*setState(() {
-      subTotal = 0;
-      discount = 0;
-      shippingCharges = 0;
-      giftCharges = 0;
-      youSave = 0;
+    setState(() {
       totalAmt = 0;
     });
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String MinDeliveryChargesBalance =
-    await prefs.getString(cnst.session.MinDeliveryChargesBalance);
-    String DeliveryCharges =
-    await prefs.getString(cnst.Session.DeliveryCharges);
-    String GiftingCharges = await prefs.getString(cnst.Session.GiftCharges);
-
+    print("CalculateTotal");
     if (MyCartList.length > 0) {
       for (int i = 0; i < MyCartList.length; i++) {
-        double AmtDiff = double.parse(MyCartList[i]["Mrp"].toString()) -
-            double.parse(MyCartList[i]["SellingPrice"].toString());
-
         setState(() {
-          subTotal += (double.parse(MyCartList[i]["Mrp"].toString()) *
-              double.parse(MyCartList[i]["Qty"].toString()));
-          discount += AmtDiff * double.parse(MyCartList[i]["Qty"].toString());
-          youSave += AmtDiff * double.parse(MyCartList[i]["Qty"].toString());
-          totalAmt += (double.parse(MyCartList[i]["SellingPrice"].toString()) *
+          totalAmt += (double.parse(MyCartList[i]["Mrp"].toString()) *
               double.parse(MyCartList[i]["Qty"].toString()));
         });
-      }
-
-      if (double.parse(MinDeliveryChargesBalance.toString()) > totalAmt) {
-        setState(() {
-          shippingCharges = double.parse(DeliveryCharges);
-          totalAmt += double.parse(DeliveryCharges);
-        });
-      } else {
-        setState(() {
-          shippingCharges = 0;
-        });
-      }
-      if (selectedType == "gifting") {
-        setState(() {
-          giftCharges = double.parse(GiftingCharges);
-          totalAmt += double.parse(GiftingCharges);
-        });
-      } else {
-        giftCharges = 0;
-      }
-      if(walletAmount > 0){
-        if(walletAmount <= totalAmt){
-          setState(() {
-            totalAmt -= walletAmount;
-            walletAmountUsed = walletAmount;
-            youSave += walletAmount;
-          });
-        }else if(walletAmount > totalAmt){
-          setState(() {
-            totalAmt -= totalAmt;
-            walletAmountUsed = totalAmt;
-            youSave += walletAmount;
-          });
-        }
       }
     } else {
       setState(() {
         totalAmt = 0;
       });
-    }*/
-  }
-
-  CheckDeleveryAvailability() async {
-    /*try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String MemberId = prefs.getString(Session.MemberId);
-
-      final result = await InternetAddress.lookup('google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        setState(() {
-          isLoading = true;
-        });
-        var formData = {
-          "Pincode": shippingAddress["Pincode"].toString().trim()
-        };
-        Services.PostServiceForSave("CheckPincode", formData).then(
-                (data) async {
-              setState(() {
-                isLoading = false;
-              });
-              if (data.Data != "0" && data.IsSuccess == true) {
-                setState(() {
-                  isDeleveryAvailable = true;
-                });
-              } else {
-                setState(() {
-                  isDeleveryAvailable = false;
-                });
-                showMsg(data.Message);
-              }
-            }, onError: (e) {
-          setState(() {
-            isLoading = false;
-          });
-          showMsg("Try Again.");
-        });
-      } else {
-        setState(() {
-          isLoading = false;
-        });
-        showMsg("No Internet Connection.");
-      }
-    } on SocketException catch (_) {
-      showMsg("No Internet Connection.");
-    }*/
+    }
   }
 
   CheckOut() async {
-    Navigator.pushReplacementNamed(context, '/OrderSuccess');
-    /*try {
+    try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String MemberId = prefs.getString(Session.MemberId);
+      String MemberId = prefs.getString(cnst.session.Member_Id);
 
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
@@ -185,25 +96,17 @@ class _CheckOutState extends State<CheckOut> {
           isLoading = true;
         });
 
-        var formData = {
-          "SubTotal": subTotal,
-          "Discount": discount,
-          "Shipping": shippingCharges,
-          "GiftCharge": giftCharges,
-          "YouSave": youSave,
-          "Total": totalAmt,
-          "AddressId": shippingAddress["Id"],
-          "IsGift": selectedType == "gifting" ? true : false,
-          "PaymentMode": "COD",
+        FormData formData = new FormData.fromMap({
           "UserId": MemberId,
-          "WalletPoint" : walletAmountUsed
-        };
-        Services.PostServiceForSave("CheckOut", formData).then((data) async {
+          "Address": shippingAddress
+        });
+
+        Services.PostServiceForSave("wl/v1/CheckOut", formData).then((data) async {
           setState(() {
             isLoading = false;
           });
           if (data.Data != "0" && data.IsSuccess == true) {
-            Navigator.pushReplacementNamed(context, '/PlaceOrder');
+            Navigator.pushReplacementNamed(context, '/OrderSuccess');
           } else {
             showMsg(data.Message);
           }
@@ -221,7 +124,7 @@ class _CheckOutState extends State<CheckOut> {
       }
     } on SocketException catch (_) {
       showMsg("No Internet Connection.");
-    }*/
+    }
   }
 
   showMsg(String msg, {String title = 'Kaya Cosmetics'}) {
@@ -243,45 +146,6 @@ class _CheckOutState extends State<CheckOut> {
       },
     );
   }
-
-  /*CheckAvailablePoint() async {
-    try {
-      final result = await InternetAddress.lookup('google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        setState(() {
-          isLoading = true;
-        });
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        String MemberId = prefs.getString(Session.MemberId);
-        Future res = Services.GetCurrentAmountInWallet(MemberId);
-        res.then((data) async {
-          setState(() {
-            isLoading = false;
-          });
-          if (data.IsSuccess == true) {
-            setState(() {
-              walletAmount = double.parse(data.Data.toString());
-            });
-            print("walletAmount : $walletAmount");
-          }
-          CalculateTotal();
-        }, onError: (e) {
-          print("Error : on Login Call");
-          //showMsg("$e");
-          setState(() {
-            isLoading = false;
-          });
-          Fluttertoast.showToast(
-              msg: "$e",
-              backgroundColor: Colors.red,
-              gravity: ToastGravity.TOP,
-              toastLength: Toast.LENGTH_SHORT);
-        });
-      }
-    } on SocketException catch (_) {
-      showInternetMsg("No Internet Connection.");
-    }
-  }*/
 
   showInternetMsg(String msg) {
     showDialog(
@@ -530,35 +394,20 @@ class _CheckOutState extends State<CheckOut> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          GestureDetector(
-                            onTap: () {
-                              var calculation = {
-                                "subTotal": subTotal,
-                                "discount": discount,
-                                "totalAmt": totalAmt
-                              };
-                              _settingModalBottomSheet(context, calculation);
-                            },
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  "TOTAL",
-                                  style: TextStyle(
-                                      fontSize: 13, color: Colors.black54),
-                                ),
-                                Text(
-                                  cnst.inr_rupee + " ${totalAmt}",
-                                  style: TextStyle(
-                                      fontSize: 17, color: Colors.black),
-                                ),
-                                Text(
-                                  "Click here see full detail.",
-                                  style: TextStyle(
-                                      fontSize: 13, color: Colors.black54),
-                                ),
-                              ],
-                            ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                "TOTAL",
+                                style: TextStyle(
+                                    fontSize: 13, color: Colors.black54),
+                              ),
+                              Text(
+                                cnst.inr_rupee + " ${totalAmt}",
+                                style: TextStyle(
+                                    fontSize: 17, color: Colors.black),
+                              ),
+                            ],
                           ),
                           Container(
                             width: 165,

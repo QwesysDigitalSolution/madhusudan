@@ -143,7 +143,7 @@ class _CheckOutItemState extends State<CheckOutItem> {
                   ),
                 ),*/
                     Text(
-                      cnst.inr_rupee + " ${Product["SellingPrice"]}",
+                      cnst.inr_rupee + " ${Product["Mrp"]}",
                       style: TextStyle(fontSize: 15, color: cnst.app_primary_material_color),
                     ),
                   ],
