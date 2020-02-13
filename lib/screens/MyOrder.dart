@@ -8,6 +8,7 @@ import 'package:madhusudan/component/LoadingComponent.dart';
 import 'package:madhusudan/component/MyOrderItem.dart';
 import 'package:madhusudan/component/NoDataComponent.dart';
 import 'package:madhusudan/common/Services.dart';
+import 'package:madhusudan/utils/Shimmer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyOrder extends StatefulWidget {
@@ -34,7 +35,8 @@ class _MyOrderState extends State<MyOrder> {
       MemberId = prefs.getString(cnst.session.Member_Id);
     });
 
-    getPendingOrderDetail();
+    await getPendingOrderDetail();
+    await getDeliverdOrderDetail();
   }
 
   getPendingOrderDetail() async {
@@ -57,6 +59,46 @@ class _MyOrderState extends State<MyOrder> {
               if (data.length > 0) {
                 setState(() {
                   CurrentOrderList = data;
+                });
+                setState(() {
+                  isLoading = false;
+                });
+              } else {
+                setState(() {
+                  isLoading = false;
+                });
+              }
+            }, onError: (e) {
+          setState(() {
+            isLoading = false;
+          });
+        });
+      }
+    } on SocketException catch (_) {
+      showMsg("No Internet Connection.");
+    }
+  }
+
+  getDeliverdOrderDetail() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String MemberId = prefs.getString(cnst.session.Member_Id);
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        List formData = [
+          {"key": "UserId", "value": MemberId},
+          {"key": "Status", "value": "Delivered"}
+        ];
+        print("GetSubCategory Data = ${formData}");
+        //pr.show();
+        setState(() {
+          isLoading = true;
+        });
+        Services.GetServiceForList("wl/v1/GetOrderByType", formData).then(
+                (data) async {
+              if (data.length > 0) {
+                setState(() {
+                  DeliverdOrderList = data;
                 });
                 setState(() {
                   isLoading = false;
@@ -131,6 +173,7 @@ class _MyOrderState extends State<MyOrder> {
         ),
         body: TabBarView(
           children: [
+            isLoading ? ShimmerCardListSkeleton(length: 5,isCircularImage: false,) :
             CurrentOrderList != null && CurrentOrderList.length > 0
                 ? ListView.builder(
                     itemCount: CurrentOrderList.length,
@@ -149,6 +192,7 @@ class _MyOrderState extends State<MyOrder> {
                       );
                     })
                 : NoDataComponent(),
+            isLoading ? ShimmerCardListSkeleton(length: 5,isCircularImage: false,) :
             DeliverdOrderList != null && DeliverdOrderList.length > 0
                 ? ListView.builder(
                     itemCount: DeliverdOrderList.length,

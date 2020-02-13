@@ -7,6 +7,7 @@ import 'package:madhusudan/component/NoDataComponent.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
+import 'package:madhusudan/utils/Shimmer.dart';
 
 class AboutUs extends StatefulWidget {
   @override
@@ -43,7 +44,6 @@ class _AboutUsState extends State<AboutUs> {
             color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w600));
   }
 
-
   getCMS() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -52,28 +52,26 @@ class _AboutUsState extends State<AboutUs> {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         await showPrDialog();
-        pr.show();
+
         List formData = [];
         setState(() {
           isLoading = true;
         });
 
-        Services.GetServiceForList("wl/v1/GetAboutUs", formData).then((data) async {
+        Services.GetServiceForList("wl/v1/GetAboutUs", formData).then(
+            (data) async {
           if (data.length > 0) {
-            pr.hide();
             setState(() {
               list = data;
               isLoading = false;
             });
           } else {
-            pr.hide();
             setState(() {
               list.clear();
               isLoading = false;
             });
           }
         }, onError: (e) {
-          pr.hide();
           setState(() {
             list.clear();
             isLoading = false;
@@ -138,7 +136,10 @@ class _AboutUsState extends State<AboutUs> {
         ),
       ),
       body: isLoading
-          ? Container()
+          ? ShimmerCardListSkeleton(
+              length: 5,
+              isImage: false
+            )
           : list.length > 0
               ? Container(
                   padding: EdgeInsets.all(10),

@@ -28,10 +28,11 @@ Decoration myBoxDec(animation, {isCircle = false}) {
 
 class ShimmerCardSkeleton extends StatefulWidget {
   final bool isCircularImage;
+  final bool isImage;
   final bool isBottomLinesActive;
 
   ShimmerCardSkeleton(
-      {this.isCircularImage = true, this.isBottomLinesActive = true});
+      {this.isCircularImage = true,this.isImage = true, this.isBottomLinesActive = true});
 
   @override
   _ShimmerCardSkeletonState createState() => _ShimmerCardSkeletonState();
@@ -90,12 +91,13 @@ class _ShimmerCardSkeletonState extends State<ShimmerCardSkeleton>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
+                    widget.isImage ?
                     Container(
                       height: width * 0.13,
                       width: width * 0.13,
                       decoration:
                           myBoxDec(animation, isCircle: widget.isCircularImage),
-                    ),
+                    ) : Container(),
                     SizedBox(
                       width: 20,
                     ),
@@ -321,11 +323,13 @@ class _ShimmerDarkCardSkeletonState extends State<ShimmerDarkCardSkeleton>
 
 class ShimmerCardListSkeleton extends StatelessWidget {
   final bool isCircularImage;
+  final bool isImage;
   final bool isBottomLinesActive;
   final int length;
 
   ShimmerCardListSkeleton({
     this.isCircularImage = true,
+    this.isImage = true,
     this.length = 10,
     this.isBottomLinesActive = true,
   });
@@ -337,6 +341,7 @@ class ShimmerCardListSkeleton extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         return ShimmerCardSkeleton(
           isCircularImage: isCircularImage,
+          isImage : isImage,
           isBottomLinesActive: isBottomLinesActive,
         );
       },

@@ -82,7 +82,7 @@ class _OrderDetailState extends State<OrderDetail> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            "Order No ${Order["OrderId"]}",
+            "Order No ${Order["Id"]}",
             style: TextStyle(color: cnst.app_primary_material_color),
           ),
           centerTitle: true,

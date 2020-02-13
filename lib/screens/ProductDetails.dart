@@ -17,6 +17,7 @@ import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:madhusudan/utils/DatabaseHelper.dart';
+import 'package:translator/translator.dart';
 
 class ProductDetails extends StatefulWidget {
   String Id;
@@ -37,6 +38,8 @@ class _ProductDetailsState extends State<ProductDetails> {
   List catData = new List();
   List imageList = new List();
   String MemberId = "0";
+  final translator = new GoogleTranslator();
+  String hindiDescription = "";
 
   //Audio File
   FlutterAudioRecorder _recorder;
@@ -113,9 +116,7 @@ class _ProductDetailsState extends State<ProductDetails> {
         FormData formData = new FormData.fromMap({"UserId": MemberId});
         print("getItemDetails Data = ${formData}");
         //pr.show();
-        setState(() {
-          isLoading = true;
-        });
+
         Services.PostServiceForSave("wl/v1/GetCartCount", formData).then(
             (data) async {
           if (data.IsSuccess == true) {
@@ -307,6 +308,7 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   addToCart() async {
     try {
+      await showPrDialog();
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String MemberId = prefs.getString(cnst.session.Member_Id);
 
@@ -329,12 +331,14 @@ class _ProductDetailsState extends State<ProductDetails> {
           "ItemId": widget.Id,
           "Qty": quantity,
           "Comment": txtDescription.text,
-          "AudioFile": _recorder != null
-              ? await MultipartFile.fromFile(
-                  _recording.path,
-                  filename: filename,
-                )
-              : null
+          "HindiComment": hindiDescription,
+          "AudioFile":
+              _recording != null && File(await _recording.path).exists() == true
+                  ? await MultipartFile.fromFile(
+                      _recording.path,
+                      filename: filename,
+                    )
+                  : null
         });
         print("Add To Cart Data =  $formData");
         print("Add To Item Id =  ${widget.Id}");
@@ -351,7 +355,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             });
             UpdateCartCount();
           } else {
-            showMsg(data.Message, title: "Error");
+            showMsg(data.Message);
           }
         }, onError: (e) {
           pr.hide();
@@ -400,6 +404,13 @@ class _ProductDetailsState extends State<ProductDetails> {
     }, onError: (e) {
       print("Error : " + e.toString());
     });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    player.stop();
   }
 
   @override
@@ -611,19 +622,28 @@ class _ProductDetailsState extends State<ProductDetails> {
                             Container(
                               decoration: BoxDecoration(
                                 color: Colors.grey,
-                                borderRadius: BorderRadius.all(Radius.circular(10),),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
+                                ),
                               ),
                               child: new IconButton(
                                 icon: new Icon(
                                   Icons.remove,
                                   color: Colors.white,
                                 ),
-                                onPressed: (){
-                                  int qty = txtQty.text != null && txtQty.text != "" ? int.parse(txtQty.text) : 0;
-                                  if (qty != 1) {
+                                onPressed: () {
+                                  int qty =
+                                      txtQty.text != null && txtQty.text != ""
+                                          ? int.parse(txtQty.text)
+                                          : 0;
+                                  if (qty != 1 && qty != 0) {
                                     qty--;
                                     setState(() {
                                       txtQty.text = qty.toString();
+                                    });
+                                  } else {
+                                    setState(() {
+                                      txtQty.text = "1";
                                     });
                                   }
                                 },
@@ -631,7 +651,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                             ),
                             Container(
                               width: 80,
-                              margin: EdgeInsets.only(left: 10,right: 10),
+                              margin: EdgeInsets.only(left: 10, right: 10),
                               child: TextFormField(
                                 controller: txtQty,
                                 cursorColor: Theme.of(context).cursorColor,
@@ -652,15 +672,20 @@ class _ProductDetailsState extends State<ProductDetails> {
                             Container(
                               decoration: BoxDecoration(
                                 color: Colors.grey,
-                                borderRadius: BorderRadius.all(Radius.circular(10),),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
+                                ),
                               ),
                               child: new IconButton(
                                 icon: new Icon(
                                   Icons.add,
                                   color: Colors.white,
                                 ),
-                                onPressed: (){
-                                  int qty = txtQty.text != null && txtQty.text != "" ? int.parse(txtQty.text) : 0;
+                                onPressed: () {
+                                  int qty =
+                                      txtQty.text != null && txtQty.text != ""
+                                          ? int.parse(txtQty.text)
+                                          : 0;
                                   qty++;
                                   setState(() {
                                     txtQty.text = qty.toString();
@@ -687,6 +712,17 @@ class _ProductDetailsState extends State<ProductDetails> {
                               ),
                               child: TextFormField(
                                 controller: txtDescription,
+                                onEditingComplete: () {
+                                  translator
+                                      .translate(txtDescription.text,
+                                          from: 'en', to: 'hi')
+                                      .then((s) {
+                                    print("Tranlated Text : $s");
+                                    setState(() {
+                                      hindiDescription = s;
+                                    });
+                                  });
+                                },
                                 autocorrect: true,
                                 scrollPadding: EdgeInsets.all(0),
                                 decoration: InputDecoration(

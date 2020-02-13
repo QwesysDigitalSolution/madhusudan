@@ -175,7 +175,7 @@ class _MyCartState extends State<MyCart> {
               isLoading = false;
             });
           } else {
-            showMsg(data.Message, title: "Error");
+            showMsg(data.Message);
           }
         }, onError: (e) {
           setState(() {

@@ -237,80 +237,91 @@ class _MyCartItemState extends State<MyCartItem> {
                       ),
                     ),
                   ),
-                  /*Container(
-                width: MediaQuery.of(context).size.width / 1.8,
-                child: Text(
-                  "7, Hot Pink",
-                  style: TextStyle(fontSize: 15,color: Colors.black45),
-                ),
-              ),*/
                   Text(
                     cnst.inr_rupee + " ${Product["Mrp"]}",
                     style: TextStyle(
                         fontSize: 15, color: cnst.app_primary_material_color),
                   ),
                   Container(
+                    width: MediaQuery.of(context).size.width / 1.8,
                     child: Row(
-                      //crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              if (Product["Qty"] != 1) {
-                                Product["Qty"] = Product["Qty"] - 1;
-                              }
-                            });
+                        Row(
+                          //crossAxisAlignment: CrossAxisAlignment.end,
+                          children: <Widget>[
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  if (Product["Qty"] != 1) {
+                                    Product["Qty"] = Product["Qty"] - 1;
+                                  }
+                                });
 
-                            updateCart();
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 4),
-                            child: Container(
-                              //width: MediaQuery.of(context).size.width,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.grey[300]),
+                                updateCart();
+                              },
                               child: Padding(
-                                  padding: const EdgeInsets.all(9.0),
-                                  child: Text(
-                                    "-",
-                                    style: TextStyle(fontSize: 20),
-                                  )),
+                                padding: const EdgeInsets.only(right: 4),
+                                child: Container(
+                                  //width: MediaQuery.of(context).size.width,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.grey[300]),
+                                  child: Padding(
+                                      padding: const EdgeInsets.all(9.0),
+                                      child: Text(
+                                        "-",
+                                        style: TextStyle(fontSize: 20),
+                                      )),
+                                ),
+                              ),
                             ),
-                          ),
+                            Padding(
+                              padding: const EdgeInsets.all(4),
+                              child: Text(
+                                "${Product["Qty"]}",
+                                style: TextStyle(fontSize: 17),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  Product["Qty"] =
+                                      int.parse(Product["Qty"].toString()) + 1;
+                                });
+
+                                updateCart();
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 4),
+                                child: Container(
+                                  //width: MediaQuery.of(context).size.width,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.grey[300]),
+                                  child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "+",
+                                        style: TextStyle(fontSize: 12),
+                                      )),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
+                        // More Detail For Comment & Audio
+                        /*Product["Comment"] != "" || Product["AudioFile"] != false ?
                         Padding(
-                          padding: const EdgeInsets.all(4),
-                          child: Text(
-                            "${Product["Qty"]}",
-                            style: TextStyle(fontSize: 17),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              Product["Qty"] =
-                                  int.parse(Product["Qty"].toString()) + 1;
-                            });
-
-                            updateCart();
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 4),
-                            child: Container(
-                              //width: MediaQuery.of(context).size.width,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.grey[300]),
-                              child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "+",
-                                    style: TextStyle(fontSize: 12),
-                                  )),
+                          padding: const EdgeInsets.only(right: 20),
+                          child: Container(
+                            child: Text(
+                              "more detail",
+                              style:
+                              TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                             ),
                           ),
-                        ),
+                        ) : Container()*/
                       ],
                     ),
                   ),
@@ -334,7 +345,32 @@ class _MyCartItemState extends State<MyCartItem> {
                     ),
                     color: Colors.white,
                     onPressed: () {
-                      removeFromCart();
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          // return object of type Dialog
+                          return AlertDialog(
+                            title: new Text("Delete Conformation"),
+                            content: new Text("Are you sure you want to remove item ?"),
+                            actions: <Widget>[
+                              // usually buttons at the bottom of the dialog
+                              new FlatButton(
+                                child: new Text("Close"),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              new FlatButton(
+                                child: new Text("Ok"),
+                                onPressed: () {
+                                  removeFromCart();
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     },
                     child: Row(
                       children: <Widget>[

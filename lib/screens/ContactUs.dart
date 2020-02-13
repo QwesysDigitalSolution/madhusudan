@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
 import 'package:madhusudan/common/Services.dart';
 import 'package:madhusudan/component/NoDataComponent.dart';
+import 'package:madhusudan/utils/Shimmer.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -85,16 +86,13 @@ class _ContactUsState extends State<ContactUs> {
 
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        await showPrDialog();
-        pr.show();
         List formData = [];
         setState(() {
           isLoading = true;
         });
-
         Services.GetServiceForList("wl/v1/GetContactUs", formData).then(
             (data) async {
-          pr.hide();
+
           if (data.length > 0) {
             var latlong = data[0]["Latlong"].split(',');
             setState(() {
@@ -112,7 +110,7 @@ class _ContactUsState extends State<ContactUs> {
             });
           }
         }, onError: (e) {
-          pr.hide();
+
           setState(() {
             list.clear();
             isLoading = false;
@@ -174,7 +172,9 @@ class _ContactUsState extends State<ContactUs> {
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: isLoading
-            ? Container()
+            ? ShimmerProductDetailCardSkeleton(
+                isCircularImage: false,
+              )
             : list.length > 0
                 ? SingleChildScrollView(
                     child: Column(
