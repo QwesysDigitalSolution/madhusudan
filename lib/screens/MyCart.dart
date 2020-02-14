@@ -208,6 +208,8 @@ class _MyCartState extends State<MyCart> {
 
   void removeCartItem(index) async {
     try {
+      await showPrDialog();
+      pr.show();
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         FormData formData = new FormData.fromMap({
@@ -215,14 +217,9 @@ class _MyCartState extends State<MyCart> {
           "UserId": MemberId,
         });
         print("RemoveCartItem Data = ${formData}");
-        setState(() {
-          isLoading = true;
-        });
         Services.PostServiceForSave("wl/v1/RemoveCartItem", formData).then(
             (data) async {
-          setState(() {
-            isLoading = false;
-          });
+          pr.hide();
           if (data.Data == "1") {
             showMsg("Product Removed Successfully.");
             setState(() {
@@ -234,22 +231,20 @@ class _MyCartState extends State<MyCart> {
             showMsg(data.Message, title: "Error");
           }
         }, onError: (e) {
-          setState(() {
-            isLoading = false;
-          });
+          pr.hide();
           showMsg("Try Again.");
         });
       }
     } on SocketException catch (_) {
-      setState(() {
-        isLoading = false;
-      });
+      pr.hide();
       showMsg("No Internet Connection.");
     }
   }
 
   void updateCartList(qty, index) async {
     try {
+      await showPrDialog();
+      pr.show();
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         FormData formData = new FormData.fromMap({
@@ -259,33 +254,43 @@ class _MyCartState extends State<MyCart> {
         });
 
         print("UpdateCartItem Data = ${formData}");
-        setState(() {
-          isLoading = true;
-        });
         Services.PostServiceForSave("wl/v1/UpdateCartItem", formData).then(
             (data) async {
-          setState(() {
-            isLoading = false;
-          });
+          pr.hide();
           if (data.Data == "1") {
             CalculateTotal();
-            UpdateCartCount();
+            //UpdateCartCount();
           } else {
             showMsg(data.Message, title: "Error");
           }
         }, onError: (e) {
-          setState(() {
-            isLoading = false;
-          });
+          pr.hide();
           showMsg("Try Again.");
         });
       }
     } on SocketException catch (_) {
-      setState(() {
-        isLoading = false;
-      });
+      pr.hide();
       showMsg("No Internet Connection.");
     }
+  }
+
+  showPrDialog() async {
+    pr = new ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: false);
+    pr.style(
+        message: "Please Wait",
+        borderRadius: 10.0,
+        progressWidget: Container(
+          padding: EdgeInsets.all(15),
+          child: CircularProgressIndicator(
+            valueColor: new AlwaysStoppedAnimation<Color>(
+                cnst.app_primary_material_color),
+          ),
+        ),
+        elevation: 10.0,
+        insetAnimCurve: Curves.easeInOut,
+        messageTextStyle: TextStyle(
+            color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w600));
   }
 
   @override

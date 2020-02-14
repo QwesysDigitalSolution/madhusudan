@@ -118,7 +118,7 @@ class MyCartItem extends StatelessWidget {
                               GestureDetector(
                                 onTap: () {
                                   if (product["Qty"] != 1) {
-                                    product["Qty"] = product["Qty"] - 1;
+                                    product["Qty"] =  int.parse(product["Qty"].toString()) - 1;
                                   }
                                   updateItemList(product["Qty"],index);
                                 },
