@@ -11,6 +11,7 @@ import 'package:madhusudan/common/Constants.dart' as cnst;
 import 'package:madhusudan/common/StateContainer.dart';
 import 'package:madhusudan/screens/AboutUs.dart';
 import 'package:madhusudan/screens/ContactUs.dart';
+import 'package:madhusudan/screens/OTPScreen.dart';
 import 'package:madhusudan/screens/UploadPhotoOrder.dart';
 
 //screen list
@@ -98,6 +99,7 @@ class _MyAppState extends State<MyApp> {
         '/MyOrder': (context) => MyOrder(),
         '/ContactUs': (context) => ContactUs(),
         '/AboutUs': (context) => AboutUs(),
+        '/OTPScreen': (context) => OTPScreen(),
       },
       theme: ThemeData(
         textTheme: GoogleFonts.latoTextTheme(textTheme).copyWith(

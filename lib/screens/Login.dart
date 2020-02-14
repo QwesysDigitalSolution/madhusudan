@@ -95,7 +95,6 @@ class _LoginState extends State<Login> {
     if (edtMobile.text != "") {
       if (edtMobile.text.length == 10) {
         try {
-
           final result = await InternetAddress.lookup('google.com');
           if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
             pr.show();
@@ -104,7 +103,7 @@ class _LoginState extends State<Login> {
               {"key": "FCMToken", "value": fcmToken},
             ];
             Future res =
-            Services.GetServiceForList("wl/v1/GetLoginData", formData);
+                Services.GetServiceForList("wl/v1/GetLoginData", formData);
             res.then((data) async {
               pr.hide();
               if (data != null && data.length > 0) {
@@ -113,20 +112,18 @@ class _LoginState extends State<Login> {
                     cnst.session.Member_Id, data[0]["Id"].toString());
                 await prefs.setString(cnst.session.Email, data[0]["Email"]);
                 await prefs.setString(cnst.session.Name, data[0]["Name"]);
-                  await prefs.setString(cnst.session.Image, data[0]["Image"]);
+                await prefs.setString(cnst.session.Image, data[0]["Image"]);
                 await prefs.setString(cnst.session.Mobile, data[0]["Mobile"]);
                 await prefs.setString(cnst.session.Address, data[0]["Address"]);
-                await prefs.setString(
-                    cnst.session.IsVerified, data[0]["IsVerified"].toString());
 
-                /*if (data[0]["IsVerified"].toString().toLowerCase() == "true") {
+                if (data[0]["IsVerified"].toString().toLowerCase() == "true") {
+                  await prefs.setString(cnst.session.IsVerified,
+                      data[0]["IsVerified"].toString());
                   Navigator.pushReplacementNamed(context, '/Dashboard');
                 } else {
                   Navigator.pushReplacementNamed(context, '/OTPScreen');
-                }*/
-
-                Navigator.pushReplacementNamed(
-                    context, '/Dashboard');
+                }
+                //Navigator.pushReplacementNamed(context, '/Dashboard');
               } else {
                 showMsg("Mobile Number is Incorrect");
               }
@@ -134,12 +131,13 @@ class _LoginState extends State<Login> {
               pr.hide();
               showMsg("Try Again.");
             });
-          }/* else {
+          }
+          /* else {
             pr.isShowing()?pr.hide():null;
             showMsg("No Internet Connection.");
           }*/
         } on SocketException catch (_) {
-          pr.isShowing()?pr.hide():null;
+          pr.isShowing() ? pr.hide() : null;
           showMsg("No Internet Connection.");
         }
       } else {
@@ -234,7 +232,6 @@ class _LoginState extends State<Login> {
                               //Navigator.pushReplacementNamed(context, '/Dashboard');
                               /*Navigator.pushReplacementNamed(
                                   context, '/Dashboard');*/
-
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,

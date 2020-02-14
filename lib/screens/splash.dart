@@ -25,7 +25,8 @@ class _splashState extends State<splash> {
     Timer(Duration(seconds: 2), () async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String MemberId = prefs.getString(session.Member_Id);
-      if (MemberId != null && MemberId != "") {
+      String veri = prefs.getString(session.IsVerified);
+      if (MemberId != null && MemberId != ""&& veri=="true") {
         if (Platform.isIOS) {
           _firebaseMessaging.onIosSettingsRegistered.listen((data) {
             _firebaseMessaging.getToken().then((String token) {

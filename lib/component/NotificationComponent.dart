@@ -21,6 +21,7 @@ class _NotificationComponentState extends State<NotificationComponent> {
       child: Container(
         padding: EdgeInsets.only(left: 8, right: 8),
         child: Card(
+          elevation: 2,
           shape: RoundedRectangleBorder(
             //side: BorderSide(color: cnst.appcolor)),
             side: BorderSide(
@@ -60,7 +61,7 @@ class _NotificationComponentState extends State<NotificationComponent> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Text(
-                                  '${widget.notification["Date"].toString().substring(8, 10)}',
+                                  '${widget.notification["date"].toString().substring(8, 10)}',
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 15,
@@ -85,7 +86,7 @@ class _NotificationComponentState extends State<NotificationComponent> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Text(
-                                  '${new DateFormat.MMM().format(DateTime.parse(DateFormat("yyyy-MM-dd").parse(widget.notification["Date"].toString().substring(0, 10)).toString()))},${widget.notification["Date"].substring(0, 4)}',
+                                  '${new DateFormat.MMM().format(DateTime.parse(DateFormat("yyyy-MM-dd").parse(widget.notification["date"].toString().substring(0, 10)).toString()))},${widget.notification["date"].substring(0, 4)}',
                                   style: TextStyle(
                                       fontSize: 11,
                                       //color: cnst.app_primary_material_color,
@@ -105,14 +106,14 @@ class _NotificationComponentState extends State<NotificationComponent> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            '${widget.notification["Title"]}',
+                            '${widget.notification["title"]}',
                             style: TextStyle(
                                 //color: cnst.app_primary_material_color,
                                 fontSize: 17,
                                 fontWeight: FontWeight.w600,),
                           ),
                           Text(
-                            '${widget.notification["Description"]}',
+                            '${widget.notification["description"]}',
                             style: TextStyle(
                                 //color: cnst.app_primary_material_color,
                                 fontSize: 14,),

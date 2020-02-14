@@ -49,6 +49,7 @@ dependencies:
   firebase_database: ^3.1.1
   firebase_core: ^0.4.3+3
   translator: ^0.1.4
+  pin_code_text_field: ^1.5.1
 
 dev_dependencies:
   flutter_test:
