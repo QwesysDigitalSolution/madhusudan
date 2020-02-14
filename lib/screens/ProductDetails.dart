@@ -329,16 +329,16 @@ class _ProductDetailsState extends State<ProductDetails> {
         FormData formData = new FormData.fromMap({
           "UserId": MemberId,
           "ItemId": widget.Id,
-          "Qty": quantity,
+          "Qty": txtQty.text,
           "Comment": txtDescription.text,
           "HindiComment": hindiDescription,
-          "AudioFile":
-              _recording != null && File(await _recording.path).exists() == true
-                  ? await MultipartFile.fromFile(
-                      _recording.path,
-                      filename: filename,
-                    )
-                  : null
+          "AudioFile": (_recording != null &&
+                  _recording.status == RecordingStatus.Stopped)
+              ? await MultipartFile.fromFile(
+                  _recording.path,
+                  filename: filename,
+                )
+              : null
         });
         print("Add To Cart Data =  $formData");
         print("Add To Item Id =  ${widget.Id}");
