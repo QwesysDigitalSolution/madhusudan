@@ -55,20 +55,20 @@ class _MyOrderState extends State<MyOrder> {
           isLoading = true;
         });
         Services.GetServiceForList("wl/v1/GetOrderByType", formData).then(
-                (data) async {
-              if (data.length > 0) {
-                setState(() {
-                  CurrentOrderList = data;
-                });
-                setState(() {
-                  isLoading = false;
-                });
-              } else {
-                setState(() {
-                  isLoading = false;
-                });
-              }
-            }, onError: (e) {
+            (data) async {
+          if (data.length > 0) {
+            setState(() {
+              CurrentOrderList = data;
+            });
+            setState(() {
+              isLoading = false;
+            });
+          } else {
+            setState(() {
+              isLoading = false;
+            });
+          }
+        }, onError: (e) {
           setState(() {
             isLoading = false;
           });
@@ -95,20 +95,20 @@ class _MyOrderState extends State<MyOrder> {
           isLoading = true;
         });
         Services.GetServiceForList("wl/v1/GetOrderByType", formData).then(
-                (data) async {
-              if (data.length > 0) {
-                setState(() {
-                  DeliverdOrderList = data;
-                });
-                setState(() {
-                  isLoading = false;
-                });
-              } else {
-                setState(() {
-                  isLoading = false;
-                });
-              }
-            }, onError: (e) {
+            (data) async {
+          if (data.length > 0) {
+            setState(() {
+              DeliverdOrderList = data;
+            });
+            setState(() {
+              isLoading = false;
+            });
+          } else {
+            setState(() {
+              isLoading = false;
+            });
+          }
+        }, onError: (e) {
           setState(() {
             isLoading = false;
           });
@@ -145,8 +145,12 @@ class _MyOrderState extends State<MyOrder> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("My Orders",
-              style: TextStyle(color: cnst.app_primary_material_color)),
+          title: Text(
+            "My Orders",
+            style: TextStyle(
+              color: cnst.app_primary_material_color,
+            ),
+          ),
           centerTitle: true,
           backgroundColor: Colors.white,
           leading: IconButton(
@@ -173,44 +177,52 @@ class _MyOrderState extends State<MyOrder> {
         ),
         body: TabBarView(
           children: [
-            isLoading ? ShimmerCardListSkeleton(length: 5,isCircularImage: false,) :
-            CurrentOrderList != null && CurrentOrderList.length > 0
-                ? ListView.builder(
-                    itemCount: CurrentOrderList.length,
-                    //shrinkWrap: true,
-                    itemBuilder: (BuildContext context, int index) {
-                      return MyOrderItem(
-                        CurrentOrderList[index],
-                        "Pending",
-                        ((String action) {
-                          if (action == "OrderCancel") {
-                            setState(() {
-                              CurrentOrderList.removeAt(index);
-                            });
-                          }
-                        }),
-                      );
-                    })
-                : NoDataComponent(),
-            isLoading ? ShimmerCardListSkeleton(length: 5,isCircularImage: false,) :
-            DeliverdOrderList != null && DeliverdOrderList.length > 0
-                ? ListView.builder(
-                    itemCount: DeliverdOrderList.length,
-                    //shrinkWrap: true,
-                    itemBuilder: (BuildContext context, int index) {
-                      return MyOrderItem(
-                        DeliverdOrderList[index],
-                        "Delivered",
-                        ((String action) {
-                          if (action == "OrderCancel") {
-                            setState(() {
-                              DeliverdOrderList.removeAt(index);
-                            });
-                          }
-                        }),
-                      );
-                    })
-                : NoDataComponent(),
+            isLoading
+                ? ShimmerCardListSkeleton(
+                    length: 5,
+                    isCircularImage: false,
+                  )
+                : CurrentOrderList != null && CurrentOrderList.length > 0
+                    ? ListView.builder(
+                        itemCount: CurrentOrderList.length,
+                        //shrinkWrap: true,
+                        itemBuilder: (BuildContext context, int index) {
+                          return MyOrderItem(
+                            CurrentOrderList[index],
+                            "Pending",
+                            ((String action) {
+                              if (action == "OrderCancel") {
+                                setState(() {
+                                  CurrentOrderList.removeAt(index);
+                                });
+                              }
+                            }),
+                          );
+                        })
+                    : NoDataComponent(),
+            isLoading
+                ? ShimmerCardListSkeleton(
+                    length: 5,
+                    isCircularImage: false,
+                  )
+                : DeliverdOrderList != null && DeliverdOrderList.length > 0
+                    ? ListView.builder(
+                        itemCount: DeliverdOrderList.length,
+                        //shrinkWrap: true,
+                        itemBuilder: (BuildContext context, int index) {
+                          return MyOrderItem(
+                            DeliverdOrderList[index],
+                            "Delivered",
+                            ((String action) {
+                              if (action == "OrderCancel") {
+                                setState(() {
+                                  DeliverdOrderList.removeAt(index);
+                                });
+                              }
+                            }),
+                          );
+                        })
+                    : NoDataComponent(),
           ],
         ),
       ),
