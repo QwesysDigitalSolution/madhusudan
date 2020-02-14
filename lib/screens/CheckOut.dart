@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class CheckOut extends StatefulWidget {
   List CartItem;
+
   CheckOut(this.CartItem);
 
   @override
@@ -38,33 +39,35 @@ class _CheckOutState extends State<CheckOut> {
     pr = new ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: false);
     pr.style(
-        message: "Please Wait",
-        borderRadius: 10.0,
-        progressWidget: Container(
-          padding: EdgeInsets.all(15),
-          child: CircularProgressIndicator(
-            valueColor: new AlwaysStoppedAnimation<Color>(
-                cnst.app_primary_material_color),
-          ),
+      message: "Please Wait",
+      borderRadius: 10.0,
+      progressWidget: Container(
+        padding: EdgeInsets.all(15),
+        child: CircularProgressIndicator(
+          valueColor: new AlwaysStoppedAnimation<Color>(
+              cnst.app_primary_material_color),
         ),
-        elevation: 10.0,
-        insetAnimCurve: Curves.easeInOut,
-        messageTextStyle: TextStyle(
-            color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w600));
+      ),
+      elevation: 10.0,
+      insetAnimCurve: Curves.easeInOut,
+      messageTextStyle: TextStyle(
+          color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w600),
+    );
     // TODO: implement initState
     setState(() {
       MyCartList = widget.CartItem;
     });
     CalculateTotal();
+    getLocalData();
     super.initState();
   }
 
   getLocalData() async {
-     SharedPreferences prefs = await SharedPreferences.getInstance();
-     setState(() {
-       MemberId = prefs.getString(cnst.session.Member_Id);
-       shippingAddress = prefs.getString(cnst.session.Address);
-     });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      MemberId = prefs.getString(cnst.session.Member_Id);
+      shippingAddress = prefs.getString(cnst.session.Address);
+    });
   }
 
   CalculateTotal() async {
@@ -87,30 +90,26 @@ class _CheckOutState extends State<CheckOut> {
   }
 
   CheckOut() async {
-    if((shippingAddress == null || shippingAddress == "") && txtAddress.text != ""){
+    if ((shippingAddress == null || shippingAddress == "") &&
+        txtAddress.text != "") {
       setState(() {
         shippingAddress = txtAddress.text;
       });
     }
 
-    if(shippingAddress != null && shippingAddress != "") {
+    if (shippingAddress != null && shippingAddress != "") {
       try {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        String MemberId = prefs.getString(cnst.session.Member_Id);
-
         final result = await InternetAddress.lookup('google.com');
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
           setState(() {
             isLoading = true;
           });
 
-          FormData formData = new FormData.fromMap({
-            "UserId": MemberId,
-            "Address": shippingAddress
-          });
+          FormData formData = new FormData.fromMap(
+              {"UserId": MemberId, "Address": shippingAddress});
 
-          Services.PostServiceForSave("wl/v1/CheckOut", formData).then((
-              data) async {
+          Services.PostServiceForSave("wl/v1/CheckOut", formData).then(
+              (data) async {
             setState(() {
               isLoading = false;
             });
@@ -135,7 +134,7 @@ class _CheckOutState extends State<CheckOut> {
       } on SocketException catch (_) {
         showMsg("No Internet Connection.");
       }
-    }else{
+    } else {
       showMsg("Please Enter Address !");
     }
   }
@@ -153,19 +152,19 @@ class _CheckOutState extends State<CheckOut> {
           isLoading = true;
         });
         Services.PostServiceForSave("wl/v1/GetCartCount", formData).then(
-                (data) async {
-              if (data.IsSuccess == true) {
-                final myInheritaedWidget = StateContainer.of(context);
-                myInheritaedWidget.updateCartData(
-                  cartCount: int.parse(data.Data.toString()),
-                );
-                setState(() {
-                  isLoading = false;
-                });
-              } else {
-                showMsg(data.Message);
-              }
-            }, onError: (e) {
+            (data) async {
+          if (data.IsSuccess == true) {
+            final myInheritaedWidget = StateContainer.of(context);
+            myInheritaedWidget.updateCartData(
+              cartCount: int.parse(data.Data.toString()),
+            );
+            setState(() {
+              isLoading = false;
+            });
+          } else {
+            showMsg(data.Message);
+          }
+        }, onError: (e) {
           setState(() {
             isLoading = false;
           });
@@ -302,9 +301,10 @@ class _CheckOutState extends State<CheckOut> {
                                               1.5,
                                           child: TextFormField(
                                             controller: txtAddress,
-                                            onEditingComplete: (){
+                                            onEditingComplete: () {
                                               shippingAddress = txtAddress.text;
-                                              FocusScope.of(context).requestFocus(FocusNode());
+                                              FocusScope.of(context)
+                                                  .requestFocus(FocusNode());
                                             },
                                             autocorrect: true,
                                             scrollPadding: EdgeInsets.all(0),
@@ -398,9 +398,7 @@ class _CheckOutState extends State<CheckOut> {
                               shrinkWrap: true,
                               itemCount: MyCartList.length,
                               itemBuilder: (BuildContext context, int index) {
-                                return CheckOutItem(
-                                  MyCartList[index]
-                                );
+                                return CheckOutItem(MyCartList[index]);
                               },
                             ),
                           ),
