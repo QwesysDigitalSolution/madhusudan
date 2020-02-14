@@ -14,11 +14,13 @@ class MyCartItem extends StatelessWidget {
   final Function removeItem;
   final Function updateItemList;
 
-  const MyCartItem({Key key, this.index, this.product, this.removeItem, this.updateItemList}) : super(key: key);
+  const MyCartItem(
+      {Key key, this.index, this.product, this.removeItem, this.updateItemList})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    double widt=MediaQuery.of(context).size.width;
+    double widt = MediaQuery.of(context).size.width;
 
     return Stack(
       children: <Widget>[
@@ -48,28 +50,28 @@ class MyCartItem extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(5),
                       child:
-                      (product["Image"] != null && product["Image"] != "")
-                          ? Image.network(
-                        "${cnst.img_url + product["Image"]}",
-                        height: 90,
-                        width: 90,
-                        fit: BoxFit.fill,
-                      )
-                          : Container(
-                        height: 90,
-                        width: 90,
-                        //padding: EdgeInsets.only(left: 20, right: 20),
-                        child: Center(
-                          child: Text(
-                            'No Image Available',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ),
+                          (product["Image"] != null && product["Image"] != "")
+                              ? Image.network(
+                                  "${cnst.img_url + product["Image"]}",
+                                  height: 90,
+                                  width: 90,
+                                  fit: BoxFit.fill,
+                                )
+                              : Container(
+                                  height: 90,
+                                  width: 90,
+                                  //padding: EdgeInsets.only(left: 20, right: 20),
+                                  child: Center(
+                                    child: Text(
+                                      'No Image Available',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                     ),
                   ),
                 ),
@@ -117,10 +119,12 @@ class MyCartItem extends StatelessWidget {
                             children: <Widget>[
                               GestureDetector(
                                 onTap: () {
-                                  if (product["Qty"] != 1) {
-                                    product["Qty"] =  int.parse(product["Qty"].toString()) - 1;
+                                  if (int.parse(product["Qty"].toString()) > 1) {
+                                    product["Qty"] =
+                                        int.parse(product["Qty"].toString()) -
+                                            1;
+                                    updateItemList(product["Qty"], index);
                                   }
-                                  updateItemList(product["Qty"],index);
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.only(right: 4),
@@ -151,8 +155,9 @@ class MyCartItem extends StatelessWidget {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  product["Qty"] = int.parse(product["Qty"].toString()) + 1;
-                                  updateItemList(product["Qty"],index);
+                                  product["Qty"] =
+                                      int.parse(product["Qty"].toString()) + 1;
+                                  updateItemList(product["Qty"], index);
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.only(
@@ -266,9 +271,6 @@ class MyCartItem extends StatelessWidget {
     );
   }
 }
-
-
-
 
 /*class MyCartItem extends StatefulWidget {
   Function onItemDelete;

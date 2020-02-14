@@ -24,7 +24,8 @@ class _OrderedItemState extends State<OrderedItem> {
     setState(() {
       _isPlayed = false;
     });
-    player.play("${widget.product["AudioFile"]}", isLocal: false);
+    String url = widget.product["AudioFile"];
+    player.play(url);
     player.onPlayerCompletion.listen((data) {
       print("Completed");
       setState(() {
@@ -34,9 +35,6 @@ class _OrderedItemState extends State<OrderedItem> {
   }
 
   void _stop() {
-    //AudioPlayer player = AudioPlayer();
-    /*print("Path : ${_recording.path}");
-    print("Path New : ${_recordingNew.path}");*/
     player.pause();
     setState(() {
       //stop flag

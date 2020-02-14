@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
 import 'package:madhusudan/common/Services.dart';
+import 'package:madhusudan/common/StateContainer.dart';
 import 'package:madhusudan/component/LoadingComponent.dart';
 import 'package:madhusudan/component/CheckOutItem.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -86,41 +87,89 @@ class _CheckOutState extends State<CheckOut> {
   }
 
   CheckOut() async {
+    if((shippingAddress == null || shippingAddress == "") && txtAddress.text != ""){
+      setState(() {
+        shippingAddress = txtAddress.text;
+      });
+    }
+
+    if(shippingAddress != null && shippingAddress != "") {
+      try {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String MemberId = prefs.getString(cnst.session.Member_Id);
+
+        final result = await InternetAddress.lookup('google.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          setState(() {
+            isLoading = true;
+          });
+
+          FormData formData = new FormData.fromMap({
+            "UserId": MemberId,
+            "Address": shippingAddress
+          });
+
+          Services.PostServiceForSave("wl/v1/CheckOut", formData).then((
+              data) async {
+            setState(() {
+              isLoading = false;
+            });
+            if (data.Data != "0" && data.IsSuccess == true) {
+              UpdateCartCount();
+              Navigator.pushNamed(context, '/OrderSuccess');
+            } else {
+              showMsg(data.Message);
+            }
+          }, onError: (e) {
+            setState(() {
+              isLoading = false;
+            });
+            showMsg("Try Again.");
+          });
+        } else {
+          setState(() {
+            isLoading = false;
+          });
+          showMsg("No Internet Connection.");
+        }
+      } on SocketException catch (_) {
+        showMsg("No Internet Connection.");
+      }
+    }else{
+      showMsg("Please Enter Address !");
+    }
+  }
+
+  UpdateCartCount() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String MemberId = prefs.getString(cnst.session.Member_Id);
-
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        FormData formData = new FormData.fromMap({"UserId": MemberId});
+        print("getItemDetails Data = ${formData}");
+        //pr.show();
         setState(() {
           isLoading = true;
         });
-
-        FormData formData = new FormData.fromMap({
-          "UserId": MemberId,
-          "Address": shippingAddress
-        });
-
-        Services.PostServiceForSave("wl/v1/CheckOut", formData).then((data) async {
+        Services.PostServiceForSave("wl/v1/GetCartCount", formData).then(
+                (data) async {
+              if (data.IsSuccess == true) {
+                final myInheritaedWidget = StateContainer.of(context);
+                myInheritaedWidget.updateCartData(
+                  cartCount: int.parse(data.Data.toString()),
+                );
+                setState(() {
+                  isLoading = false;
+                });
+              } else {
+                showMsg(data.Message);
+              }
+            }, onError: (e) {
           setState(() {
             isLoading = false;
           });
-          if (data.Data != "0" && data.IsSuccess == true) {
-            Navigator.pushReplacementNamed(context, '/OrderSuccess');
-          } else {
-            showMsg(data.Message);
-          }
-        }, onError: (e) {
-          setState(() {
-            isLoading = false;
-          });
-          showMsg("Try Again.");
         });
-      } else {
-        setState(() {
-          isLoading = false;
-        });
-        showMsg("No Internet Connection.");
       }
     } on SocketException catch (_) {
       showMsg("No Internet Connection.");
@@ -253,6 +302,10 @@ class _CheckOutState extends State<CheckOut> {
                                               1.5,
                                           child: TextFormField(
                                             controller: txtAddress,
+                                            onEditingComplete: (){
+                                              shippingAddress = txtAddress.text;
+                                              FocusScope.of(context).requestFocus(FocusNode());
+                                            },
                                             autocorrect: true,
                                             scrollPadding: EdgeInsets.all(0),
                                             decoration: InputDecoration(

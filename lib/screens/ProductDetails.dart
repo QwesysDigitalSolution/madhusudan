@@ -307,65 +307,69 @@ class _ProductDetailsState extends State<ProductDetails> {
   }
 
   addToCart() async {
-    try {
-      await showPrDialog();
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String MemberId = prefs.getString(cnst.session.Member_Id);
+    if(txtQty.text != null && txtQty.text != "") {
+      try {
+        await showPrDialog();
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String MemberId = prefs.getString(cnst.session.Member_Id);
 
-      final result = await InternetAddress.lookup('google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        pr.show();
-        String filename = "";
-        File compressedFile;
+        final result = await InternetAddress.lookup('google.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          pr.show();
+          String filename = "";
+          File compressedFile;
 
-        if (_recording != null) {
-          var file = _recording.path.split('/');
-          filename = "user.png";
+          if (_recording != null) {
+            var file = _recording.path.split('/');
+            filename = "user.png";
 
-          if (file != null && file.length > 0)
-            filename = file[file.length - 1].toString();
-        }
-
-        FormData formData = new FormData.fromMap({
-          "UserId": MemberId,
-          "ItemId": widget.Id,
-          "Qty": txtQty.text,
-          "Comment": txtDescription.text,
-          "HindiComment": hindiDescription,
-          "AudioFile": (_recording != null &&
-                  _recording.status == RecordingStatus.Stopped)
-              ? await MultipartFile.fromFile(
-                  _recording.path,
-                  filename: filename,
-                )
-              : null
-        });
-        print("Add To Cart Data =  $formData");
-        print("Add To Item Id =  ${widget.Id}");
-        Services.PostServiceForSave("wl/v1/AddToCart", formData).then(
-            (data) async {
-          pr.hide();
-          if (data.Data == "1") {
-            //Navigator.pushReplacementNamed(context, '/OrderSuccess');
-            showMsg("Item Added To Cart Successfully");
-            setState(() {
-              txtDescription.text = "";
-              _recording = null;
-              quantity = 1;
-            });
-            UpdateCartCount();
-          } else {
-            showMsg(data.Message);
+            if (file != null && file.length > 0)
+              filename = file[file.length - 1].toString();
           }
-        }, onError: (e) {
-          pr.hide();
-          showMsg("Try Again.");
-        });
-      } else {
+
+          FormData formData = new FormData.fromMap({
+            "UserId": MemberId,
+            "ItemId": widget.Id,
+            "Qty": txtQty.text,
+            "Comment": txtDescription.text,
+            "HindiComment": hindiDescription,
+            "AudioFile": (_recording != null &&
+                _recording.status == RecordingStatus.Stopped)
+                ? await MultipartFile.fromFile(
+              _recording.path,
+              filename: filename,
+            )
+                : null
+          });
+          print("Add To Cart Data =  $formData");
+          print("Add To Item Id =  ${widget.Id}");
+          Services.PostServiceForSave("wl/v1/AddToCart", formData).then(
+                  (data) async {
+                pr.hide();
+                if (data.Data == "1") {
+                  //Navigator.pushReplacementNamed(context, '/OrderSuccess');
+                  showMsg("Item Added To Cart Successfully");
+                  setState(() {
+                    txtDescription.text = "";
+                    _recording = null;
+                    quantity = 1;
+                  });
+                  UpdateCartCount();
+                } else {
+                  showMsg(data.Message);
+                }
+              }, onError: (e) {
+            pr.hide();
+            showMsg("Try Again.");
+          });
+        } else {
+          showMsg("No Internet Connection.");
+        }
+      } on SocketException catch (_) {
         showMsg("No Internet Connection.");
       }
-    } on SocketException catch (_) {
-      showMsg("No Internet Connection.");
+    }else{
+      showMsg("Please Enter Quantirt");
     }
   }
 
@@ -655,6 +659,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                               child: TextFormField(
                                 controller: txtQty,
                                 cursorColor: Theme.of(context).cursorColor,
+                                onEditingComplete: (){
+                                  if(txtQty.text == null || txtQty.text == ""){
+                                    txtQty.text = "1";
+                                  }
+                                  FocusScope.of(context).requestFocus(FocusNode());
+                                },
                                 decoration: InputDecoration(
                                   border: new OutlineInputBorder(
                                     borderRadius: BorderRadius.all(
@@ -713,15 +723,18 @@ class _ProductDetailsState extends State<ProductDetails> {
                               child: TextFormField(
                                 controller: txtDescription,
                                 onEditingComplete: () {
-                                  translator
-                                      .translate(txtDescription.text,
-                                          from: 'en', to: 'hi')
-                                      .then((s) {
-                                    print("Tranlated Text : $s");
-                                    setState(() {
-                                      hindiDescription = s;
+                                  if(txtDescription.text != null && txtDescription.text != "") {
+                                    translator
+                                        .translate(txtDescription.text,
+                                        from: 'en', to: 'hi')
+                                        .then((s) {
+                                      print("Tranlated Text : $s");
+                                      setState(() {
+                                        hindiDescription = s;
+                                      });
                                     });
-                                  });
+                                  }
+                                  FocusScope.of(context).requestFocus(FocusNode());
                                 },
                                 autocorrect: true,
                                 scrollPadding: EdgeInsets.all(0),
