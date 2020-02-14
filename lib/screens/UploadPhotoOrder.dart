@@ -3,13 +3,19 @@ import 'dart:io' as io;
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
+import 'package:madhusudan/common/Services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:translator/translator.dart';
 
 class UploadPhotoOrder extends StatefulWidget {
   @override
@@ -24,14 +30,16 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
   String shippingAddress = "C-123 Pandesara Bamroli Road Surat";
   FlutterAudioRecorder _recorder;
   Recording _recording;
+  String hindiDescription = "";
   Duration _duration;
+  final translator = new GoogleTranslator();
 
   //Recording _recordingNew;
   Timer _t;
   Widget _buttonIcon = Icon(Icons.do_not_disturb_on);
   String _alert;
   StreamSubscription _durationSubscription;
-
+  ProgressDialog pr;
   bool _isPlayed = true;
   AudioPlayer player = AudioPlayer();
 
@@ -79,7 +87,7 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
     // AudioFormat is optional, if given value, will overwrite path extension when there is conflicts.
 
     //_recorder = FlutterAudioRecorder(customPath, audioFormat: AudioFormat.WAV, sampleRate: 22050);
-    _recorder = FlutterAudioRecorder("${customPath}.mp4", sampleRate: 22050);
+    _recorder = FlutterAudioRecorder("${customPath}", sampleRate: 22050);
     await _recorder.initialized;
   }
 
@@ -154,6 +162,131 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
       //stop flag
       _isPlayed = true;
     });
+  }
+
+  showPrDialog() async {
+    pr = new ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: false);
+    pr.style(
+        message: "Please Wait",
+        borderRadius: 10.0,
+        progressWidget: Container(
+          padding: EdgeInsets.all(15),
+          child: CircularProgressIndicator(
+            valueColor: new AlwaysStoppedAnimation<Color>(
+                cnst.app_primary_material_color),
+          ),
+        ),
+        elevation: 10.0,
+        insetAnimCurve: Curves.easeInOut,
+        messageTextStyle: TextStyle(
+            color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w600));
+  }
+
+  showMsg(String msg, {String title = 'Madhusudan'}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text(title),
+          content: new Text(msg),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Okay"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  order() async {
+    if ((txtDescription.text != null && txtDescription.text != "") ||
+        (_recording != null && _recording.status == RecordingStatus.Stopped)) {
+      try {
+        await showPrDialog();
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String MemberId = prefs.getString(cnst.session.Member_Id);
+
+        final result = await InternetAddress.lookup('google.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          pr.show();
+          String filename = "";
+          String imagename = "";
+          File compressedFile;
+
+          if (_recording != null) {
+            var file = _recording.path.split('/');
+            filename = "recording.mp4";
+
+            if (file != null && file.length > 0)
+              filename = file[file.length - 1].toString();
+          }
+
+          if (_orderPhoto != null) {
+            var file = _orderPhoto.path.split('/');
+            imagename = "user.png";
+
+            if (file != null && file.length > 0)
+              imagename = file[file.length - 1].toString();
+
+            ImageProperties properties =
+                await FlutterNativeImage.getImageProperties(_orderPhoto.path);
+            compressedFile = await FlutterNativeImage.compressImage(
+              _orderPhoto.path,
+              quality: 80,
+              targetWidth: 600,
+              targetHeight:
+                  (properties.height * 600 / properties.width).round(),
+            );
+          }
+
+          FormData formData = new FormData.fromMap({
+            "UserId": MemberId,
+            "Description": txtDescription.text,
+            "HindiComment": hindiDescription,
+            "Image": _orderPhoto != null
+                ? await MultipartFile.fromFile(compressedFile.path,
+                    filename: imagename.toString())
+                : null,
+            "AudioFile": (_recording != null &&
+                    _recording.status == RecordingStatus.Stopped)
+                ? await MultipartFile.fromFile(
+                    _recording.path,
+                    filename: filename,
+                  )
+                : null
+          });
+          print("Add To Cart Data =  $formData");
+          Services.PostServiceForSave("wl/v1/AddPhotoOrder", formData).then(
+              (data) async {
+            pr.hide();
+            if (data.Data == "1") {
+              Navigator.pushNamed(context, '/OrderSuccess');
+              showMsg("Order Save Successfully");
+              setState(() {
+                txtDescription.text = "";
+              });
+              await _prepare();
+            } else {
+              showMsg(data.Message);
+            }
+          }, onError: (e) {
+            pr.hide();
+            showMsg("Try Again.");
+          });
+        } else {
+          showMsg("No Internet Connection.");
+        }
+      } on SocketException catch (_) {
+        showMsg("No Internet Connection.");
+      }
+    } else {
+      showMsg("Please Enter Quantirt");
+    }
   }
 
   @override
@@ -413,18 +546,35 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                       ),
                       child: TextFormField(
                         controller: txtDescription,
+                        onEditingComplete: () {
+                          if (txtDescription.text != null &&
+                              txtDescription.text != "") {
+                            translator
+                                .translate(txtDescription.text,
+                                    from: 'en', to: 'hi')
+                                .then((s) {
+                              print("Tranlated Text : $s");
+                              setState(() {
+                                hindiDescription = s;
+                              });
+                            });
+                          }
+                          FocusScope.of(context).requestFocus(FocusNode());
+                        },
                         autocorrect: true,
                         scrollPadding: EdgeInsets.all(0),
                         decoration: InputDecoration(
-                            fillColor: Colors.grey[200],
-                            filled: true,
-                            //border: InputBorder.none,
-                            border: new OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(8),
-                                ),
-                                borderSide: BorderSide.none),
-                            hintText: "Enter Something"),
+                          fillColor: Colors.grey[200],
+                          filled: true,
+                          //border: InputBorder.none,
+                          border: new OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8),
+                            ),
+                            borderSide: BorderSide.none,
+                          ),
+                          hintText: "Enter Something",
+                        ),
                         //maxLength: 10,
                         maxLines: 4,
                         keyboardType: TextInputType.text,
@@ -538,7 +688,7 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                   color: cnst.app_primary_material_color[600],
                   minWidth: MediaQuery.of(context).size.width,
                   onPressed: () {
-                    //_checkLogin();
+                    order();
                     if (_orderPhoto != null) {
                       if (txtDescription.text != "") {
                         //_addPhotoOrder();
