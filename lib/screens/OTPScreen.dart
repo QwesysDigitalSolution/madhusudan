@@ -131,10 +131,11 @@ class _OTPScreenState extends State<OTPScreen> {
               otpCode = code;
             });
             Fluttertoast.showToast(
-                msg: "Otp Send ${data.Message}",
-                backgroundColor: Colors.green,
-                gravity: ToastGravity.TOP,
-                toastLength: Toast.LENGTH_SHORT);
+              msg: "Otp Send Successfully !",
+              backgroundColor: Colors.green,
+              gravity: ToastGravity.TOP,
+              toastLength: Toast.LENGTH_SHORT,
+            );
           } else {
             setState(() {
               isLoading = false;

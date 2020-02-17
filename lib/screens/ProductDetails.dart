@@ -306,8 +306,8 @@ class _ProductDetailsState extends State<ProductDetails> {
     //pr.isShowing() ? pr.hide() : null;
   }
 
-  addToCart() async {
-    if(txtQty.text != null && txtQty.text != "") {
+  addToCart(String type) async {
+    if (txtQty.text != null && txtQty.text != "") {
       try {
         await showPrDialog();
         SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -334,31 +334,35 @@ class _ProductDetailsState extends State<ProductDetails> {
             "Comment": txtDescription.text,
             "HindiComment": hindiDescription,
             "AudioFile": (_recording != null &&
-                _recording.status == RecordingStatus.Stopped)
+                    _recording.status == RecordingStatus.Stopped)
                 ? await MultipartFile.fromFile(
-              _recording.path,
-              filename: filename,
-            )
+                    _recording.path,
+                    filename: filename,
+                  )
                 : null
           });
           print("Add To Cart Data =  $formData");
           print("Add To Item Id =  ${widget.Id}");
           Services.PostServiceForSave("wl/v1/AddToCart", formData).then(
-                  (data) async {
-                pr.hide();
-                if (data.Data == "1") {
-                  //Navigator.pushReplacementNamed(context, '/OrderSuccess');
-                  showMsg("Item Added To Cart Successfully");
-                  setState(() {
-                    txtDescription.text = "";
-                    _recording = null;
-                    quantity = 1;
-                  });
-                  UpdateCartCount();
-                } else {
-                  showMsg(data.Message);
-                }
-              }, onError: (e) {
+              (data) async {
+            pr.hide();
+            if (data.Data == "1") {
+              await _prepare();
+              await UpdateCartCount();
+              if (type == "cart") {
+                //Navigator.pushReplacementNamed(context, '/OrderSuccess');
+                showMsg("Item Added To Cart Successfully");
+                setState(() {
+                  txtDescription.text = "";
+                  quantity = 1;
+                });
+              } else {
+                Navigator.pushNamed(context, "/MyCart");
+              }
+            } else {
+              showMsg(data.Message);
+            }
+          }, onError: (e) {
             pr.hide();
             showMsg("Try Again.");
           });
@@ -368,7 +372,7 @@ class _ProductDetailsState extends State<ProductDetails> {
       } on SocketException catch (_) {
         showMsg("No Internet Connection.");
       }
-    }else{
+    } else {
       showMsg("Please Enter Quantirt");
     }
   }
@@ -659,11 +663,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                               child: TextFormField(
                                 controller: txtQty,
                                 cursorColor: Theme.of(context).cursorColor,
-                                onEditingComplete: (){
-                                  if(txtQty.text == null || txtQty.text == ""){
+                                onEditingComplete: () {
+                                  if (txtQty.text == null ||
+                                      txtQty.text == "") {
                                     txtQty.text = "1";
                                   }
-                                  FocusScope.of(context).requestFocus(FocusNode());
+                                  FocusScope.of(context)
+                                      .requestFocus(FocusNode());
                                 },
                                 decoration: InputDecoration(
                                   border: new OutlineInputBorder(
@@ -723,10 +729,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                               child: TextFormField(
                                 controller: txtDescription,
                                 onEditingComplete: () {
-                                  if(txtDescription.text != null && txtDescription.text != "") {
+                                  if (txtDescription.text != null &&
+                                      txtDescription.text != "") {
                                     translator
                                         .translate(txtDescription.text,
-                                        from: 'en', to: 'hi')
+                                            from: 'en', to: 'hi')
                                         .then((s) {
                                       print("Tranlated Text : $s");
                                       setState(() {
@@ -734,7 +741,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                                       });
                                     });
                                   }
-                                  FocusScope.of(context).requestFocus(FocusNode());
+                                  FocusScope.of(context)
+                                      .requestFocus(FocusNode());
                                 },
                                 autocorrect: true,
                                 scrollPadding: EdgeInsets.all(0),
@@ -846,7 +854,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 minWidth:
                                     MediaQuery.of(context).size.width - 20,
                                 onPressed: () {
-                                  addToCart();
+                                  addToCart('cart');
                                 },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -891,6 +899,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     MediaQuery.of(context).size.width - 20,
                                 onPressed: () {
                                   //addtoCart('buyNow');
+                                  addToCart('buyNow');
                                 },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,

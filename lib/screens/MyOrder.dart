@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
@@ -9,7 +10,9 @@ import 'package:madhusudan/component/MyOrderItem.dart';
 import 'package:madhusudan/component/NoDataComponent.dart';
 import 'package:madhusudan/common/Services.dart';
 import 'package:madhusudan/utils/Shimmer.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:madhusudan/component/MyDeliverdOrderItem.dart';
 
 class MyOrder extends StatefulWidget {
   @override
@@ -21,10 +24,28 @@ class _MyOrderState extends State<MyOrder> {
   bool isLoading = false;
   List CurrentOrderList;
   List DeliverdOrderList;
+  ProgressDialog pr;
 
   @override
   void initState() {
     // TODO: implement initState
+    pr = new ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: false);
+    pr.style(
+      message: "Please Wait",
+      borderRadius: 10.0,
+      progressWidget: Container(
+        padding: EdgeInsets.all(15),
+        child: CircularProgressIndicator(
+          valueColor: new AlwaysStoppedAnimation<Color>(
+              cnst.app_primary_material_color),
+        ),
+      ),
+      elevation: 10.0,
+      insetAnimCurve: Curves.easeInOut,
+      messageTextStyle: TextStyle(
+          color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w600),
+    );
     super.initState();
     getLocalData();
   }
@@ -119,6 +140,39 @@ class _MyOrderState extends State<MyOrder> {
     }
   }
 
+  void OrderCancel(orderId, index) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String MemberId = prefs.getString(cnst.session.Member_Id);
+
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        pr.show();
+        FormData formData =
+            new FormData.fromMap({"UserId": MemberId, "OrderId": orderId});
+
+        Services.PostServiceForSave("wl/v1/CancelOrder", formData).then(
+            (data) async {
+          pr.hide();
+          if (data.Data != "0" && data.IsSuccess == true) {
+            setState(() {
+              CurrentOrderList.removeAt(index);
+            });
+          } else {
+            showMsg(data.Message, title: "Error");
+          }
+        }, onError: (e) {
+          pr.hide();
+          showMsg("Try Again.");
+        });
+      } else {
+        showMsg("No Internet Connection.");
+      }
+    } on SocketException catch (_) {
+      showMsg("No Internet Connection.");
+    }
+  }
+
   showMsg(String msg, {String title = 'Kaya Cosmetics'}) {
     showDialog(
       context: context,
@@ -188,15 +242,9 @@ class _MyOrderState extends State<MyOrder> {
                         //shrinkWrap: true,
                         itemBuilder: (BuildContext context, int index) {
                           return MyOrderItem(
-                            CurrentOrderList[index],
-                            "Pending",
-                            ((String action) {
-                              if (action == "OrderCancel") {
-                                setState(() {
-                                  CurrentOrderList.removeAt(index);
-                                });
-                              }
-                            }),
+                            index: index,
+                            order: CurrentOrderList[index],
+                            onCancel: OrderCancel,
                           );
                         })
                     : NoDataComponent(),
@@ -210,16 +258,8 @@ class _MyOrderState extends State<MyOrder> {
                         itemCount: DeliverdOrderList.length,
                         //shrinkWrap: true,
                         itemBuilder: (BuildContext context, int index) {
-                          return MyOrderItem(
+                          return MyDeliverdOrderItem(
                             DeliverdOrderList[index],
-                            "Delivered",
-                            ((String action) {
-                              if (action == "OrderCancel") {
-                                setState(() {
-                                  DeliverdOrderList.removeAt(index);
-                                });
-                              }
-                            }),
                           );
                         })
                     : NoDataComponent(),

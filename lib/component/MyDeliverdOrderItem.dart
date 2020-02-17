@@ -10,24 +10,57 @@ import 'package:madhusudan/screens/OrderDetail.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class MyOrderItem extends StatelessWidget {
-  final dynamic order;
-  final int index;
-  final Function onCancel;
+class MyDeliverdOrderItem extends StatefulWidget {
+  var order;
 
-  MyOrderItem({this.order, this.index, this.onCancel});
+  MyDeliverdOrderItem(this.order);
+
+  @override
+  _MyDeliverdOrderItemState createState() => _MyDeliverdOrderItemState();
+}
+
+class _MyDeliverdOrderItemState extends State<MyDeliverdOrderItem> {
+  List productList;
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    setState(() {
+      productList = widget.order["ItemsList"];
+    });
+  }
+
+  showMsg(String msg, {String title = 'Kaya Cosmetics'}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text(title),
+          content: new Text(msg),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Okay"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    var productList = order["ItemsList"];
-
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => OrderDetail(
-              order,
+              widget.order,
               "pending",
             ),
           ),
@@ -42,7 +75,7 @@ class MyOrderItem extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 10, top: 10),
                 child: Text(
-                  "Order No ${order["Id"]}",
+                  "Order No ${widget.order["Id"]}",
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 17,
@@ -52,7 +85,7 @@ class MyOrderItem extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 10, top: 3),
                 child: Text(
-                  "${order["Date"].toString().substring(0, 10)}",
+                  "${widget.order["Date"].toString().substring(0, 10)}",
                   style: TextStyle(color: Colors.black54, fontSize: 15),
                 ),
               ),
@@ -132,77 +165,11 @@ class MyOrderItem extends StatelessWidget {
                       child: Text(
                         "Total Amount:  " +
                             cnst.inr_rupee +
-                            " ${order["Total"]} /-",
+                            " ${widget.order["Total"]} /-",
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 18,
                             fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width / 2.7,
-                      height: 35,
-                      margin: EdgeInsets.only(right: 5),
-                      decoration: BoxDecoration(
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(8)),
-                          border: Border.all(
-                              color: cnst.app_primary_material_color)),
-                      child: MaterialButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(8.0)),
-                        color: Colors.white,
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              // return object of type Dialog
-                              return AlertDialog(
-                                title:
-                                new Text("Order Cancel Conformation"),
-                                content: new Text(
-                                  "Are you sure you want to cancel this order?",
-                                ),
-                                actions: <Widget>[
-                                  // usually buttons at the bottom of the dialog
-                                  new FlatButton(
-                                    child: new Text("Close"),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                  new FlatButton(
-                                    child: new Text("Accept"),
-                                    onPressed: () {
-                                      onCancel(order["Id"], index);
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        child: Row(
-                          children: <Widget>[
-                            Icon(
-                              Icons.cancel,
-                              color: cnst.app_primary_material_color,
-                              size: 15,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 5),
-                              child: Text(
-                                "Cancel Order",
-                                style: TextStyle(
-                                    color:
-                                    cnst.app_primary_material_color,
-                                    fontSize: 13.0,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                          ],
-                        ),
                       ),
                     ),
                   ],
