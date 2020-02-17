@@ -116,8 +116,7 @@ class _LoginState extends State<Login> {
                 await prefs.setString(cnst.session.Mobile, data[0]["Mobile"]);
                 await prefs.setString(cnst.session.Address, data[0]["Address"]);
 
-                if (data[0]["IsVerified"].toString().toLowerCase() == "true" &&
-                    data[0]["FCMToken"].toString() == fcmToken) {
+                if (data[0]["IsVerified"].toString().toLowerCase() == "true") {
                   await prefs.setString(cnst.session.IsVerified,
                       data[0]["IsVerified"].toString());
                   Navigator.pushReplacementNamed(context, '/Dashboard');

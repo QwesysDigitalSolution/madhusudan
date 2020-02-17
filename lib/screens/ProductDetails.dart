@@ -539,9 +539,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                                       imageList[index]["Image"]);
                                 },
                                 child: new FadeInImage.assetNetwork(
-                                  placeholder: 'assets/loading.gif',
+                                  placeholder: 'images/logo.png',
                                   image: "${imageList[index]["Image"]}",
-                                  fit: BoxFit.fill,
+                                  fit: BoxFit.contain,
                                   width: MediaQuery.of(context).size.width / 2,
                                   height: 200,
                                 ),

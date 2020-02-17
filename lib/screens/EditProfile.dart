@@ -17,9 +17,10 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  String Name = "", Email = "", MemberId = "", MemberImage = "";
+  String Name = "", Email = "", MemberId = "", MemberImage = "", ShippingAddress = "";
   TextEditingController txtName = new TextEditingController();
   TextEditingController txtEmail = new TextEditingController();
+  TextEditingController txtAddress = new TextEditingController();
   bool isLoading = false;
 
   File _memberImage;
@@ -41,6 +42,7 @@ class _EditProfileState extends State<EditProfile> {
       MemberImage = prefs.getString(cnst.session.Image);
       txtName.text=prefs.getString(cnst.session.Name);
       txtEmail.text=prefs.getString(cnst.session.Email);
+      txtAddress.text = prefs.getString(cnst.session.Address);
     });
   }
 
@@ -216,6 +218,7 @@ class _EditProfileState extends State<EditProfile> {
           {"key": "Name", "value": txtName.text.trim()},
           {"key": "Email", "value": txtEmail.text.trim()},
           {"key": "UserId", "value": MemberId},
+          {"key": "Address", "value": txtAddress.text.trim()},
         ];
 
         Services.GetServiceForSave("wl/v1/UpdateMemberInfo", formData).then(
@@ -223,8 +226,8 @@ class _EditProfileState extends State<EditProfile> {
               pr.hide();
               if (data.Data == "1" && data.IsSuccess == true) {
                 await prefs.setString(cnst.session.Name, txtName.text);
-
                 await prefs.setString(cnst.session.Email, txtEmail.text);
+                await prefs.setString(cnst.session.Address, txtAddress.text);
                 Navigator.of(context).pushNamedAndRemoveUntil(
                     '/Dashboard', (Route<dynamic> route) => false);
               } else {
@@ -342,6 +345,25 @@ class _EditProfileState extends State<EditProfile> {
                                   //helperText: "password",
                                 ),
                                 keyboardType: TextInputType.emailAddress,
+                              ),
+                              Padding(padding: EdgeInsets.only(top: 15)),
+                              TextFormField(
+                                controller: txtAddress,
+                                cursorColor: Theme.of(context).cursorColor,
+                                decoration: InputDecoration(
+                                  counterText: "",
+                                  filled: true,
+                                  hintText: 'Enter Address',
+                                  labelText: "Address",
+                                  prefixIcon: Icon(
+                                    Icons.short_text,
+                                    color: Colors.grey,
+                                  ),
+                                  //helperText: "password",
+                                ),
+                                keyboardType: TextInputType.multiline,
+                                minLines: 3,
+                                maxLines: 5,
                               ),
                               Padding(padding: EdgeInsets.only(top: 15)),
                               Container(

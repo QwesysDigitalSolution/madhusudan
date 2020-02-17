@@ -283,6 +283,25 @@ class _OTPScreenState extends State<OTPScreen> {
                               autofocus: false,
                               controller: controller,
                               //hideCharacter: true,
+                              onDone: (val) {
+                                if (controller.text != "") {
+                                  if (otpCode.toString() == controller.text) {
+                                    VerificationStatusUpdate();
+                                  } else {
+                                    Fluttertoast.showToast(
+                                        msg: "Enter Valid Code",
+                                        backgroundColor: Colors.green,
+                                        gravity: ToastGravity.TOP,
+                                        toastLength: Toast.LENGTH_SHORT);
+                                  }
+                                } else {
+                                  Fluttertoast.showToast(
+                                      msg: "Enter Otp",
+                                      backgroundColor: Colors.green,
+                                      gravity: ToastGravity.TOP,
+                                      toastLength: Toast.LENGTH_SHORT);
+                                }
+                              },
                               highlight: true,
                               pinBoxHeight: widt * 0.15,
                               pinBoxWidth: widt * 0.15,

@@ -27,7 +27,8 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
   TextEditingController txtDescription = new TextEditingController();
   TextEditingController txtAddress = new TextEditingController();
   bool isAddressEdit = false;
-  String shippingAddress = "C-123 Pandesara Bamroli Road Surat";
+  String MemberId = "0";
+  String shippingAddress = "";
   FlutterAudioRecorder _recorder;
   Recording _recording;
   String hindiDescription = "";
@@ -88,6 +89,7 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
 
     //_recorder = FlutterAudioRecorder(customPath, audioFormat: AudioFormat.WAV, sampleRate: 22050);
     _recorder = FlutterAudioRecorder("${customPath}", sampleRate: 22050);
+    getLocalData();
     await _recorder.initialized;
   }
 
@@ -183,6 +185,14 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
             color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w600));
   }
 
+  getLocalData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      MemberId = prefs.getString(cnst.session.Member_Id);
+      shippingAddress = prefs.getString(cnst.session.Address);
+    });
+  }
+
   showMsg(String msg, {String title = 'Madhusudan'}) {
     showDialog(
       context: context,
@@ -208,9 +218,6 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
         (_recording != null && _recording.status == RecordingStatus.Stopped)) {
       try {
         await showPrDialog();
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        String MemberId = prefs.getString(cnst.session.Member_Id);
-
         final result = await InternetAddress.lookup('google.com');
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
           pr.show();
@@ -248,6 +255,7 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
             "UserId": MemberId,
             "Description": txtDescription.text,
             "HindiComment": hindiDescription,
+            "Address": shippingAddress,
             "Image": _orderPhoto != null
                 ? await MultipartFile.fromFile(compressedFile.path,
                     filename: imagename.toString())
@@ -688,26 +696,29 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                   color: cnst.app_primary_material_color[600],
                   minWidth: MediaQuery.of(context).size.width,
                   onPressed: () {
-                    order();
-                    if (_orderPhoto != null) {
-                      if (txtDescription.text != "") {
-                        //_addPhotoOrder();
+                    if (shippingAddress != "") {
+                      if (txtDescription.text != "" ||
+                          _orderPhoto != null ||
+                          _recording.status == RecordingStatus.Stopped) {
+                        order();
                         print("${txtDescription.text}");
                       } else {
                         Fluttertoast.showToast(
-                            msg: "Enter Description.",
-                            fontSize: 13,
-                            backgroundColor: Colors.redAccent,
-                            gravity: ToastGravity.TOP,
-                            textColor: Colors.white,);
-                      }
-                    } else {
-                      Fluttertoast.showToast(
-                          msg: "Select Order Photo",
+                          msg: "Enter Description or Photo or Recording.",
                           fontSize: 13,
                           backgroundColor: Colors.redAccent,
                           gravity: ToastGravity.TOP,
-                          textColor: Colors.white);
+                          textColor: Colors.white,
+                        );
+                      }
+                    } else {
+                      Fluttertoast.showToast(
+                        msg: "Enter Address.",
+                        fontSize: 13,
+                        backgroundColor: Colors.redAccent,
+                        gravity: ToastGravity.TOP,
+                        textColor: Colors.white,
+                      );
                     }
                   },
                   child: Row(
