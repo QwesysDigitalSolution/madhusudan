@@ -56,6 +56,7 @@ class _OTPScreenState extends State<OTPScreen> {
         insetAnimCurve: Curves.easeInOut,
         messageTextStyle: TextStyle(
             color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w600));
+
     sendOtp();
     if (Platform.isIOS) {
       iosSubscription =
@@ -216,6 +217,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double widt = MediaQuery.of(context).size.width;
     return Scaffold(
       body: WillPopScope(
         onWillPop: () async {
@@ -275,23 +277,19 @@ class _OTPScreenState extends State<OTPScreen> {
                       child: Column(
                         children: <Widget>[
                           Padding(
-                            padding: const EdgeInsets.only(left: 35),
+                            padding: EdgeInsets.only(left: widt * 0.058),
                             child: PinCodeTextField(
                               autofocus: false,
                               controller: controller,
                               //hideCharacter: true,
                               highlight: true,
-                              pinBoxHeight: 60,
-                              pinBoxWidth: 60,
+                              pinBoxHeight: widt * 0.15,
+                              pinBoxWidth: widt * 0.15,
                               highlightColor: cnst.app_primary_material_color,
                               defaultBorderColor: Colors.grey,
                               hasTextBorderColor:
                                   cnst.app_primary_material_color,
                               maxLength: 4,
-                              //hasError: hasError,
-                              //maskCharacter: "😎",
-                              /*pinCodeTextFieldLayoutType:
-                                  PinCodeTextFieldLayoutType.AUTO_ADJUST_WIDTH,*/
                               pinBoxDecoration: ProvidedPinBoxDecoration
                                   .defaultPinBoxDecoration,
                               pinTextStyle: TextStyle(fontSize: 20.0),

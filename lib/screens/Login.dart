@@ -116,14 +116,14 @@ class _LoginState extends State<Login> {
                 await prefs.setString(cnst.session.Mobile, data[0]["Mobile"]);
                 await prefs.setString(cnst.session.Address, data[0]["Address"]);
 
-                if (data[0]["IsVerified"].toString().toLowerCase() == "true") {
+                if (data[0]["IsVerified"].toString().toLowerCase() == "true" &&
+                    data[0]["FCMToken"].toString() == fcmToken) {
                   await prefs.setString(cnst.session.IsVerified,
                       data[0]["IsVerified"].toString());
                   Navigator.pushReplacementNamed(context, '/Dashboard');
                 } else {
                   Navigator.pushReplacementNamed(context, '/OTPScreen');
                 }
-                //Navigator.pushReplacementNamed(context, '/Dashboard');
               } else {
                 showMsg("Mobile Number is Incorrect");
               }

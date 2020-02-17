@@ -699,7 +699,7 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                             fontSize: 13,
                             backgroundColor: Colors.redAccent,
                             gravity: ToastGravity.TOP,
-                            textColor: Colors.white);
+                            textColor: Colors.white,);
                       }
                     } else {
                       Fluttertoast.showToast(
