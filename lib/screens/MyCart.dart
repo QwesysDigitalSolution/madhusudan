@@ -159,9 +159,9 @@ class _MyCartState extends State<MyCart> {
         FormData formData = new FormData.fromMap({"UserId": MemberId});
         print("getItemDetails Data = ${formData}");
         //pr.show();
-        setState(() {
+        /*setState(() {
           isLoading = true;
-        });
+        });*/
         Services.PostServiceForSave("wl/v1/GetCartCount", formData).then(
             (data) async {
           if (data.IsSuccess == true) {
@@ -169,9 +169,9 @@ class _MyCartState extends State<MyCart> {
             myInheritaedWidget.updateCartData(
               cartCount: int.parse(data.Data.toString()),
             );
-            setState(() {
+            /*setState(() {
               isLoading = false;
-            });
+            });*/
           } else {
             showMsg(data.Message);
           }

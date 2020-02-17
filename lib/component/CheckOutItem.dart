@@ -80,7 +80,7 @@ class _CheckOutItemState extends State<CheckOutItem> {
               context,
               MaterialPageRoute(
                 builder: (context) => ProductDetails(
-                  /*Id: Product["ItemId"].toString(),*/
+                  Id: Product["ItemId"].toString(),
                 ),
               ),
             );
