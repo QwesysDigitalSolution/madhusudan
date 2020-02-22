@@ -41,22 +41,30 @@ class MyOrderItem extends StatelessWidget {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(left: 10, top: 10),
-                child: Text(
-                  "Order No ${order["Id"]}",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(
+                        "Order No ${order["Id"]}",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 10, top: 0, right: 5),
+                      child: Text(
+                        "${order["Date"].toString().substring(0, 10)}",
+                        style: TextStyle(color: Colors.black54, fontSize: 15),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10, top: 3),
-                child: Text(
-                  "${order["Date"].toString().substring(0, 10)}",
-                  style: TextStyle(color: Colors.black54, fontSize: 15),
-                ),
-              ),
-              Row(
+              /*Row(
                 children: <Widget>[
                   Container(
                     width: 100,
@@ -103,13 +111,13 @@ class MyOrderItem extends StatelessWidget {
                               fontSize: 15, fontWeight: FontWeight.w600),
                         ),
                       ),
-                      /*Container(
+                      Container(
                         width: MediaQuery.of(context).size.width / 1.5,
                         child: Text(
                           "7, Hot Pink",
                           style: TextStyle(fontSize: 15, color: Colors.black45),
                         ),
-                      ),*/
+                      ),
                       Text(
                         cnst.inr_rupee +
                             "${int.parse(productList[0]["Mrp"]) * int.parse(productList[0]["Qty"])}",
@@ -120,13 +128,28 @@ class MyOrderItem extends StatelessWidget {
                     ],
                   ),
                 ],
+              ),*/
+              Padding(
+                padding: const EdgeInsets.only(left: 10, top: 3),
+                child: RichText(
+                  text: TextSpan(
+                    text: 'Totel Items : ',
+                    style: DefaultTextStyle.of(context).style,
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: "${productList.length}",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
               ),
               Padding(
-                padding: const EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.only(bottom: 0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Padding(
+                    /*Padding(
                       padding:
                       const EdgeInsets.only(left: 10, top: 10, bottom: 10),
                       child: Text(
@@ -138,8 +161,46 @@ class MyOrderItem extends StatelessWidget {
                             fontSize: 18,
                             fontWeight: FontWeight.w600),
                       ),
+                    ),*/
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 10, top: 0, bottom: 10),
+                      child: RichText(
+                        text: TextSpan(
+                          text: 'Total Amount : ',
+                          style: DefaultTextStyle.of(context).style,
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: "${cnst.inr_rupee} ${order["Total"]} /-",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  letterSpacing: 0.5
+                                )),
+                          ],
+                        ),
+                      ),
                     ),
-                    Container(
+                    order["Status"].toString() == "cancelled"
+                        ? Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              color: cnst.app_primary_material_color[500],
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                  bottomLeft: Radius.circular(10)),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 10, right: 10, top: 5, bottom: 5),
+                              child: Text(
+                                "Order Is Cancelled",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          )
+                        : Container()
+                    /*Container(
                       width: MediaQuery.of(context).size.width / 2.7,
                       height: 35,
                       margin: EdgeInsets.only(right: 5),
@@ -204,7 +265,7 @@ class MyOrderItem extends StatelessWidget {
                           ],
                         ),
                       ),
-                    ),
+                    ),*/
                   ],
                 ),
               ),

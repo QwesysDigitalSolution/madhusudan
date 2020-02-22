@@ -386,12 +386,21 @@ class _MyCartState extends State<MyCart> {
                             color: cnst.app_primary_material_color[600],
                             //minWidth: MediaQuery.of(context).size.width - 20,
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => CheckOut(CartList),
-                                ),
-                              );
+                              if(CartList.length>0){
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CheckOut(CartList),
+                                  ),
+                                );
+                              }else{
+                                Fluttertoast.showToast(
+                                    msg: "Cart Is Emplty",
+                                    fontSize: 13,
+                                    backgroundColor: Colors.redAccent,
+                                    gravity: ToastGravity.CENTER,
+                                    textColor: Colors.white);
+                              }
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,

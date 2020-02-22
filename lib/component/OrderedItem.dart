@@ -194,12 +194,20 @@ class _OrderedItemState extends State<OrderedItem> {
           widget.product["Comment"] != ""
               ? Container(
                   width: MediaQuery.of(context).size.width,
-                  child: Text(
-                    "${widget.product["Comment"]}",
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                  child: RichText(
+                    text: TextSpan(
+                      text: 'Description : ',
+                      style: DefaultTextStyle.of(context).style,
+                      children: <TextSpan>[
+                        TextSpan(
+                            text: "${widget.product["Comment"]}",
+                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                      ],
+                    ),
                   ),
                 )
-              : Container()
+              : Container(),
+
         ],
       ),
     );

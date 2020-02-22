@@ -268,6 +268,7 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                   )
                 : null
           });
+
           print("Add To Cart Data =  $formData");
           Services.PostServiceForSave("wl/v1/AddPhotoOrder", formData).then(
               (data) async {
@@ -696,24 +697,26 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                   color: cnst.app_primary_material_color[600],
                   minWidth: MediaQuery.of(context).size.width,
                   onPressed: () {
-                    if (shippingAddress != "") {
-                      if (txtDescription.text != "" ||
-                          _orderPhoto != null ||
-                          _recording.status == RecordingStatus.Stopped) {
-                        order();
-                        print("${txtDescription.text}");
-                      } else {
-                        Fluttertoast.showToast(
-                          msg: "Enter Description or Photo or Recording.",
-                          fontSize: 13,
-                          backgroundColor: Colors.redAccent,
-                          gravity: ToastGravity.TOP,
-                          textColor: Colors.white,
-                        );
-                      }
+
+                    /*if (shippingAddress != "") {
+
                     } else {
                       Fluttertoast.showToast(
                         msg: "Enter Address.",
+                        fontSize: 13,
+                        backgroundColor: Colors.redAccent,
+                        gravity: ToastGravity.TOP,
+                        textColor: Colors.white,
+                      );
+                    }*/
+                    if (txtDescription.text != "" ||
+                        _orderPhoto != null ||
+                        _recording.status == RecordingStatus.Stopped) {
+                      order();
+                      print("${txtDescription.text}");
+                    } else {
+                      Fluttertoast.showToast(
+                        msg: "Enter Description or Photo or Recording.",
                         fontSize: 13,
                         backgroundColor: Colors.redAccent,
                         gravity: ToastGravity.TOP,

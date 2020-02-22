@@ -92,7 +92,6 @@ class _ContactUsState extends State<ContactUs> {
         });
         Services.GetServiceForList("wl/v1/GetContactUs", formData).then(
             (data) async {
-
           if (data.length > 0) {
             var latlong = data[0]["Latlong"].split(',');
             setState(() {
@@ -110,7 +109,6 @@ class _ContactUsState extends State<ContactUs> {
             });
           }
         }, onError: (e) {
-
           setState(() {
             list.clear();
             isLoading = false;
@@ -194,7 +192,7 @@ class _ContactUsState extends State<ContactUs> {
                                 markers: _createMarker(),
                               )
                             : Center(
-                                child: Text("Localtion Not Available"),
+                                child: Text("Location Not Available"),
                               ),
                       ),
                       Container(
@@ -204,37 +202,93 @@ class _ContactUsState extends State<ContactUs> {
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               ListTile(
-                                leading: Icon(Icons.person),
+                                leading: Icon(
+                                  Icons.person,
+                                  color: cnst.app_primary_material_color,
+                                ),
                                 title: Text('Name'),
                                 subtitle: Text("${list[0]["Name"].toString()}"),
                                 enabled: true,
                               ),
                               ListTile(
-                                leading: Icon(Icons.phone),
+                                leading: Icon(Icons.phone,
+                                    color: cnst.app_primary_material_color),
                                 title: Text('Mobile'),
                                 subtitle:
                                     Text("${list[0]["Mobile"].toString()}"),
                               ),
                               ListTile(
-                                leading: Icon(Icons.map),
+                                leading: Icon(Icons.map,
+                                    color: cnst.app_primary_material_color),
                                 title: Text('Address'),
                                 subtitle:
                                     Text("${list[0]["Address"].toString()}"),
                               ),
-                              ListTile(
+                              /*ListTile(
                                 leading: Icon(Icons.map),
                                 title: Text('Branch Office'),
                                 subtitle: Text(
                                     "${list[0]["Branch Office"].toString()}"),
+                              ),*/
+                              ListTile(
+                                leading: Icon(Icons.account_balance,
+                                    color: cnst.app_primary_material_color),
+                                title: Text('Account Details'),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(list[0]["AccountNumber"].toString() !=
+                                                "" &&
+                                            list[0]["AccountNumber"] != null
+                                        ? "Account Number : ${list[0]["AccountNumber"]}"
+                                        : "Account Number :  - "),
+                                    Text(list[0]["IFSCCode"].toString() !=
+                                        "" &&
+                                        list[0]["IFSCCode"] != null
+                                        ? "IFSC Code : ${list[0]["IFSCCode"]}"
+                                        : "IFSC Code :  - "),
+
+                                    Text(list[0]["HolderName"].toString() !=
+                                        "" &&
+                                        list[0]["HolderName"] != null
+                                        ? "Holder Name : ${list[0]["HolderName"]}"
+                                        : "Holder Name :  - "),
+
+                                  ],
+                                ),
                               ),
                               ListTile(
-                                leading: Icon(Icons.email),
+                                leading: Icon(Icons.email,
+                                    color: cnst.app_primary_material_color),
                                 title: Text('Email'),
                                 subtitle:
                                     Text("${list[0]["Email"].toString()}"),
                               ),
                               ListTile(
-                                leading: Icon(Icons.web),
+                                leading: Icon(Icons.perm_contact_calendar,
+                                    color: cnst.app_primary_material_color),
+                                title: Text('Salesman Box Contact'),
+                                subtitle:
+                                Text(list[0]["SalesmanBox"].toString() !=
+                                    "" &&
+                                    list[0]["SalesmanBox"] != null
+                                    ? "${list[0]["SalesmanBox"]}"
+                                    : " - "),
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.perm_contact_calendar,
+                                    color: cnst.app_primary_material_color),
+                                title: Text('Salesman Loose Contact'),
+                                subtitle:
+                                Text(list[0]["Salesmanloose"].toString() !=
+                                    "" &&
+                                    list[0]["Salesmanloose"] != null
+                                    ? "${list[0]["Salesmanloose"]}"
+                                    : " - "),
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.web,
+                                    color: cnst.app_primary_material_color),
                                 title: Text('Website'),
                                 subtitle: Text(
                                     "${list[0]["WebsiteLink"].toString()}"),

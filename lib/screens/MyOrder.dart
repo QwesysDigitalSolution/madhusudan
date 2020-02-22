@@ -23,7 +23,7 @@ class _MyOrderState extends State<MyOrder> {
   String MemberId = "0";
   bool isLoading = false;
   List CurrentOrderList;
-  List DeliverdOrderList;
+  List PhotoOrderList;
   ProgressDialog pr;
 
   @override
@@ -68,14 +68,14 @@ class _MyOrderState extends State<MyOrder> {
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         List formData = [
           {"key": "UserId", "value": MemberId},
-          {"key": "Status", "value": "Pending"}
+          {"key": "Status", "value": "Order"}
         ];
         print("GetSubCategory Data = ${formData}");
         //pr.show();
         setState(() {
           isLoading = true;
         });
-        Services.GetServiceForList("wl/v1/GetOrderByType", formData).then(
+        Services.GetServiceForList("wl/v1/GetOrderByTypeNew", formData).then(
             (data) async {
           if (data.length > 0) {
             setState(() {
@@ -108,18 +108,18 @@ class _MyOrderState extends State<MyOrder> {
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         List formData = [
           {"key": "UserId", "value": MemberId},
-          {"key": "Status", "value": "Delivered"}
+          {"key": "Status", "value": "PhotoOrder"}
         ];
         print("GetSubCategory Data = ${formData}");
         //pr.show();
         setState(() {
           isLoading = true;
         });
-        Services.GetServiceForList("wl/v1/GetOrderByType", formData).then(
+        Services.GetServiceForList("wl/v1/GetOrderByTypeNew", formData).then(
             (data) async {
           if (data.length > 0) {
             setState(() {
-              DeliverdOrderList = data;
+              PhotoOrderList = data;
             });
             setState(() {
               isLoading = false;
@@ -240,10 +240,10 @@ class _MyOrderState extends State<MyOrder> {
             tabs: [
               Padding(
                 padding: const EdgeInsets.all(12),
-                child: Text("Pending Order",
+                child: Text("Orders",
                     style: TextStyle(fontSize: 17, color: Colors.black)),
               ),
-              Text("Delivered Order",
+              Text("Photo Orders",
                   style: TextStyle(fontSize: 17, color: Colors.black)),
             ],
           ),
@@ -272,13 +272,13 @@ class _MyOrderState extends State<MyOrder> {
                     length: 5,
                     isCircularImage: false,
                   )
-                : DeliverdOrderList != null && DeliverdOrderList.length > 0
+                : PhotoOrderList != null && PhotoOrderList.length > 0
                     ? ListView.builder(
-                        itemCount: DeliverdOrderList.length,
+                        itemCount: PhotoOrderList.length,
                         //shrinkWrap: true,
                         itemBuilder: (BuildContext context, int index) {
                           return MyDeliverdOrderItem(
-                            DeliverdOrderList[index],
+                            PhotoOrderList[index],
                           );
                         })
                     : NoDataComponent(),

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:madhusudan/animation/FadeAnimation.dart';
 import 'package:madhusudan/common/ClassList.dart';
 import 'package:madhusudan/common/Services.dart';
@@ -252,69 +253,108 @@ class _ProductListState extends State<ProductList> {
             ),
           ];
         },
-        body: SafeArea(
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: isLoading == true
-                ? ShimmerGridListSkeleton(
-                    length: 10,
-                    isCircularImage: false,
-                  )
-                : catData.length > 0 && catData != null
-                    ? searchMemberData.length != 0
-                        ? AnimationLimiter(
-                            child: GridView.builder(
-                                itemCount: searchMemberData.length,
-                                //shrinkWrap: true,
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  childAspectRatio:
-                                      MediaQuery.of(context).size.width / (430),
-                                ),
-                                itemBuilder: (BuildContext context, int index) {
-                                  return ProductItemCard(
-                                      searchMemberData[index], index);
-                                }),
-                          )
-                        : _isSearching && isfirst
-                            ? AnimationLimiter(
-                                child: GridView.builder(
-                                    itemCount: searchMemberData.length,
-                                    //shrinkWrap: true,
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      childAspectRatio:
-                                          MediaQuery.of(context).size.width /
-                                              (430),
-                                    ),
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return ProductItemCard(
-                                          searchMemberData[index], index);
-                                    }),
-                              )
-                            : AnimationLimiter(
-                                child: GridView.builder(
-                                    itemCount: catData.length,
-                                    //shrinkWrap: true,
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      childAspectRatio:
-                                          MediaQuery.of(context).size.width /
-                                              (430),
-                                    ),
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return ProductItemCard(
-                                          catData[index], index);
-                                    }),
-                              )
-                    : NoDataComponent(),
-          ),
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: isLoading == true
+              ? ShimmerGridListSkeleton(
+                  length: 10,
+                  isCircularImage: false,
+                )
+              : catData.length > 0 && catData != null
+                  ? searchMemberData.length != 0
+                      ? AnimationLimiter(
+                          /*child: GridView.builder(
+                              itemCount: searchMemberData.length,
+                              //shrinkWrap: true,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio:
+                                    MediaQuery.of(context).size.width / (430),
+                              ),
+                              itemBuilder: (BuildContext context, int index) {
+                                return ProductItemCard(
+                                    searchMemberData[index], index);
+                              }),*/
+                          child: StaggeredGridView.countBuilder(
+                              padding: const EdgeInsets.only(
+                                  left: 4, right: 4, top: 5),
+                              crossAxisCount: 4,
+                              itemCount: searchMemberData.length,
+                              staggeredTileBuilder: (_) =>
+                                  StaggeredTile.fit(2),
+                              mainAxisSpacing: 3,
+                              crossAxisSpacing: 3,
+                              itemBuilder: (BuildContext context, int index) {
+                                return ProductItemCard(
+                                    searchMemberData[index], index);
+                              }),
+                        )
+                      : _isSearching && isfirst
+                          ? AnimationLimiter(
+                              /*child: GridView.builder(
+                                  itemCount: searchMemberData.length,
+                                  //shrinkWrap: true,
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    childAspectRatio:
+                                        MediaQuery.of(context).size.width /
+                                            (430),
+                                  ),
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return ProductItemCard(
+                                        searchMemberData[index], index);
+                                  }),*/
+                              child: StaggeredGridView.countBuilder(
+                                  padding: const EdgeInsets.only(
+                                      left: 4, right: 4, top: 5),
+                                  crossAxisCount: 4,
+                                  itemCount: searchMemberData.length,
+                                  staggeredTileBuilder: (_) =>
+                                      StaggeredTile.fit(2),
+                                  mainAxisSpacing: 3,
+                                  crossAxisSpacing: 3,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    return ProductItemCard(
+                                        searchMemberData[index], index);
+                                  }
+                              ),
+                            )
+                          : AnimationLimiter(
+                              /*child: GridView.builder(
+                                  itemCount: catData.length,
+                                  //shrinkWrap: true,
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    childAspectRatio:
+                                        MediaQuery.of(context).size.width /
+                                            (430),
+                                  ),
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return ProductItemCard(
+                                        catData[index], index);
+                                  }),*/
+                              child: StaggeredGridView.countBuilder(
+                                  padding: const EdgeInsets.only(
+                                      left: 4, right: 4, top: 5),
+                                  crossAxisCount: 4,
+                                  itemCount: catData.length,
+                                  staggeredTileBuilder: (_) =>
+                                      StaggeredTile.fit(2),
+                                  mainAxisSpacing: 3,
+                                  crossAxisSpacing: 3,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    return ProductItemCard(
+                                        catData[index], index);
+                                  }
+                              ),
+                            )
+                  : NoDataComponent(),
         ),
       ),
     );

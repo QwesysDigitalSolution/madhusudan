@@ -1,14 +1,16 @@
 import 'dart:io';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
 import 'package:madhusudan/component/LoadingComponent.dart';
 import 'package:madhusudan/common/Services.dart';
 import 'package:madhusudan/screens/ProductDetails.dart';
+import 'package:madhusudan/utils/AudioProvider.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class MyCartItem extends StatelessWidget {
+class MyCartItem extends StatefulWidget {
   final int index;
   final dynamic product;
   final Function removeItem;
@@ -19,9 +21,58 @@ class MyCartItem extends StatelessWidget {
       : super(key: key);
 
   @override
+  _MyCartItemState createState() => _MyCartItemState();
+}
+
+class _MyCartItemState extends State<MyCartItem> {
+  AudioPlayer player = AudioPlayer();
+  AudioProvider audioProvider;
+  bool _isPlayed = true;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    /*String url = widget.product["AudioFile"];
+    audioProvider = new AudioProvider(url);*/
+    super.initState();
+  }
+
+  void _stop() {
+    player.pause();
+    setState(() {
+      //stop flag
+      _isPlayed = true;
+    });
+  }
+
+  void _play() async {
+    audioProvider = new AudioProvider(widget.product["AudioFile"].toString());
+    String localUrl = await audioProvider.load();
+    player.play(localUrl, isLocal: true).then((data) {
+      print("Path : $localUrl");
+      setState(() {
+        _isPlayed = false;
+      });
+    });
+
+    player.onPlayerCompletion.listen((data) {
+      print("Completed");
+      setState(() {
+        _isPlayed = true;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    player.stop();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double widt = MediaQuery.of(context).size.width;
-
     return Stack(
       children: <Widget>[
         Container(
@@ -34,7 +85,7 @@ class MyCartItem extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) => ProductDetails(
-                        Id: product["ItemId"].toString(),
+                        Id: widget.product["ItemId"].toString(),
                       ),
                     ),
                   );
@@ -49,29 +100,29 @@ class MyCartItem extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(5),
-                      child:
-                          (product["Image"] != null && product["Image"] != "")
-                              ? Image.network(
-                                  "${cnst.img_url + product["Image"]}",
-                                  height: 90,
-                                  width: 90,
-                                  fit: BoxFit.fill,
-                                )
-                              : Container(
-                                  height: 90,
-                                  width: 90,
-                                  //padding: EdgeInsets.only(left: 20, right: 20),
-                                  child: Center(
-                                    child: Text(
-                                      'No Image Available',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 14,
-                                      ),
-                                    ),
+                      child: (widget.product["Image"] != null &&
+                              widget.product["Image"] != "")
+                          ? Image.network(
+                              "${cnst.img_url + widget.product["Image"]}",
+                              height: 90,
+                              width: 90,
+                              fit: BoxFit.fill,
+                            )
+                          : Container(
+                              height: 90,
+                              width: 90,
+                              //padding: EdgeInsets.only(left: 20, right: 20),
+                              child: Center(
+                                child: Text(
+                                  'No Image Available',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14,
                                   ),
                                 ),
+                              ),
+                            ),
                     ),
                   ),
                 ),
@@ -80,110 +131,200 @@ class MyCartItem extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ProductDetails(
-                              Id: product["ItemId"].toString(),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProductDetails(
+                                    Id: widget.product["ItemId"].toString(),
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              //width: MediaQuery.of(context).size.width / 1.8,
+                              //width: widt*0.3,
+                              child: Text(
+                                "${widget.product["ItemName"]}",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                             ),
                           ),
-                        );
-                      },
-                      child: Container(
-                        //width: MediaQuery.of(context).size.width / 1.8,
-                        //width: widt*0.3,
-                        child: Text(
-                          "${product["ItemName"]}",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Text(
+                            cnst.inr_rupee + " ${widget.product["Mrp"]}",
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: cnst.app_primary_material_color,
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    Text(
-                      cnst.inr_rupee + " ${product["Mrp"]}",
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: cnst.app_primary_material_color,
-                      ),
+                      ],
                     ),
                     Container(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
-                          Row(
-                            //crossAxisAlignment: CrossAxisAlignment.end,
-                            children: <Widget>[
-                              GestureDetector(
-                                onTap: () {
-                                  if (int.parse(product["Qty"].toString()) > 1) {
-                                    product["Qty"] =
-                                        int.parse(product["Qty"].toString()) -
-                                            1;
-                                    updateItemList(product["Qty"], index);
-                                  }
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 4),
-                                  child: Container(
-                                    //width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.grey[300]),
-                                    child: Padding(
-                                        padding: const EdgeInsets.all(9.0),
-                                        child: Text(
-                                          "-",
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                          ),
-                                        )),
+                          Expanded(
+                            child: Row(
+                              //crossAxisAlignment: CrossAxisAlignment.end,
+                              children: <Widget>[
+                                GestureDetector(
+                                  onTap: () {
+                                    if (int.parse(
+                                            widget.product["Qty"].toString()) >
+                                        1) {
+                                      widget.product["Qty"] = int.parse(widget
+                                              .product["Qty"]
+                                              .toString()) -
+                                          1;
+                                      widget.updateItemList(
+                                          widget.product["Qty"], widget.index);
+                                    }
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 4),
+                                    /*child: Container(
+                                      //width: MediaQuery.of(context).size.width,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.grey[300]),
+                                      child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            "-",
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                            ),
+                                          )),
+                                    ),*/
+                                    child: Container(
+                                      height: 24,
+                                      width: 24,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.grey[300]),
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.remove,
+                                          size: 12,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(4),
-                                child: Text(
-                                  "${product["Qty"]}",
-                                  style: TextStyle(
-                                    fontSize: 17,
+                                Padding(
+                                  padding: const EdgeInsets.all(4),
+                                  child: Text(
+                                    "${widget.product["Qty"]}",
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  product["Qty"] =
-                                      int.parse(product["Qty"].toString()) + 1;
-                                  updateItemList(product["Qty"], index);
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 4,
-                                  ),
-                                  child: Container(
-                                    //width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.grey[300]),
-                                    child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          "+",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                          ),
-                                        )),
+                                GestureDetector(
+                                  onTap: () {
+                                    widget.product["Qty"] = int.parse(
+                                            widget.product["Qty"].toString()) +
+                                        1;
+                                    widget.updateItemList(
+                                        widget.product["Qty"], widget.index);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 4,
+                                    ),
+                                    /*child: Container(
+                                      //width: MediaQuery.of(context).size.width,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.grey[300]),
+                                      child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            "+",
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                            ),
+                                          )),
+                                    ),*/
+                                    child: Container(
+                                      height: 24,
+                                      width: 24,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.grey[300]),
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.add,
+                                          size: 12,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
+                          widget.product["AudioFile"] != ""
+                              ? Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: Container(
+                                    height: 35,
+                                    width: 35,
+                                    decoration: BoxDecoration(
+                                      color: cnst.app_primary_material_color,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(100)),
+                                    ),
+                                    child: IconButton(
+                                      onPressed: () {
+                                        if (_isPlayed == false) {
+                                          _stop();
+                                        } else {
+                                          _play();
+                                        }
+                                      },
+                                      color: Colors.black,
+                                      icon: Icon(
+                                        _isPlayed == true
+                                            ? Icons.play_arrow
+                                            : Icons.stop,
+                                        color: Colors.white,
+                                        size: 15,
+                                      ),
+                                    ),
+                                  ),
+                              )
+                              : Container()
                         ],
                       ),
                     ),
+                    widget.product["Comment"] != ""
+                        ? Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.only(right: 5),
+                      child: Text(
+                        "${widget.product["Comment"]}",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(fontSize: 14,),
+                      ),
+                    )
+                        : Container()
+
                   ],
                 ),
               ),
@@ -231,7 +372,7 @@ class MyCartItem extends StatelessWidget {
                                 onPressed: () {
                                   //removeFromCart();
                                   Navigator.of(context).pop();
-                                  removeItem(index);
+                                  widget.removeItem(widget.index);
                                 },
                               ),
                             ],

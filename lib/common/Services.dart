@@ -8,6 +8,7 @@ import 'package:madhusudan/common/Constants.dart' as cnst;
 Dio dio = new Dio();
 
 class Services {
+
   static Future<List> GetServiceForList(String APIName, List params) async {
     String Url = "";
     if (params.length > 0) {
@@ -112,4 +113,5 @@ class Services {
       throw Exception(e);
     }
   }
+
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
 
 class OrderSuccess extends StatefulWidget {
@@ -9,6 +10,7 @@ class OrderSuccess extends StatefulWidget {
 class _OrderSuccessState extends State<OrderSuccess> {
   @override
   Widget build(BuildContext context) {
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
     return Scaffold(
       appBar: AppBar(
         leading: GestureDetector(

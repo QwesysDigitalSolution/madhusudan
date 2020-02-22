@@ -4,11 +4,14 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
+import 'package:flutter_plugin_pdf_viewer/flutter_plugin_pdf_viewer.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:madhusudan/common/ClassList.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
 import 'package:madhusudan/common/Services.dart';
 import 'package:madhusudan/common/StateContainer.dart';
+import 'package:madhusudan/component/ImageViewComponent.dart';
 import 'package:madhusudan/component/LoadingComponent.dart';
 import 'package:madhusudan/component/NoDataComponent.dart';
 import 'package:madhusudan/utils/Shimmer.dart';
@@ -37,6 +40,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   bool isLoading = true;
   List catData = new List();
   List imageList = new List();
+  List<PDFDocument> docList = new List();
   String MemberId = "0";
   final translator = new GoogleTranslator();
   String hindiDescription = "";
@@ -47,6 +51,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   AudioPlayer player = AudioPlayer();
   bool _isPlayed = true;
   String _alert;
+  PDFDocument document;
 
   //Recording _recordingNew;
   Timer _t;
@@ -255,6 +260,8 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   getItemDetails() async {
     try {
+      /*document = await PDFDocument.fromURL(
+          "http://conorlastowka.com/book/CitationNeededBook-Sample.pdf");*/
       await showPrDialog();
       //pr.show();
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -297,7 +304,6 @@ class _ProductDetailsState extends State<ProductDetails> {
         });
       }
     } on SocketException catch (_) {
-      //pr.isShowing() ? pr.hide() : null;
       setState(() {
         isLoading = false;
       });
@@ -351,7 +357,16 @@ class _ProductDetailsState extends State<ProductDetails> {
               await UpdateCartCount();
               if (type == "cart") {
                 //Navigator.pushReplacementNamed(context, '/OrderSuccess');
-                showMsg("Item Added To Cart Successfully");
+                //showMsg("Item Added To Cart Successfully");
+                Fluttertoast.showToast(
+                  msg: "Item Added To Cart Successfully",
+                  fontSize: 16,
+                  backgroundColor: Colors.black,
+                  gravity: ToastGravity.TOP,
+                  textColor: Colors.white,
+                  toastLength: Toast.LENGTH_SHORT,
+                  timeInSecForIos: 5,
+                );
                 setState(() {
                   txtDescription.text = "";
                   quantity = 1;
@@ -388,9 +403,20 @@ class _ProductDetailsState extends State<ProductDetails> {
             MemberId: MemberId,
             Count: "1",
           );
-          databaseHelper.updatePhotoOpenCount(photoCount).then((data) {
+          databaseHelper.updatePhotoOpenCount(photoCount).then((data) async {
             print("Update Callback : $data");
-            Navigator.of(context).push(ImagePreview(image: image));
+
+            PDFDocument document1;
+
+            if (image.contains(".pdf")) {
+              document1 = await PDFDocument.fromURL(
+                  "http://conorlastowka.com/book/CitationNeededBook-Sample.pdf");
+            } else {
+              document1 = null;
+            }
+
+            Navigator.of(context)
+                .push(ImagePreview(image: image, doc: document1));
           });
         } else {
           showMsg(
@@ -404,9 +430,19 @@ class _ProductDetailsState extends State<ProductDetails> {
           MemberId: MemberId,
           Count: "1",
         );
-        databaseHelper.insertPhotoOpenCount(photoCount).then((data) {
+        databaseHelper.insertPhotoOpenCount(photoCount).then((data) async {
           print("Insert Callback : $data");
-          Navigator.of(context).push(ImagePreview(image: image));
+          PDFDocument document1;
+
+          if (image.contains(".pdf")) {
+            document1 = await PDFDocument.fromURL(
+                "http://conorlastowka.com/book/CitationNeededBook-Sample.pdf");
+          } else {
+            document1 = null;
+          }
+
+          Navigator.of(context)
+              .push(ImagePreview(image: image, doc: document1));
         });
       }
     }, onError: (e) {
@@ -419,6 +455,11 @@ class _ProductDetailsState extends State<ProductDetails> {
     // TODO: implement dispose
     super.dispose();
     player.stop();
+  }
+
+  Future<String> geturl(url) async {
+    String doc = (await PDFDocument.fromURL(url)) as String;
+    return doc;
   }
 
   @override
@@ -530,22 +571,40 @@ class _ProductDetailsState extends State<ProductDetails> {
                         Container(
                           height: height / 2,
                           child: Swiper(
+                            loop: false,
+                            onTap: (val) {
+                              _showOverlay(
+                                  context,
+                                  imageList[val]["Id"].toString(),
+                                  imageList[val]["Image"]);
+                            },
                             itemBuilder: (BuildContext, int index) {
-                              return GestureDetector(
+                              return ImageViewComponent(imageList[index]);
+                              /*return GestureDetector(
                                 onTap: () {
                                   _showOverlay(
                                       context,
                                       imageList[index]["Id"].toString(),
                                       imageList[index]["Image"]);
                                 },
-                                child: new FadeInImage.assetNetwork(
-                                  placeholder: 'images/logo.png',
-                                  image: "${imageList[index]["Image"]}",
-                                  fit: BoxFit.contain,
-                                  width: MediaQuery.of(context).size.width / 2,
-                                  height: 200,
-                                ),
-                              );
+                                child: imageList[index]["Image"]
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(".pdf")
+                                    ? PDFViewer(
+                                        document: document,
+                                        showPicker: false,
+                                      )
+                                    : FadeInImage.assetNetwork(
+                                        placeholder: 'images/logo.png',
+                                        image: "${imageList[index]["Image"]}",
+                                        fit: BoxFit.contain,
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                2,
+                                        height: 200,
+                                      ),
+                              );*/
                             },
                             itemCount: imageList.length,
                             itemHeight: 110,
@@ -553,8 +612,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 builder: DotSwiperPaginationBuilder(
                               color: Colors.grey[400],
                             )),
-                            control: new SwiperControl(
-                                color: cnst.app_primary_material_color),
+                            //control: new SwiperControl(),
                           ),
                         )
                       else
@@ -714,10 +772,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                       ),
                       Container(
                         padding: EdgeInsets.only(
-                            left: 20,
-                            right: 20,
-                            top: 20,
-                            bottom: MediaQuery.of(context).viewInsets.bottom),
+                          left: 20,
+                          right: 20,
+                          top: 20,
+                        ),
                         child: new Wrap(
                           children: <Widget>[
                             Container(
@@ -939,8 +997,9 @@ class _ProductDetailsState extends State<ProductDetails> {
 
 class ImagePreview extends ModalRoute<void> {
   String image;
+  PDFDocument doc;
 
-  ImagePreview({this.image});
+  ImagePreview({this.image, this.doc});
 
   @override
   Duration get transitionDuration => Duration(milliseconds: 500);
@@ -959,6 +1018,8 @@ class ImagePreview extends ModalRoute<void> {
 
   @override
   bool get maintainState => true;
+
+  String nn = "";
 
   @override
   Widget buildPage(
@@ -985,9 +1046,14 @@ class ImagePreview extends ModalRoute<void> {
           width: MediaQuery.of(context).size.width,
           child: Hero(
             tag: "Sliderimage",
-            child: PhotoView(
-              imageProvider: NetworkImage(image),
-            ),
+            child: image.toLowerCase().contains(".pdf")
+                ? PDFViewer(
+                    document: doc,
+                    showPicker: false,
+                  )
+                : PhotoView(
+                    imageProvider: NetworkImage(image),
+                  ),
           ),
         ),
         Positioned(

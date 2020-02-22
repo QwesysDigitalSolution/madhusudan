@@ -100,46 +100,47 @@ class _CheckOutState extends State<CheckOut> {
       });
     }
 
-    if (shippingAddress != null && shippingAddress != "") {
-      try {
-        final result = await InternetAddress.lookup('google.com');
-        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-          setState(() {
-            isLoading = true;
-          });
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          isLoading = true;
+        });
 
-          FormData formData = new FormData.fromMap(
-              {"UserId": MemberId, "Address": shippingAddress});
+        FormData formData = new FormData.fromMap(
+            {"UserId": MemberId, "Address": shippingAddress});
 
-          Services.PostServiceForSave("wl/v1/CheckOut", formData).then(
-              (data) async {
-            setState(() {
-              isLoading = false;
-            });
-            if (data.Data != "0" && data.IsSuccess == true) {
-              UpdateCartCount();
-              Navigator.pushNamed(context, '/OrderSuccess');
-            } else {
-              showMsg(data.Message);
-            }
-          }, onError: (e) {
-            setState(() {
-              isLoading = false;
-            });
-            showMsg("Try Again.");
-          });
-        } else {
+        Services.PostServiceForSave("wl/v1/CheckOut", formData).then(
+                (data) async {
+              setState(() {
+                isLoading = false;
+              });
+              if (data.Data != "0" && data.IsSuccess == true) {
+                UpdateCartCount();
+                Navigator.pushNamed(context, '/OrderSuccess');
+              } else {
+                showMsg(data.Message);
+              }
+            }, onError: (e) {
           setState(() {
             isLoading = false;
           });
-          showMsg("No Internet Connection.");
-        }
-      } on SocketException catch (_) {
+          showMsg("Try Again.");
+        });
+      } else {
+        setState(() {
+          isLoading = false;
+        });
         showMsg("No Internet Connection.");
       }
+    } on SocketException catch (_) {
+      showMsg("No Internet Connection.");
+    }
+
+    /*if (shippingAddress != null && shippingAddress != "") {
     } else {
       showMsg("Please Enter Address !");
-    }
+    }*/
   }
 
   UpdateCartCount() async {
