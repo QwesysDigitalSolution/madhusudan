@@ -29,6 +29,8 @@ class _OrderDetailState extends State<OrderDetail> {
   List OrderItems;
   String shippingAddress = "";
 
+  String TransportName = "";
+
   @override
   void initState() {
     // TODO: implement initState
@@ -36,24 +38,33 @@ class _OrderDetailState extends State<OrderDetail> {
     pr = new ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: false);
     pr.style(
-        message: "Please Wait",
-        borderRadius: 10.0,
-        progressWidget: Container(
-          padding: EdgeInsets.all(15),
-          child: CircularProgressIndicator(
-            valueColor: new AlwaysStoppedAnimation<Color>(
-                cnst.app_primary_material_color),
-          ),
+      message: "Please Wait",
+      borderRadius: 10.0,
+      progressWidget: Container(
+        padding: EdgeInsets.all(15),
+        child: CircularProgressIndicator(
+          valueColor: new AlwaysStoppedAnimation<Color>(
+              cnst.app_primary_material_color),
         ),
-        elevation: 10.0,
-        insetAnimCurve: Curves.easeInOut,
-        messageTextStyle: TextStyle(
-            color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w600),);
+      ),
+      elevation: 10.0,
+      insetAnimCurve: Curves.easeInOut,
+      messageTextStyle: TextStyle(
+          color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w600),
+    );
 
     print(widget.order.toString());
     setState(() {
       Order = widget.order;
       OrderItems = widget.order["ItemsList"];
+    });
+    getLocalData();
+  }
+
+  getLocalData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      TransportName = prefs.getString(cnst.session.TransportName);
     });
   }
 
@@ -148,6 +159,28 @@ class _OrderDetailState extends State<OrderDetail> {
                             width: MediaQuery.of(context).size.width / 1.5,
                             child: Text(
                               "${Order["Address"]}",
+                              style:
+                                  TextStyle(fontSize: 14, color: Colors.black),
+                            ),
+                          ),
+                        ),
+                        Divider(
+                          color: Colors.grey,
+                        ),
+                        Text(
+                          'Transport Name',
+                          style: TextStyle(
+                              color: Colors.black54,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.left,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width / 1.5,
+                            child: Text(
+                              "${TransportName}",
                               style:
                                   TextStyle(fontSize: 14, color: Colors.black),
                             ),

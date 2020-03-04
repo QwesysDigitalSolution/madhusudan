@@ -21,6 +21,7 @@ class _CheckOutItemState extends State<CheckOutItem> {
   var Product = {};
   ProgressDialog pr;
   bool isLoading = false;
+  double totalAmt = 0;
 
   @override
   void initState() {
@@ -44,6 +45,8 @@ class _CheckOutItemState extends State<CheckOutItem> {
             color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w600));
     setState(() {
       Product = widget.product1;
+      totalAmt += (double.parse(widget.product1["PcsMrp"].toString()) *
+          double.parse(widget.product1["Qty"].toString()));
     });
 
     print("Product Single Data");
@@ -69,6 +72,8 @@ class _CheckOutItemState extends State<CheckOutItem> {
       },
     );
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -135,15 +140,8 @@ class _CheckOutItemState extends State<CheckOutItem> {
                             fontSize: 15, fontWeight: FontWeight.w600),
                       ),
                     ),
-                    /*Container(
-                  width: MediaQuery.of(context).size.width / 1.8,
-                  child: Text(
-                    "7, Hot Pink",
-                    style: TextStyle(fontSize: 15,color: Colors.black45),
-                  ),
-                ),*/
                     Text(
-                      cnst.inr_rupee + " ${Product["Mrp"]}",
+                      cnst.inr_rupee + " ${totalAmt}",
                       style: TextStyle(fontSize: 15, color: cnst.app_primary_material_color),
                     ),
                   ],

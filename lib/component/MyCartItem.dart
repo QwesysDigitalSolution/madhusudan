@@ -162,7 +162,7 @@ class _MyCartItemState extends State<MyCartItem> {
                         Padding(
                           padding: const EdgeInsets.only(right: 10),
                           child: Text(
-                            cnst.inr_rupee + " ${widget.product["Mrp"]}",
+                            cnst.inr_rupee + " ${widget.product["PcsMrp"]}",
                             style: TextStyle(
                               fontSize: 15,
                               color: cnst.app_primary_material_color,
@@ -171,6 +171,27 @@ class _MyCartItemState extends State<MyCartItem> {
                         ),
                       ],
                     ),
+                    widget.product["Type"].toString() == "box"
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 2, left: 0),
+                            child: Text(
+                              "( Total Pcs : ${widget.product["Pcs"]}, Rate : ${widget.product["Mrp"]} /piece )",
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 12,
+                              ),
+                            ),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.only(top: 2, left: 0),
+                            child: Text(
+                              "( Mimimum Pcs : ${widget.product["MinQty"]} )",
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
                     Container(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -182,15 +203,20 @@ class _MyCartItemState extends State<MyCartItem> {
                               children: <Widget>[
                                 GestureDetector(
                                   onTap: () {
-                                    if (int.parse(
-                                            widget.product["Qty"].toString()) >
-                                        1) {
-                                      widget.product["Qty"] = int.parse(widget
-                                              .product["Qty"]
-                                              .toString()) -
-                                          1;
-                                      widget.updateItemList(
-                                          widget.product["Qty"], widget.index);
+                                    if(widget.product["Type"].toString()=="loose" ){
+                                      if(int.parse(widget.product["Qty"].toString())>int.parse(widget.product["MinQty"].toString())){
+                                        widget.product["Qty"] = int.parse(widget
+                                            .product["Qty"]
+                                            .toString()) - 1;
+                                        widget.updateItemList(widget.product["Qty"], widget.index);
+                                      }
+                                    }else{
+                                      if (int.parse(widget.product["Qty"].toString()) > 1) {
+                                        widget.product["Qty"] = int.parse(widget
+                                            .product["Qty"]
+                                            .toString()) - 1;
+                                        widget.updateItemList(widget.product["Qty"], widget.index);
+                                      }
                                     }
                                   },
                                   child: Padding(
@@ -281,14 +307,14 @@ class _MyCartItemState extends State<MyCartItem> {
                           ),
                           widget.product["AudioFile"] != ""
                               ? Padding(
-                                padding: const EdgeInsets.only(right: 10),
-                                child: Container(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: Container(
                                     height: 35,
                                     width: 35,
                                     decoration: BoxDecoration(
                                       color: cnst.app_primary_material_color,
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(100)),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(100)),
                                     ),
                                     child: IconButton(
                                       onPressed: () {
@@ -308,23 +334,24 @@ class _MyCartItemState extends State<MyCartItem> {
                                       ),
                                     ),
                                   ),
-                              )
+                                )
                               : Container()
                         ],
                       ),
                     ),
                     widget.product["Comment"] != ""
                         ? Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.only(right: 5),
-                      child: Text(
-                        "${widget.product["Comment"]}",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(fontSize: 14,),
-                      ),
-                    )
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.only(right: 5),
+                            child: Text(
+                              "${widget.product["Comment"]}",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontSize: 14,
+                              ),
+                            ),
+                          )
                         : Container()
-
                   ],
                 ),
               ),
@@ -404,7 +431,7 @@ class _MyCartItemState extends State<MyCartItem> {
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

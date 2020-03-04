@@ -138,10 +138,28 @@ class _OrderedItemState extends State<OrderedItem> {
                       ),
                     ),
                   ),
-                  Text(
-                    cnst.inr_rupee + " ${int.parse(widget.product["Mrp"])}",
-                    style: TextStyle(
-                        fontSize: 15, color: cnst.app_primary_material_color),
+                  Container(
+                    width: MediaQuery.of(context).size.width / 1.7,
+                    //color: Colors.blueAccent,
+                    child: Wrap(
+                      children: <Widget>[
+                        Text(
+                          cnst.inr_rupee + " ${int.parse(widget.product["SubTotal"])}",
+                          style: TextStyle(
+                              fontSize: 15, color: cnst.app_primary_material_color),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2, left: 5),
+                          child: Text(
+                            "( Total Pcs : ${widget.product["TotalQty"]}, Rate : ${widget.product["Mrp"]} )",
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 12,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width / 1.7,

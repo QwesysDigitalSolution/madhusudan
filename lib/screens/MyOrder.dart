@@ -20,6 +20,7 @@ class MyOrder extends StatefulWidget {
 }
 
 class _MyOrderState extends State<MyOrder> {
+
   String MemberId = "0";
   bool isLoading = false;
   List CurrentOrderList;
@@ -156,7 +157,8 @@ class _MyOrderState extends State<MyOrder> {
           pr.hide();
           if (data.Data != "0" && data.IsSuccess == true) {
             setState(() {
-              CurrentOrderList.removeAt(index);
+              //CurrentOrderList.removeAt(index);
+              CurrentOrderList[index]["Status"]="cancelled";
             });
           } else {
             showMsg(data.Message, title: "Error");
@@ -287,4 +289,6 @@ class _MyOrderState extends State<MyOrder> {
       ),
     );
   }
+
 }
+

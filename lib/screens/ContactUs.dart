@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
 import 'package:madhusudan/common/Services.dart';
@@ -9,6 +10,7 @@ import 'package:madhusudan/component/NoDataComponent.dart';
 import 'package:madhusudan/utils/Shimmer.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ContactUs extends StatefulWidget {
   @override
@@ -145,6 +147,11 @@ class _ContactUsState extends State<ContactUs> {
       ].toSet();
     }
   }
+  _launchURL(String no) async {
+    String whatsAppLink = cnst.whatsAppLink;
+    String urlwithmobile = whatsAppLink.replaceAll("#mobile", "91$no");
+    launch(urlwithmobile);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -201,14 +208,40 @@ class _ContactUsState extends State<ContactUs> {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              ListTile(
-                                leading: Icon(
-                                  Icons.person,
-                                  color: cnst.app_primary_material_color,
-                                ),
-                                title: Text('Name'),
-                                subtitle: Text("${list[0]["Name"].toString()}"),
-                                enabled: true,
+                              Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: ListTile(
+                                      leading: Icon(
+                                        Icons.person,
+                                        color: cnst.app_primary_material_color,
+                                      ),
+                                      title: Text('Name'),
+                                      subtitle: Text("${list[0]["Name"].toString()}"),
+                                      enabled: true,
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: (){
+                                      //url lunched
+                                      _launchURL("8758422007");
+                                      /*if(list[0]["WhatsappNo"].toString()!=""){
+                                        _launchURL(list[0]["WhatsappNo"].toString());
+                                      }else{
+                                        Fluttertoast.showToast(
+                                            msg: "Mobile Number Not Available",
+                                            fontSize: 13,
+                                            backgroundColor: Colors.redAccent,
+                                            gravity: ToastGravity.CENTER,
+                                            textColor: Colors.white);
+                                      }*/
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 5,right: 5),
+                                      child: Image.asset("images/whatsapp.png",height: 30,width: 30,),
+                                    ),
+                                  )
+                                ],
                               ),
                               ListTile(
                                 leading: Icon(Icons.phone,
@@ -237,6 +270,11 @@ class _ContactUsState extends State<ContactUs> {
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
+                                    Text(list[0]["GSTNo"].toString() !=
+                                        "" &&
+                                        list[0]["GSTNo"] != null
+                                        ? "GSTNo : ${list[0]["GSTNo"]}"
+                                        : "GSTNo :  - "),
                                     Text(list[0]["AccountNumber"].toString() !=
                                                 "" &&
                                             list[0]["AccountNumber"] != null

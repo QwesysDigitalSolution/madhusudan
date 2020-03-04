@@ -43,16 +43,84 @@ class MyOrderItem extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 10, top: 10),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        "Order No ${order["Id"]}",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600),
-                      ),
+                    Text(
+                      "Order No ${order["Id"]}",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600),
                     ),
+                    /*order["Status"].toString() == "pending"
+                        ? Container(
+                            //width: MediaQuery.of(context).size.width / 2.7,
+                            height: 28,
+                            margin: EdgeInsets.only(right: 5),
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
+                                border: Border.all(
+                                    color: cnst.app_primary_material_color)),
+                            child: MaterialButton(
+                              minWidth: 0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: new BorderRadius.circular(8.0)),
+                              color: Colors.white,
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    // return object of type Dialog
+                                    return AlertDialog(
+                                      title:
+                                          new Text("Order Cancel Conformation"),
+                                      content: new Text(
+                                        "Are you sure you want to cancel this order?",
+                                      ),
+                                      actions: <Widget>[
+                                        // usually buttons at the bottom of the dialog
+                                        new FlatButton(
+                                          child: new Text("Close"),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        new FlatButton(
+                                          child: new Text("Accept"),
+                                          onPressed: () {
+                                            onCancel(order["Id"], index);
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.cancel,
+                                    color: cnst.app_primary_material_color,
+                                    size: 12,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 5),
+                                    child: Text(
+                                      "Cancel",
+                                      style: TextStyle(
+                                          color:
+                                              cnst.app_primary_material_color,
+                                          fontSize: 12.0,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        : Container(),*/
                     Padding(
                       padding:
                           const EdgeInsets.only(left: 10, top: 0, right: 5),
@@ -173,19 +241,116 @@ class MyOrderItem extends StatelessWidget {
                             TextSpan(
                                 text: "${cnst.inr_rupee} ${order["Total"]} /-",
                                 style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  letterSpacing: 0.5
-                                )),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    letterSpacing: 0.5)),
                           ],
                         ),
                       ),
                     ),
-                    order["Status"].toString() == "cancelled"
+                    /*Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        color: order["Status"].toString() == "processing"
+                            ? Colors.yellowAccent[700]
+                            : order["Status"].toString() == "dispatch"
+                                ? Colors.green[700]
+                                : order["Status"].toString() == "on-hold"
+                                    ? Colors.blue[700]
+                                    : cnst.app_primary_material_color[500],
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            bottomLeft: Radius.circular(10)),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 10, right: 10, top: 5, bottom: 5),
+                        child: Text(
+                          "Order Is ${order["Status"].toString()}",
+                          style: TextStyle(color:order["Status"].toString() == "processing"?Colors.black :Colors.white),
+                        ),
+                      ),
+                    ),*/
+
+                    order["Status"].toString() == "pending"
                         ? Container(
+                            //width: MediaQuery.of(context).size.width / 2.7,
+                            height: 28,
+                            margin: EdgeInsets.only(right: 5),
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
+                                border: Border.all(
+                                    color: cnst.app_primary_material_color)),
+                            child: MaterialButton(
+                              minWidth: 0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: new BorderRadius.circular(8.0)),
+                              color: Colors.white,
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    // return object of type Dialog
+                                    return AlertDialog(
+                                      title:
+                                          new Text("Order Cancel Conformation"),
+                                      content: new Text(
+                                        "Are you sure you want to cancel this order?",
+                                      ),
+                                      actions: <Widget>[
+                                        // usually buttons at the bottom of the dialog
+                                        new FlatButton(
+                                          child: new Text("Close"),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        new FlatButton(
+                                          child: new Text("Accept"),
+                                          onPressed: () {
+                                            onCancel(order["Id"], index);
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.cancel,
+                                    color: cnst.app_primary_material_color,
+                                    size: 12,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 5),
+                                    child: Text(
+                                      "Cancel Order",
+                                      style: TextStyle(
+                                        color: cnst.app_primary_material_color,
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        : Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.rectangle,
-                              color: cnst.app_primary_material_color[500],
+                              color: order["Status"].toString() == "processing"
+                                  ? Colors.yellowAccent[700]
+                                  : order["Status"].toString() == "dispatch"
+                                      ? Colors.green[700]
+                                      : order["Status"].toString() == "on-hold"
+                                          ? Colors.blue[700]
+                                          : cnst
+                                              .app_primary_material_color[500],
                               borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(10),
                                   bottomLeft: Radius.circular(10)),
@@ -194,12 +359,15 @@ class MyOrderItem extends StatelessWidget {
                               padding: const EdgeInsets.only(
                                   left: 10, right: 10, top: 5, bottom: 5),
                               child: Text(
-                                "Order Is Cancelled",
-                                style: TextStyle(color: Colors.white),
+                                "Order Is ${order["Status"].toString()}",
+                                style: TextStyle(
+                                    color: order["Status"].toString() ==
+                                            "processing"
+                                        ? Colors.black
+                                        : Colors.white),
                               ),
                             ),
-                          )
-                        : Container()
+                          ),
                     /*Container(
                       width: MediaQuery.of(context).size.width / 2.7,
                       height: 35,

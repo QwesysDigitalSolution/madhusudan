@@ -286,8 +286,15 @@ class _ProductDetailsState extends State<ProductDetails> {
           //pr.hide();
           if (data.length > 0) {
             setState(() {
+
+              if(data[0]["Type"].toString()=="loose"){
+                txtQty.text=data[0]["MinQty"].toString();
+              }
               catData = data;
               imageList = data[0]["Images"];
+
+
+
             });
             setState(() {
               isLoading = false;
@@ -410,7 +417,8 @@ class _ProductDetailsState extends State<ProductDetails> {
 
             if (image.contains(".pdf")) {
               document1 = await PDFDocument.fromURL(
-                  "http://conorlastowka.com/book/CitationNeededBook-Sample.pdf");
+                  "http://mslive.qwesysdigitalsolutions.in/wp-content/uploads/2020/02/MadhusudanSandhya_compressed.pdf");
+              //"http://conorlastowka.com/book/CitationNeededBook-Sample.pdf");
             } else {
               document1 = null;
             }
@@ -436,11 +444,10 @@ class _ProductDetailsState extends State<ProductDetails> {
 
           if (image.contains(".pdf")) {
             document1 = await PDFDocument.fromURL(
-                "http://conorlastowka.com/book/CitationNeededBook-Sample.pdf");
+                "http://mslive.qwesysdigitalsolutions.in/wp-content/uploads/2020/02/MadhusudanSandhya_compressed.pdf");
           } else {
             document1 = null;
           }
-
           Navigator.of(context)
               .push(ImagePreview(image: image, doc: document1));
         });
@@ -500,7 +507,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Prodect Detail",
+          "Product Detail",
           style: TextStyle(color: cnst.app_primary_material_color),
         ),
         leading: GestureDetector(
@@ -659,17 +666,55 @@ class _ProductDetailsState extends State<ProductDetails> {
                               fontWeight: FontWeight.w600),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 2, left: 15),
-                        child: Text(
-                          "${cnst.inr_rupee} ${catData[0]["Mrp"]}",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
+                      catData[0]["Type"].toString() == "box"
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 2, left: 15),
+                              child: Row(
+                                children: <Widget>[
+                                  Text(
+                                    "${cnst.inr_rupee} ${catData[0]["PcsMrp"]}",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      " ( Total Pcs : ${catData[0]["Pcs"]}, Rate : ${catData[0]["Mrp"]} / piece )",
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.only(top: 2, left: 15),
+                              child: Row(
+                                children: <Widget>[
+                                  Text(
+                                    "${cnst.inr_rupee} ${catData[0]["Mrp"]}",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      " ( Mimimum Pcs : ${catData[0]["MinQty"]} )",
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                       Padding(
                         padding: const EdgeInsets.only(top: 10, left: 15),
                         child: Text(
@@ -703,7 +748,15 @@ class _ProductDetailsState extends State<ProductDetails> {
                                           ? int.parse(txtQty.text)
                                           : 0;
                                   if (qty != 1 && qty != 0) {
-                                    qty--;
+
+                                    if(catData[0]["Type"].toString()=="loose" ){
+                                      if(qty>int.parse(catData[0]["MinQty"].toString())){
+                                        qty--;
+                                      }
+                                    }else if(catData[0]["Type"].toString()=="box"){
+                                      qty--;
+                                    }
+
                                     setState(() {
                                       txtQty.text = qty.toString();
                                     });
@@ -724,7 +777,25 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 onEditingComplete: () {
                                   if (txtQty.text == null ||
                                       txtQty.text == "") {
-                                    txtQty.text = "1";
+                                    if(catData[0]["Type"].toString()=="loose" ){
+                                      txtQty.text = catData[0]["MinQty"].toString();
+                                    }else if(catData[0]["Type"].toString()=="box"){
+                                      txtQty.text = "1";
+                                    }
+                                  }else{
+                                    /*if(txtQty.text!="" || txtQty.text != null){
+                                      if(int.parse(txtQty.text)<int.parse(catData[0]["MinQty"].toString())){
+                                        txtQty.text = catData[0]["MinQty"].toString();
+                                      }
+                                    }else{
+                                      txtQty.text = catData[0]["MinQty"].toString();
+                                    }*/
+
+                                    if(catData[0]["Type"].toString()=="loose" ){
+                                      if(int.parse(txtQty.text)<int.parse(catData[0]["MinQty"].toString())){
+                                        txtQty.text = catData[0]["MinQty"].toString();
+                                      }
+                                    }
                                   }
                                   FocusScope.of(context)
                                       .requestFocus(FocusNode());

@@ -13,7 +13,6 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
 
   String Name = "", Mobile = "", MemberId = "", MemberImage = "";
-
   String appPackage;
 
   @override

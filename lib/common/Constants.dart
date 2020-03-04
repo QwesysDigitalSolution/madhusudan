@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 const String api_url = "http://mslive.qwesysdigitalsolutions.in/wp-json/";
 const inr_rupee = "₹";
 const String img_url = "";
+const String whatsAppLink = "https://wa.me/#mobile"; //mobile no with country code
 
 class session {
   static const String session_login = "login_data";
@@ -16,6 +17,7 @@ class session {
   static const String Address = "Address";
   static const String Image = "Image";
   static const String IsVerified = "IsVerified";
+  static const String TransportName = "TransportName";
 }
 
 Map<int, Color> app_primary_colors = {

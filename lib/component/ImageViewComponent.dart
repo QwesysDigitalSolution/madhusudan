@@ -25,7 +25,7 @@ class _ImageViewComponentState extends State<ImageViewComponent> {
 
   setPdf() async {
     document = await PDFDocument.fromURL(
-        "http://conorlastowka.com/book/CitationNeededBook-Sample.pdf");
+        "http://mslive.qwesysdigitalsolutions.in/wp-content/uploads/2020/02/MadhusudanSandhya_compressed.pdf");
     setState(() {});
   }
 

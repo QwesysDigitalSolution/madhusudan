@@ -6,8 +6,9 @@ import 'package:madhusudan/screens/ProductDetails.dart';
 class ProductItemCard extends StatefulWidget {
   var ItemData;
   int index;
+  String type;
 
-  ProductItemCard(this.ItemData, this.index);
+  ProductItemCard(this.ItemData, this.index, this.type);
 
   @override
   _ProductItemCardState createState() => _ProductItemCardState();
@@ -52,13 +53,7 @@ class _ProductItemCardState extends State<ProductItemCard> {
                     children: <Widget>[
                       widget.ItemData["Image"].toString() != "" &&
                               widget.ItemData["Image"].toString() != "null"
-                          ? /*Image.network(
-                              "${widget.ItemData["Image"]}",
-                              //height: 140,
-                              //width: MediaQuery.of(context).size.width / 2,
-                              fit: BoxFit.cover,
-                            )*/
-                          FadeInImage.assetNetwork(
+                          ? FadeInImage.assetNetwork(
                               placeholder: "assets/loading.gif",
                               image: "${widget.ItemData["Image"]}",
                               fit: BoxFit.cover,
@@ -101,7 +96,7 @@ class _ProductItemCardState extends State<ProductItemCard> {
                               padding: const EdgeInsets.only(
                                   left: 10, right: 10, top: 3, bottom: 5),
                               child: Text(
-                                "${cnst.inr_rupee} ${widget.ItemData["Mrp"]}",
+                                "${cnst.inr_rupee} ${widget.type=="Box"?widget.ItemData["PcsMrp"]:widget.ItemData["Mrp"]}",
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,

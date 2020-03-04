@@ -11,13 +11,14 @@ import 'package:madhusudan/component/MyCartItem.dart';
 import 'package:madhusudan/screens/CheckOut.dart';
 import 'package:madhusudan/utils/Shimmer.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-/*import 'package:madhusudan/screens/StateContainer.dart';*/
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 class MyCart extends StatefulWidget {
   @override
   _MyCartState createState() => _MyCartState();
 }
+
 
 class _MyCartState extends State<MyCart> {
   String MemberId = "0";
@@ -26,6 +27,8 @@ class _MyCartState extends State<MyCart> {
   double subTotal = 0;
   double discount = 0;
   double totalAmt = 0;
+  double MinCart = 0;
+  double totalPcs = 0;
   ProgressDialog pr;
 
   @override
@@ -52,13 +55,14 @@ class _MyCartState extends State<MyCart> {
     getLocalData();
   }
 
+
+
   getLocalData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String Gender = prefs.getString(cnst.session.Gender);
     setState(() {
       MemberId = prefs.getString(cnst.session.Member_Id);
     });
-
     getOrderDetail();
   }
 
@@ -100,7 +104,9 @@ class _MyCartState extends State<MyCart> {
             (data) async {
           if (data.length > 0) {
             setState(() {
-              CartList = data;
+              CartList = data[0]["CartItem"];
+              MinCart =
+                  double.parse(data[0]["CartTotal"][0]["MinCart"].toString());
             });
             CalculateTotal();
             setState(() {
@@ -134,18 +140,24 @@ class _MyCartState extends State<MyCart> {
       subTotal = 0;
       discount = 0;
       totalAmt = 0;
+      //MinCart = 0;
+      totalPcs = 0;
     });
     print("CalculateTotal");
     if (CartList.length > 0) {
       for (int i = 0; i < CartList.length; i++) {
         setState(() {
-          totalAmt += (double.parse(CartList[i]["Mrp"].toString()) *
+          totalAmt += (double.parse(CartList[i]["PcsMrp"].toString()) *
+              double.parse(CartList[i]["Qty"].toString()));
+          totalPcs += (double.parse(CartList[i]["Pcs"].toString()) *
               double.parse(CartList[i]["Qty"].toString()));
         });
       }
+      print("Total Pcs : ${totalPcs}");
     } else {
       setState(() {
         totalAmt = 0;
+        totalPcs = 0;
       });
     }
   }
@@ -374,66 +386,79 @@ class _MyCartState extends State<MyCart> {
                           ],
                         ),
                         Container(
-                          width: 165,
-                          //margin: EdgeInsets.only(top: 20),
-                          height: 45,
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8))),
-                          child: MaterialButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(8.0)),
-                            color: cnst.app_primary_material_color[600],
-                            //minWidth: MediaQuery.of(context).size.width - 20,
-                            onPressed: () {
-                              if(CartList.length>0){
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => CheckOut(CartList),
-                                  ),
-                                );
-                              }else{
-                                Fluttertoast.showToast(
-                                    msg: "Cart Is Emplty",
-                                    fontSize: 13,
-                                    backgroundColor: Colors.redAccent,
-                                    gravity: ToastGravity.CENTER,
-                                    textColor: Colors.white);
-                              }
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  "CHECKOUT",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.w600),
-                                  textAlign: TextAlign.center,
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    //shape: BoxShape.circle,
+                                width: 165,
+                                //margin: EdgeInsets.only(top: 20),
+                                height: 45,
+                                decoration: BoxDecoration(
                                     borderRadius:
-                                        BorderRadius.all(Radius.circular(12)),
-                                    color: Colors.white,
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(7.0),
-                                    child: Icon(
-                                      Icons.arrow_forward_ios,
-                                      color:
-                                          cnst.app_primary_material_color[600],
-                                      size: 18,
-                                    ),
+                                        BorderRadius.all(Radius.circular(8))),
+                                child: MaterialButton(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          new BorderRadius.circular(8.0)),
+                                  color: cnst.app_primary_material_color[600],
+                                  onPressed: () {
+                                    if (CartList.length > 0) {
+                                      if(totalPcs > MinCart){
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                CheckOut(CartList),
+                                          ),
+                                        );
+                                      }else{
+                                        Fluttertoast.showToast(
+                                            msg: "Minimum Cart Quantity $MinCart Pcs ",
+                                            fontSize: 13,
+                                            backgroundColor: Colors.redAccent,
+                                            gravity: ToastGravity.CENTER,
+                                            textColor: Colors.white);
+                                      }
+                                    } else {
+                                      Fluttertoast.showToast(
+                                          msg: "Cart Is Emplty",
+                                          fontSize: 13,
+                                          backgroundColor: Colors.redAccent,
+                                          gravity: ToastGravity.CENTER,
+                                          textColor: Colors.white);
+                                    }
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        "CHECKOUT",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14.0,
+                                            fontWeight: FontWeight.w600),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          //shape: BoxShape.circle,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(12)),
+                                          color: Colors.white,
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(7.0),
+                                          child: Icon(
+                                            Icons.arrow_forward_ios,
+                                            color:
+                                                cnst.app_primary_material_color[
+                                                    600],
+                                            size: 18,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
+                              )
+
                       ],
                     ),
                   ),
@@ -443,3 +468,4 @@ class _MyCartState extends State<MyCart> {
     );
   }
 }
+

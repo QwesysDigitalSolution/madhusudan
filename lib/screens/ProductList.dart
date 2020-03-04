@@ -122,6 +122,9 @@ class _ProductListState extends State<ProductList> {
       }
     } on SocketException catch (_) {
       //pr.isShowing() ? pr.hide() : null;
+      setState(() {
+        isLoading = false;
+      });
       showMsg("No Internet Connection.");
     }
   }
@@ -288,26 +291,11 @@ class _ProductListState extends State<ProductList> {
                               crossAxisSpacing: 3,
                               itemBuilder: (BuildContext context, int index) {
                                 return ProductItemCard(
-                                    searchMemberData[index], index);
+                                    searchMemberData[index], index,widget.type);
                               }),
                         )
                       : _isSearching && isfirst
                           ? AnimationLimiter(
-                              /*child: GridView.builder(
-                                  itemCount: searchMemberData.length,
-                                  //shrinkWrap: true,
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    childAspectRatio:
-                                        MediaQuery.of(context).size.width /
-                                            (430),
-                                  ),
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return ProductItemCard(
-                                        searchMemberData[index], index);
-                                  }),*/
                               child: StaggeredGridView.countBuilder(
                                   padding: const EdgeInsets.only(
                                       left: 4, right: 4, top: 5),
@@ -319,26 +307,11 @@ class _ProductListState extends State<ProductList> {
                                   crossAxisSpacing: 3,
                                   itemBuilder: (BuildContext context, int index) {
                                     return ProductItemCard(
-                                        searchMemberData[index], index);
+                                        searchMemberData[index], index,widget.type);
                                   }
                               ),
                             )
                           : AnimationLimiter(
-                              /*child: GridView.builder(
-                                  itemCount: catData.length,
-                                  //shrinkWrap: true,
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    childAspectRatio:
-                                        MediaQuery.of(context).size.width /
-                                            (430),
-                                  ),
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return ProductItemCard(
-                                        catData[index], index);
-                                  }),*/
                               child: StaggeredGridView.countBuilder(
                                   padding: const EdgeInsets.only(
                                       left: 4, right: 4, top: 5),
@@ -350,7 +323,7 @@ class _ProductListState extends State<ProductList> {
                                   crossAxisSpacing: 3,
                                   itemBuilder: (BuildContext context, int index) {
                                     return ProductItemCard(
-                                        catData[index], index);
+                                        catData[index], index,widget.type);
                                   }
                               ),
                             )

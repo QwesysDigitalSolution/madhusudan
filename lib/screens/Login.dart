@@ -102,8 +102,7 @@ class _LoginState extends State<Login> {
               {"key": "MobileNo", "value": edtMobile.text},
               {"key": "FCMToken", "value": fcmToken},
             ];
-            Future res =
-                Services.GetServiceForList("wl/v1/GetLoginData", formData);
+            Future res = Services.GetServiceForList("wl/v1/GetLoginData", formData);
             res.then((data) async {
               pr.hide();
               if (data != null && data.length > 0) {
@@ -115,6 +114,8 @@ class _LoginState extends State<Login> {
                 await prefs.setString(cnst.session.Image, data[0]["Image"]);
                 await prefs.setString(cnst.session.Mobile, data[0]["Mobile"]);
                 await prefs.setString(cnst.session.Address, data[0]["Address"]);
+                await prefs.setString(cnst.session.TransportName, data[0]["TranportName"]);
+
 
                 if (data[0]["IsVerified"].toString().toLowerCase() == "true") {
                   await prefs.setString(cnst.session.IsVerified,
@@ -228,9 +229,6 @@ class _LoginState extends State<Login> {
                             minWidth: MediaQuery.of(context).size.width - 20,
                             onPressed: () {
                               _checkLogin();
-                              //Navigator.pushReplacementNamed(context, '/Dashboard');
-                              /*Navigator.pushReplacementNamed(
-                                  context, '/Dashboard');*/
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,

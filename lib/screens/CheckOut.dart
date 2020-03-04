@@ -33,6 +33,7 @@ class _CheckOutState extends State<CheckOut> {
   String method = "COD";
   bool isAddressEdit = false;
   ProgressDialog pr;
+  double totalPcs = 0;
 
   @override
   void initState() {
@@ -81,7 +82,7 @@ class _CheckOutState extends State<CheckOut> {
     if (MyCartList.length > 0) {
       for (int i = 0; i < MyCartList.length; i++) {
         setState(() {
-          totalAmt += (double.parse(MyCartList[i]["Mrp"].toString()) *
+          totalAmt += (double.parse(MyCartList[i]["PcsMrp"].toString()) *
               double.parse(MyCartList[i]["Qty"].toString()));
         });
       }

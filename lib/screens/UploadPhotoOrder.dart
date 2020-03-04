@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io' as io;
+//import 'dart:io' as io;
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
@@ -71,8 +71,8 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
 
   Future _init() async {
     String customPath = '/madhusudan_audio_recorder_';
-    io.Directory appDocDirectory;
-    if (io.Platform.isIOS) {
+    Directory appDocDirectory;
+    if (Platform.isIOS) {
       appDocDirectory = await getApplicationDocumentsDirectory();
     } else {
       appDocDirectory = await getExternalStorageDirectory();
@@ -298,6 +298,17 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
     }
   }
 
+  getCameraImg() async{
+    var image = await ImagePicker.pickImage(
+      source: ImageSource.camera,
+    );
+    if (image.toString() != "null") {
+      setState(() {
+        _orderPhoto = image;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double widt = MediaQuery.of(context).size.width;
@@ -377,15 +388,8 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         GestureDetector(
-                          onTap: () async {
-                            var image = await ImagePicker.pickImage(
-                              source: ImageSource.camera,
-                            );
-                            if (image != null) {
-                              setState(() {
-                                _orderPhoto = image;
-                              });
-                            }
+                          onTap: () {
+                            getCameraImg();
                           },
                           child: Container(
                             //width: MediaQuery.of(context).size.width,
@@ -667,17 +671,14 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                       ),
                     ),
                     //Recording End
-
+                    Padding(padding: EdgeInsets.only(bottom: 10)),
                     _orderPhoto != null
-                        ? Container(
-                            padding: EdgeInsets.only(top: 10),
-                            child: Image.file(
-                              File(_orderPhoto.path),
-                              //height: 0,
-                              width: MediaQuery.of(context).size.width,
-                              fit: BoxFit.fill,
-                            ),
-                          )
+                        ? Image.file(
+                          File(_orderPhoto.path),
+                          //height: 0,
+                          width: MediaQuery.of(context).size.width,
+                          fit: BoxFit.fill,
+                        )
                         : Container()
                   ],
                 ),
