@@ -10,6 +10,8 @@ import 'package:madhusudan/common/Services.dart';
 import 'package:madhusudan/component/LoadingComponent.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class EditProfile extends StatefulWidget {
   @override
@@ -319,8 +321,8 @@ class _EditProfileState extends State<EditProfile> {
                                 decoration: InputDecoration(
                                   counterText: "",
                                   filled: true,
-                                  hintText: 'Enter Name',
-                                  labelText: "Name",
+                                  hintText: 'EnterName'.tr(),
+                                  labelText: 'Name'.tr(),
                                   prefixIcon: Icon(
                                     Icons.person,
                                     color: Colors.grey,
@@ -336,8 +338,8 @@ class _EditProfileState extends State<EditProfile> {
                                 decoration: InputDecoration(
                                   counterText: "",
                                   filled: true,
-                                  hintText: 'Enter Email',
-                                  labelText: "Email",
+                                  hintText: 'EnterEmail'.tr(),
+                                  labelText: 'Email'.tr(),
                                   prefixIcon: Icon(
                                     Icons.email,
                                     color: Colors.grey,
@@ -353,8 +355,8 @@ class _EditProfileState extends State<EditProfile> {
                                 decoration: InputDecoration(
                                   counterText: "",
                                   filled: true,
-                                  hintText: 'Enter Address',
-                                  labelText: "Address",
+                                  hintText: 'EnterAddress'.tr(),
+                                  labelText: 'Address'.tr(),
                                   prefixIcon: Icon(
                                     Icons.short_text,
                                     color: Colors.grey,
@@ -431,7 +433,7 @@ class _EditProfileState extends State<EditProfile> {
                                         ),
                                       ),
                                       Text(
-                                        "Update",
+                                        'Update'.tr(),
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 17.0,

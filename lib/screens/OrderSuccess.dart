@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class OrderSuccess extends StatefulWidget {
   @override
@@ -63,7 +65,7 @@ class _OrderSuccessState extends State<OrderSuccess> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  "Order Placed!",
+                  'OrderPlaced'.tr(),
                   style: TextStyle(
                       fontSize: 20,
                       color: Colors.black,
@@ -75,7 +77,7 @@ class _OrderSuccessState extends State<OrderSuccess> {
                 margin: EdgeInsets.only(left: 25, right: 25),
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
-                  "Your order was placed successfully.",
+                  'Successfully'.tr(),
                   style: TextStyle(fontSize: 15, color: Colors.black54),
                   textAlign: TextAlign.center,
                 ),
@@ -85,7 +87,7 @@ class _OrderSuccessState extends State<OrderSuccess> {
                 margin: EdgeInsets.only(left: 25, right: 25),
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: Text(
-                  "For more details, check All My Orders page under Profile tab",
+                  'SuccessfullyLine1'.tr(),
                   style: TextStyle(fontSize: 15, color: Colors.black54),
                   textAlign: TextAlign.center,
                 ),
@@ -111,7 +113,7 @@ class _OrderSuccessState extends State<OrderSuccess> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        "MY ORDERS",
+                        'MyOrders'.tr(),
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 14.0,

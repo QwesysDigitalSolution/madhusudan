@@ -52,12 +52,13 @@ dependencies:
   pin_code_text_field: ^1.5.1
   flutter_plugin_pdf_viewer: ^1.0.7
   flutter_staggered_grid_view: ^0.3.0
-
+  easy_localization:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  flutter_localizations:
+    sdk: flutter
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -86,8 +87,11 @@ flutter:
     - images/icon_user.png
     - images/check.png
     - images/whatsapp.png
+    - images/language.png
     - assets/loading.gif
-
+    - resources/langs/en-US.json
+    - resources/langs/hi-IN.json
+    - resources/langs/gu-IN.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

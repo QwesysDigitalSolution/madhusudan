@@ -11,6 +11,8 @@ import 'package:madhusudan/component/LoadingComponent.dart';
 import 'package:madhusudan/component/CheckOutItem.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class CheckOut extends StatefulWidget {
   List CartItem;
@@ -262,7 +264,7 @@ class _CheckOutState extends State<CheckOut> {
                           Padding(
                             padding: const EdgeInsets.only(top: 10, left: 10),
                             child: Text(
-                              'SHIPPING ADDRESS',
+                              'SHIPPINGADDRESS'.tr(),
                               style: TextStyle(
                                   color: Colors.black54,
                                   fontSize: 15,
@@ -485,7 +487,7 @@ class _CheckOutState extends State<CheckOut> {
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Text(
-                                    "PLACE ORDER",
+                                    'PLACEORDER'.tr(),
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 14.0,

@@ -21,6 +21,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:madhusudan/utils/DatabaseHelper.dart';
 import 'package:translator/translator.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class ProductDetails extends StatefulWidget {
   String Id;
@@ -705,7 +707,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      " ( Mimimum Pcs : ${catData[0]["MinQty"]} )",
+                                      " ( Minimum Pcs : ${catData[0]["MinQty"]} )",
                                       style: TextStyle(
                                         color: Colors.grey,
                                         fontSize: 14,
@@ -999,7 +1001,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                       padding: const EdgeInsets.only(
                                           top: 8, bottom: 8, left: 8, right: 4),
                                       child: Text(
-                                        "Add to Cart",
+                                        'AddtoCart'.tr(),
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 14.0,
@@ -1042,7 +1044,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                       padding: const EdgeInsets.only(
                                           top: 8, bottom: 8, left: 8, right: 4),
                                       child: Text(
-                                        "Buy Now",
+                                        'BuyNow'.tr(),
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 14.0,

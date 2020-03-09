@@ -4,6 +4,8 @@ import 'package:get_version/get_version.dart';
 import 'package:madhusudan/common/Constants.dart' as cnst;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -11,7 +13,6 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-
   String Name = "", Mobile = "", MemberId = "", MemberImage = "";
   String appPackage;
 
@@ -64,8 +65,99 @@ class _ProfileState extends State<Profile> {
     Navigator.pushReplacementNamed(context, "/login");
   }
 
+  //app language dialog
+  showSucDialog(String PaymentIs) {
+    showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          var data = EasyLocalizationProvider.of(context).data;
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(20.0),
+                  bottomRight: Radius.circular(20.0)),
+            ), //this right here
+            child: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      color: cnst.app_primary_material_color,
+                    ),
+                    child: Center(
+                        child: Text(
+                      "Select Language",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          letterSpacing: 0.5),
+                    )),
+                  ),
+                  Padding(padding: EdgeInsets.only(top: 5, bottom: 5)),
+                  GestureDetector(
+                    onTap: () {
+                      data.changeLocale(locale: Locale("en", "US"));
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      height: 50,
+                      //color: Colors.deepOrange,
+                      child: Card(
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(13.0),
+                          ),
+                          child: Center(child: Text("English"))),
+                    ),
+                  ),
+                  Padding(padding: EdgeInsets.only(top: 5, bottom: 5)),
+                  GestureDetector(
+                    onTap: () {
+                      data.changeLocale(locale: Locale("hi", "IN"));
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      height: 50,
+                      //color: Colors.deepOrange,
+                      child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(13.0),
+                          ),
+                          child: Center(child: Text("Hindi"))),
+                    ),
+                  ),
+                  Padding(padding: EdgeInsets.only(top: 5, bottom: 10)),
+                  GestureDetector(
+                    onTap: () {
+                      data.changeLocale(locale: Locale("gu", "IN"));
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      height: 50,
+                      //color: Colors.deepOrange,
+                      child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(13.0),
+                          ),
+                          child: Center(child: Text("Gujarati"))),
+                    ),
+                  ),
+                  Padding(padding: EdgeInsets.only(top: 5, bottom: 10)),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
+    var data = EasyLocalizationProvider.of(context).data;
+
     double widt = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
       child: Container(
@@ -147,7 +239,7 @@ class _ProfileState extends State<Profile> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(10.0),
-                                  child: Text("Edit Profile",
+                                  child: Text('EditProfile'.tr(),
                                       style: TextStyle(
                                         fontSize: 16,
                                       )),
@@ -199,7 +291,7 @@ class _ProfileState extends State<Profile> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(10.0),
-                                  child: Text("My Orders",
+                                  child: Text('MyOrders'.tr(),
                                       style: TextStyle(
                                         fontSize: 16,
                                       )),
@@ -263,7 +355,7 @@ class _ProfileState extends State<Profile> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(10.0),
-                                  child: Text("About Us",
+                                  child: Text('AboutUs'.tr(),
                                       style: TextStyle(
                                         fontSize: 16,
                                       )),
@@ -314,7 +406,7 @@ class _ProfileState extends State<Profile> {
                                 Padding(
                                   padding: const EdgeInsets.all(10.0),
                                   child: Text(
-                                    "Contact Us",
+                                    'ContactUs'.tr(),
                                     style: TextStyle(
                                       fontSize: 16,
                                     ),
@@ -366,7 +458,58 @@ class _ProfileState extends State<Profile> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(10.0),
-                                  child: Text("Rate App",
+                                  child: Text('RateApp'.tr(),
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                      )),
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: Container(
+                                //width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.grey[300]),
+                                child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 12,
+                                    )),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      color: Colors.grey[300],
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        showSucDialog("asfdsaa");
+                      },
+                      child: Container(
+                        color: Colors.white,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Image.asset(
+                                    "images/language.png",
+                                    width: 25,
+                                    height: 25,
+                                    color: cnst.app_primary_material_color[600],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Text('AppLanguage'.tr(),
                                       style: TextStyle(
                                         fontSize: 17,
                                       )),
@@ -425,7 +568,7 @@ class _ProfileState extends State<Profile> {
                             ),
                             Padding(
                               padding: const EdgeInsets.all(10.0),
-                              child: Text("Logout",
+                              child: Text('Logout'.tr(),
                                   style: TextStyle(
                                     fontSize: 16,
                                   )),

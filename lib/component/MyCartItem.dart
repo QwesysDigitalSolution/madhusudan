@@ -185,7 +185,7 @@ class _MyCartItemState extends State<MyCartItem> {
                         : Padding(
                             padding: const EdgeInsets.only(top: 2, left: 0),
                             child: Text(
-                              "( Mimimum Pcs : ${widget.product["MinQty"]} )",
+                              "( Minimum Pcs : ${widget.product["MinQty"]} )",
                               style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: 12,

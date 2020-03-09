@@ -15,6 +15,8 @@ import 'package:madhusudan/component/ProductItemCard.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:madhusudan/utils/Shimmer.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class ProductList extends StatefulWidget {
   String type;
@@ -180,7 +182,7 @@ class _ProductListState extends State<ProductList> {
                         child: CupertinoTextField(
                           controller: txtSearch,
                           keyboardType: TextInputType.text,
-                          placeholder: "Search Product",
+                          placeholder: 'SearchProduct'.tr(),
                           onChanged: (val) {
                             if (val == "" || val == null) {
                               setState(() {

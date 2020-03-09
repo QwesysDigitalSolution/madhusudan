@@ -16,6 +16,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:translator/translator.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class UploadPhotoOrder extends StatefulWidget {
   @override
@@ -380,7 +382,7 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                   children: <Widget>[
                     Center(
                       child: Text(
-                        "UPLOAD ORDER PHOTO",
+                        'UPLOADORDERPHOTO'.tr(),
                         style: TextStyle(fontSize: 12, color: Colors.black54),
                       ),
                     ),
@@ -438,7 +440,7 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                       padding:
                           const EdgeInsets.only(top: 20, left: 10, bottom: 5),
                       child: Text(
-                        'SHIPPING ADDRESS',
+                        'SHIPPINGADDRESS'.tr(),
                         style: TextStyle(
                             color: Colors.black54,
                             fontSize: 15,
@@ -543,7 +545,7 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                       padding:
                           const EdgeInsets.only(top: 20, left: 10, bottom: 5),
                       child: Text(
-                        'DESCRIPTION',
+                        'DESCRIPTION'.tr(),
                         style: TextStyle(
                             color: Colors.black54,
                             fontSize: 15,
@@ -744,7 +746,7 @@ class _UploadPhotoOrderState extends State<UploadPhotoOrder> {
                         ),
                       ),
                       Text(
-                        "ORDER NOW",
+                        'ORDERNOW'.tr(),
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 17.0,

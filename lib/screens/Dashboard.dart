@@ -17,6 +17,8 @@ import 'package:madhusudan/screens/Home.dart';
 import 'package:madhusudan/screens/Notification.dart';
 import 'package:madhusudan/screens/Profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -188,7 +190,7 @@ class _DashboardState extends State<Dashboard> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             title: Text(
-              "Home",
+              'Home',
               style: TextStyle(
                 color: Colors.black,
               ),
@@ -197,7 +199,7 @@ class _DashboardState extends State<Dashboard> {
           ),
           BottomNavigationBarItem(
             title: Text(
-              "Notification",
+              'Notification',
               style: TextStyle(
                 color: Colors.black,
               ),
@@ -206,7 +208,7 @@ class _DashboardState extends State<Dashboard> {
           ),
           BottomNavigationBarItem(
             title: Text(
-              "Profile",
+              'Profile',
               style: TextStyle(
                 color: Colors.black,
               ),

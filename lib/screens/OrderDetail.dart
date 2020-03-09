@@ -10,6 +10,8 @@ import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timeline_list/timeline.dart';
 import 'package:timeline_list/timeline_model.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class OrderDetail extends StatefulWidget {
   var order;
@@ -121,7 +123,7 @@ class _OrderDetailState extends State<OrderDetail> {
                         Padding(
                           padding: const EdgeInsets.only(top: 10),
                           child: Text(
-                            'ITEMS',
+                            'ITEMS'.tr(),
                             style: TextStyle(
                                 color: Colors.black54,
                                 fontSize: 15,
@@ -146,7 +148,7 @@ class _OrderDetailState extends State<OrderDetail> {
                           color: Colors.grey,
                         ),
                         Text(
-                          'SHIPPING ADDRESS',
+                          'SHIPPINGADDRESS'.tr(),
                           style: TextStyle(
                               color: Colors.black54,
                               fontSize: 15,
@@ -168,7 +170,7 @@ class _OrderDetailState extends State<OrderDetail> {
                           color: Colors.grey,
                         ),
                         Text(
-                          'Transport Name',
+                          'TransportName'.tr(),
                           style: TextStyle(
                               color: Colors.black54,
                               fontSize: 15,
@@ -215,7 +217,7 @@ class _OrderDetailState extends State<OrderDetail> {
                                       ),
                                     ),
                                     Text(
-                                      "${Order["Total"]}",
+                                      "${cnst.inr_rupee} ${Order["Total"]} /-",
                                       style: TextStyle(
                                         fontSize: 16,
                                       ),
@@ -236,7 +238,7 @@ class _OrderDetailState extends State<OrderDetail> {
                           ),
                           child: Center(
                             child: Text(
-                              "Payment Mode :  COD",
+                              'PaymentMode'.tr()+" :  COD",
                               style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 17.0,

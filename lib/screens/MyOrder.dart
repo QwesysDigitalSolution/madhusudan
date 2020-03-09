@@ -13,6 +13,8 @@ import 'package:madhusudan/utils/Shimmer.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:madhusudan/component/MyDeliverdOrderItem.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class MyOrder extends StatefulWidget {
   @override
@@ -242,10 +244,10 @@ class _MyOrderState extends State<MyOrder> {
             tabs: [
               Padding(
                 padding: const EdgeInsets.all(12),
-                child: Text("Orders",
+                child: Text('Orders'.tr(),
                     style: TextStyle(fontSize: 17, color: Colors.black)),
               ),
-              Text("Photo Orders",
+              Text('PhotoOrders'.tr(),
                   style: TextStyle(fontSize: 17, color: Colors.black)),
             ],
           ),

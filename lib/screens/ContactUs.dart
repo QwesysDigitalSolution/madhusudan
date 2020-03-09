@@ -11,6 +11,8 @@ import 'package:madhusudan/utils/Shimmer.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class ContactUs extends StatefulWidget {
   @override
@@ -155,6 +157,7 @@ class _ContactUsState extends State<ContactUs> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -216,7 +219,7 @@ class _ContactUsState extends State<ContactUs> {
                                         Icons.person,
                                         color: cnst.app_primary_material_color,
                                       ),
-                                      title: Text('Name'),
+                                      title: Text('Name'.tr()),
                                       subtitle: Text("${list[0]["Name"].toString()}"),
                                       enabled: true,
                                     ),
@@ -246,14 +249,14 @@ class _ContactUsState extends State<ContactUs> {
                               ListTile(
                                 leading: Icon(Icons.phone,
                                     color: cnst.app_primary_material_color),
-                                title: Text('Mobile'),
+                                title: Text('MobileNo'.tr()),
                                 subtitle:
                                     Text("${list[0]["Mobile"].toString()}"),
                               ),
                               ListTile(
                                 leading: Icon(Icons.map,
                                     color: cnst.app_primary_material_color),
-                                title: Text('Address'),
+                                title: Text('Address'.tr()),
                                 subtitle:
                                     Text("${list[0]["Address"].toString()}"),
                               ),
@@ -266,15 +269,15 @@ class _ContactUsState extends State<ContactUs> {
                               ListTile(
                                 leading: Icon(Icons.account_balance,
                                     color: cnst.app_primary_material_color),
-                                title: Text('Account Details'),
+                                title: Text('AccountDetails'.tr()),
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Text(list[0]["GSTNo"].toString() !=
                                         "" &&
                                         list[0]["GSTNo"] != null
-                                        ? "GSTNo : ${list[0]["GSTNo"]}"
-                                        : "GSTNo :  - "),
+                                        ? "GSTNO : ${list[0]["GSTNo"]}"
+                                        : "GSTNO :  - "),
                                     Text(list[0]["AccountNumber"].toString() !=
                                                 "" &&
                                             list[0]["AccountNumber"] != null
@@ -298,14 +301,14 @@ class _ContactUsState extends State<ContactUs> {
                               ListTile(
                                 leading: Icon(Icons.email,
                                     color: cnst.app_primary_material_color),
-                                title: Text('Email'),
+                                title: Text('Email'.tr()),
                                 subtitle:
                                     Text("${list[0]["Email"].toString()}"),
                               ),
                               ListTile(
                                 leading: Icon(Icons.perm_contact_calendar,
                                     color: cnst.app_primary_material_color),
-                                title: Text('Salesman Box Contact'),
+                                title: Text('SalesmanBoxContact'.tr()),
                                 subtitle:
                                 Text(list[0]["SalesmanBox"].toString() !=
                                     "" &&
@@ -316,7 +319,7 @@ class _ContactUsState extends State<ContactUs> {
                               ListTile(
                                 leading: Icon(Icons.perm_contact_calendar,
                                     color: cnst.app_primary_material_color),
-                                title: Text('Salesman Loose Contact'),
+                                title: Text('SalesmanLooseContact'.tr()),
                                 subtitle:
                                 Text(list[0]["Salesmanloose"].toString() !=
                                     "" &&
@@ -327,7 +330,7 @@ class _ContactUsState extends State<ContactUs> {
                               ListTile(
                                 leading: Icon(Icons.web,
                                     color: cnst.app_primary_material_color),
-                                title: Text('Website'),
+                                title: Text('Website'.tr()),
                                 subtitle: Text(
                                     "${list[0]["WebsiteLink"].toString()}"),
                                 onTap: () {},

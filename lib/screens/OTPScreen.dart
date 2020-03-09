@@ -16,8 +16,8 @@ import 'package:madhusudan/common/Constants.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class OTPScreen extends StatefulWidget {
   @override
@@ -221,6 +221,7 @@ class _OTPScreenState extends State<OTPScreen> {
   @override
   Widget build(BuildContext context) {
     double widt = MediaQuery.of(context).size.width;
+    var data = EasyLocalizationProvider.of(context).data;
     return Scaffold(
       body: WillPopScope(
         onWillPop: () async {
@@ -240,7 +241,7 @@ class _OTPScreenState extends State<OTPScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        'Verify Your Account',
+                        'VerifyYourAccount'.tr(),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Colors.white,
@@ -251,7 +252,9 @@ class _OTPScreenState extends State<OTPScreen> {
                         padding:
                             const EdgeInsets.only(top: 5, left: 20, right: 20),
                         child: Text(
-                          "OTP has been sent to you on ${memberMobile}. Please enter it below",
+                          'OtpLine1'.tr() +
+                              " ${memberMobile}. " +
+                              'OtpLine2'.tr(),
                           textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.white, fontSize: 14),
                         ),
@@ -354,7 +357,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                 }
                               },
                               child: Text(
-                                "VERIFY",
+                                'VERIFY'.tr(),
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 14.0,
@@ -373,7 +376,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                     padding: EdgeInsets.only(top: 5),
                                   ),
                                   Text(
-                                    "Didn't Receive the Verification Code ?",
+                                    'DONTRECEIVE'.tr(),
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontSize: 12,
@@ -391,7 +394,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                       }
                                     },
                                     child: Text(
-                                      'RESEND CODE',
+                                      'RESENDCODE'.tr(),
                                       maxLines: 2,
                                       softWrap: true,
                                       style: TextStyle(

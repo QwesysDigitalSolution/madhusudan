@@ -12,7 +12,8 @@ import 'package:madhusudan/screens/CheckOut.dart';
 import 'package:madhusudan/utils/Shimmer.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class MyCart extends StatefulWidget {
   @override
@@ -399,7 +400,7 @@ class _MyCartState extends State<MyCart> {
                                   color: cnst.app_primary_material_color[600],
                                   onPressed: () {
                                     if (CartList.length > 0) {
-                                      if(totalPcs > MinCart){
+                                      /*if(totalPcs > MinCart){
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -414,7 +415,14 @@ class _MyCartState extends State<MyCart> {
                                             backgroundColor: Colors.redAccent,
                                             gravity: ToastGravity.CENTER,
                                             textColor: Colors.white);
-                                      }
+                                      }*/
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              CheckOut(CartList),
+                                        ),
+                                      );
                                     } else {
                                       Fluttertoast.showToast(
                                           msg: "Cart Is Emplty",
@@ -429,7 +437,7 @@ class _MyCartState extends State<MyCart> {
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       Text(
-                                        "CHECKOUT",
+                                        'CHECKOUT'.tr(),
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 14.0,

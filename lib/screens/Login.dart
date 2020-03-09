@@ -10,6 +10,8 @@ import 'package:madhusudan/animation/FadeAnimation.dart';
 import 'package:madhusudan/common/Services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -163,6 +165,8 @@ class _LoginState extends State<Login> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: cnst.app_primary_material_color[900],
     ));
+    var data = EasyLocalizationProvider.of(context).data;
+
 
     double widt = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -200,8 +204,8 @@ class _LoginState extends State<Login> {
                             //fillColor: Colors.white,
                             counterText: "",
                             filled: true,
-                            hintText: 'Enter Mobile No',
-                            labelText: "Mobile No",
+                            hintText: '${tr("EnterMobileNo")}',
+                            labelText: "${tr("MobileNo")}",
                             prefixIcon: Icon(
                               Icons.phone_iphone,
                               color: Colors.grey,
@@ -250,7 +254,7 @@ class _LoginState extends State<Login> {
                                   ),
                                 ),
                                 Text(
-                                  "Login",
+                                  'Login'.tr(),
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 17.0,
@@ -288,4 +292,5 @@ class _LoginState extends State<Login> {
       ),
     );
   }
+
 }

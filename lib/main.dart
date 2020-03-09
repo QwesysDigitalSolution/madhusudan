@@ -19,12 +19,20 @@ import 'package:madhusudan/screens/EditProfile.dart';
 import 'package:madhusudan/screens/Splash.dart';
 import 'package:madhusudan/screens/Dashboard.dart';
 import 'package:madhusudan/screens/Login.dart';
-import 'package:madhusudan/screens/ProductList.dart';
 import 'package:madhusudan/screens/MyCart.dart';
 import 'package:madhusudan/screens/OrderSuccess.dart';
 import 'package:madhusudan/screens/MyOrder.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
-void main() => runApp(new StateContainer(child: MyApp()));
+void main() {
+  runApp(EasyLocalization(
+    child: new StateContainer(
+      child: MyApp(),
+    ),
+  ));
+}
 
 class MyApp extends StatefulWidget {
   @override
@@ -82,31 +90,51 @@ class _MyAppState extends State<MyApp> {
     /*SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: cnst.app_primary_material_color[900]
     ));*/
+    var data = EasyLocalizationProvider.of(context).data;
 
     final textTheme = Theme.of(context).textTheme;
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "Madhusudan",
-      initialRoute: '/',
-      routes: {
-        '/': (context) => splash(),
-        '/login': (context) => Login(),
-        '/Dashboard': (context) => Dashboard(),
-        '/UploadPhotoOrder': (context) => UploadPhotoOrder(),
-        '/EditProfile': (context) => EditProfile(),
-        '/MyCart': (context) => MyCart(),
-        '/OrderSuccess': (context) => OrderSuccess(),
-        '/MyOrder': (context) => MyOrder(),
-        '/ContactUs': (context) => ContactUs(),
-        '/AboutUs': (context) => AboutUs(),
-        '/OTPScreen': (context) => OTPScreen(),
-      },
-      theme: ThemeData(
-        textTheme: GoogleFonts.latoTextTheme(textTheme).copyWith(
-          body1: GoogleFonts.oswald(textStyle: textTheme.body1),
+    return EasyLocalizationProvider(
+      data: data,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: "Madhusudan",
+        initialRoute: '/',
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          EasyLocalizationDelegate(
+            locale: data.locale,
+            path: 'resources/langs',
+          ),
+        ],
+        supportedLocales: [
+          Locale('en', 'US'),
+          Locale('hi', 'IN'),
+          Locale('gu', 'IN')
+          /*Locale('gu', 'IN'),
+          Locale('mr', 'IN')*/
+        ],
+        locale: data.locale,
+        routes: {
+          '/': (context) => splash(),
+          '/login': (context) => Login(),
+          '/Dashboard': (context) => Dashboard(),
+          '/UploadPhotoOrder': (context) => UploadPhotoOrder(),
+          '/EditProfile': (context) => EditProfile(),
+          '/MyCart': (context) => MyCart(),
+          '/OrderSuccess': (context) => OrderSuccess(),
+          '/MyOrder': (context) => MyOrder(),
+          '/ContactUs': (context) => ContactUs(),
+          '/AboutUs': (context) => AboutUs(),
+          '/OTPScreen': (context) => OTPScreen(),
+        },
+        theme: ThemeData(
+          textTheme: GoogleFonts.latoTextTheme(textTheme).copyWith(
+            body1: GoogleFonts.oswald(textStyle: textTheme.body1),
+          ),
+          primaryColor: cnst.app_primary_material_color,
+          primarySwatch: cnst.app_primary_material_color,
         ),
-        primaryColor: cnst.app_primary_material_color,
-        primarySwatch: cnst.app_primary_material_color,
       ),
     );
   }
